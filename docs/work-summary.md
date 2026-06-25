@@ -3,7 +3,9 @@
 Before Terraform, first understand what "Infrastructure means".
 
 when you open a website like:
-  -> Amazon, Google, Apple 
+  -> Amazon
+  -> Google
+  -> Apple 
 
 You only see the frontend of that website. 
 
