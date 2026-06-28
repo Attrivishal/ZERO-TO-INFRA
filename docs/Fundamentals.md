@@ -1,150 +1,175 @@
+![HCL Fundamentals](./images/hcl_banner.png)
+
 # 🧱 Level 1: HCL Fundamentals
 
-This is the foundation of Terraform. Without understanding these concepts, you will only be copying and pasting code from tutorials without knowing how it works.
-
----
+This is the foundation of Terraform
 
 > [!IMPORTANT]
-> ### ⚠️ Key Rule
-> In HashiCorp Configuration Language (HCL), everything is structured around **Blocks**, **Arguments**, and **Labels**. Master these three concepts, and you will understand any Terraform configuration.
+> **without this, you will only be copying code from tutorials.**
 
 ---
 
-## 📦 1. Blocks
+## 📦 1 Blocks
 
 > [!NOTE]
-> ### What is a Block?
-> A **Block** is the basic building unit of Terraform. Think of it as a container that groups related configurations together and tells Terraform what you want to configure.
+> ### -> What is a Block?
+> **Ans.** A Block is a basic building unit of terraform
+> * Everything in Terraform start with a block.
+> * Think of a block as a conatiner that tells Terraform what you want to configure.
 
-### 📝 Example 1: Provider Block
+### Example:
 ```hcl
 provider "aws" {
   region = "ap-south-1"
 }
 ```
-* **Block type:** `provider` (tells Terraform which cloud or service to connect to).
 
-### 📝 Example 2: Resource Block
+Here:
+* `provider` is the block.
+
+### Another example:
 ```hcl
 resource "aws_instance" "web" {
-  # Configuration settings go here
+
 }
 ```
-* **Block type:** `resource` (tells Terraform to manage a physical or virtual piece of infrastructure).
 
-> [!NOTE]
-> **What is a Resource in Terraform?**
-> A resource defines how we need to create, update, and manage infrastructure.
+Again:
+* `resource` is the Block.
 
 ---
 
-### 📋 The "Form" Analogy
-Think of writing Terraform configurations like filling out a multi-section application form:
+### # What is resource in Terraform?
+A resource defines how we need to create, update, and manage infrastructure
 
-```
-┌──────────────────────────────────────┐
-│  SECTION: PERSONAL DETAILS  (Block)  │
-├──────────────────────────────────────┤
-│  Name: Vishal Attri                  │
-│  Age: 21                             │
-│  City: Delhi                         │
-└──────────────────────────────────────┘
-```
+#### Real-life Analogy:
+Imagine you're filling out a form:
 
-In Terraform:
-* `provider`, `resource`, `variable`, and `module` represent the **Sections** (Blocks) of the form.
-* Terraform reads each section individually to construct your infrastructure.
+**Personal Details:**
+* Name:
+* Age:
+* Address:
 
-### 🛠️ Common Terraform Blocks
-Here are the most common blocks you will write in every project:
+**"Personal Details"** is the section.
 
-| Block Type | Purpose | Example |
-| :--- | :--- | :--- |
-| **`terraform`** | Configures Terraform settings (e.g., versions, backend states). | `terraform { required_version = ">= 1.5.0" }` |
-| **`provider`** | Tells Terraform how to communicate with a cloud platform. | `provider "aws" { region = "us-east-1" }` |
-| **`resource`** | Defines a service/infrastructure component to create. | `resource "aws_instance" "web" { ... }` |
-| **`variable`** | Declares input values to customize configurations. | `variable "port" { default = 80 }` |
-| **`output`** | Exposes output values to print or share with other modules. | `output "ip" { value = aws_instance.web.public_ip }` |
-| **`locals`** | Defines local constants for internal use. | `locals { app_name = "frontend" }` |
-| **`module`** | References groups of reusable code. | `module "vpc" { source = "./modules/vpc" }` |
-| **`data`** | Queries external APIs or existing cloud resources. | `data "aws_ami" "ubuntu" { ... }` |
+Similarly:
+* `provider`
+* `resource`
+* `variable`
+* `module`
+
+are sections.
+
+Terraform reads each section seperatly.
 
 ---
 
-## 🔑 2. Arguments
+### Common Blocks:
+
+| # | Common Blocks (Your Notes) |
+| :-: | :--- |
+| 1 | `terraform` |
+| 2 | `resources` |
+| 3 | `variable` |
+| 4 | `output` |
+| 5 | `locals` |
+| 6 | `module` |
+| 7 | `data` |
+
+we almost these common blocks everywhere.
+
+---
+
+## 🔑 Arguments
+
+* -> Now let's Discuss about Arguments.
+* -> Inside every block there are arguments
 
 > [!TIP]
-> ### What is an Argument?
-> Arguments are the key-value pairs inside a block body that configure the resource properties or settings.
+> ### # What is arguments?
+> **Ans.** Arguments are those which gives information to the block
 
-### 📝 Example:
+### Example:
 ```hcl
 provider "aws" {
-  region = "us-east-1"  # <-- This is an argument
+    region = "us-east-1"
 }
 ```
 
-Think of it like filling out a form where every entry is a `Key = Value` pair:
-* `Name` = `Vishal Attri`
-* `Age` = `21`
-* `City` = `Delhi`
+So, Here `region` is the argument.
 
-Basically, everything inside a block is formatted as `key = value`, which is an argument.
+Think of it like this:
+* `Name` = `Vishal Attri` (Your name)
+* `Age` = `21` (Your Age)
+* `City` = `Delhi` (Your City)
 
-### 🏎️ The "Dream Car" Analogy
-Imagine you buy your dream car: a **BMW**:
+Every thing in the form `Key = value` is an argument. Basically Everything inside a block is an argument.
 
-```hcl
-resource "car" "my_dream_car" {
-  brand        = "BMW"
-  color        = "Black"
-  engine       = "Petrol"
-  transmission = "Automatic"
-}
-```
+#### Real-Life Analogy:
+Suppose you buy your dream car name **(BMW)**:
+The car has its: 
+* `color = Black`
+* `Engine = Petrol`
+* `Transmission = Automatic`
+ 
+These are the properties of the car.
 
-* The **car** is the resource.
-* **`brand`**, **`color`**, **`engine`**, and **`transmission`** are the **Arguments** (properties) that describe your specific car.
+Similarly, Terraform resource have properties called arguments.
 
 ---
 
-## 🏷️ 3. Labels
+## 🏷️ Labels
 
 > [!NOTE]
-> ### What are Labels?
-> Labels are the unique identifiers that come after the block type. They name and identify the block so that you (and Terraform) can refer to it later in the configuration.
+> ### # What is Labels?
+> Labels are the unique identifiers that come after a block. Basically they give a unique name or indentity to Our terraform block so that we can refer it later.
 
-### 🔬 Dissecting Block Syntax
-```
-resource  "aws_instance"  "web_server"  { ... }
-   ▲           ▲               ▲
-   │           │               └─ Label 2: Resource Name (User-defined, e.g., web_server)
-   │           └───────────────── Label 1: Resource Type (Determined by the provider, e.g., aws_instance)
-   └───────────────────────────── Block Type (Tells Terraform what kind of block this is)
+### For Example: 
+```hcl
+Block_type "Label1" "Label2" {
+     # Here arguments will come
+}
 ```
 
-1. **Block Type:** (`resource`) Defines what kind of construct this is.
-2. **Label 1 (Resource Type):** (`"aws_instance"`) Tells Terraform which cloud service we are creating.
-3. **Label 2 (Resource Name):** (`"web_server"`) A unique name you assign to this block so you can reference its attributes elsewhere.
+```hcl
+resource "aws_instance" "web_server"{
+   ami = "ami-123"
+   instance_type = "t2.micro"
+}
+```
+
+Now let me Break down all for you so that you can understand it easily:
+
+| Code Segment | Label/Type | Function (Your Notes) |
+| :--- | :--- | :--- |
+| `resource` | **Block type** | It tells terraform what kind of block this is. |
+| `"aws_instance"` | **Label1 (Type)** | It tells which cloud servie we want to use? or using! |
+| `"web_server"` | **Label2 (Type)** | Here we decide the name of the the resource how do we recall it. |
+
+<br>
+
+| Label Type | Purpose (Your Notes) |
+| :--- | :--- |
+| **Label1** | Is used for what type of cloud service we want to use. |
+| **Label2** | Is used to give an unique name to that service. |
 
 ---
 
-### 🛡️ Why Labels Matter: Unique Identification
-Without labels, Terraform wouldn't know which resource is which. By using unique names for Label 2, we can manage multiple instances of the same resource type:
+### Main purpose of using Labels is:
+#### 1. Unique Identification:
+BY using Lables we can uniquely identify the resources that we are using or we can say service.
 
+Like:
 ```hcl
-resource "aws_s3_bucket" "storage_bucket_1" {
-  bucket = "company-logos-prod"
+resource "aws-s3" "Storage_bucket1"{
+ #..Arguments...
 }
-
-resource "aws_s3_bucket" "storage_bucket_2" {
-  bucket = "company-assets-prod"
+resource "aws-s3" "Storage_bucket2"{
+ #..Arguments...
 }
-
-resource "aws_s3_bucket" "storage_bucket_3" {
-  bucket = "company-backups-prod"
+resource "aws-s3" "Storage_bucket3"{
+ #..Arguments...
 }
 ```
 
-> [!TIP]
-> Label 2 allows you to reference properties of a specific resource. For example, you can get the ID of bucket 1 using: `aws_s3_bucket.storage_bucket_1.id`
+By using this name I can check or use this block in future uniquely without any confusion.
