@@ -173,3 +173,98 @@ resource "aws-s3" "Storage_bucket3"{
 ```
 
 By using this name I can check or use this block in future uniquely without any confusion.
+
+# 💎 What is values?
+
+> [!NOTE]
+> In Terraform, values are the actual data which is stored in the configuration  whether it is in the form of numbers, boolean and characters/text. 
+> 
+> Always rember this simple formula:
+> 
+> **------ EVERTHING stored in the Terrafomr = VALUE -------**
+
+For Example: 
+* 🔢 **Numbers:** 7,16
+* 🚦 **Booleans:** true, false
+* 📝 **character/text:** "Vishal", "Hello"
+
+like this:
+Wait let me show you a real example: 
+
+```hcl
+resource "aws_instance" "web" {
+    ami           = "ami123"     # <- value (characters/text)
+    instance_type = "t2.micro"   # <- value (characters/text)
+    count         = 7            # <- value (Number)
+    monitoring    = true         # <- value (Boolean)
+}
+```
+
+> [!IMPORTANT]
+> ### Key rule to remmber guys : 
+> **-------- Everything on the right side of = is a VALUE --------**
+
+---
+
+# 🗂️ what is Data Types in Terraform? 
+
+> [!NOTE]
+> Data types tell the terraform what KIND of values it is handling, whether it is text, a number, boolean, a list, or something more complex.
+
+---
+
+# 📚 The complete Data Types Reference: 
+
+| # | Data Type | Quick Summary (Your Notes) |
+| :-: | :--- | :--- |
+| 1 | 🔤 **String** | Text data - always presented in double quotes. |
+| 2 | 🔢 **Number** | It contains all numeric values - No quotes |
+| 3 | 🚦 **Boolean** | It containe onlt true and false values nothing else - No qoutes |
+| 4 | 📋 **List** | It is a collection of array of values (ordered) - defined with [] |
+
+<br>
+
+### 1. String
+Text data - always presented in double quotes.
+
+like: 
+```hcl
+region = "us-east-1"
+name   = "Vishal"
+ami_id = "ami-0c55b1293"
+```
+
+### 2. Number
+It contains all numeric values - No quotes
+
+like: 
+```hcl
+age            = 21
+port           = 8080
+instance_count = 7
+```
+
+### 3. Boolean
+It containe onlt true and false values nothing else - No qoutes
+
+like :  
+```hcl
+enable_dbs          = true
+enable_monitoring   = false
+is_encrypted        = true
+enable_backup       = false 
+```
+
+### 4. List
+It is a collection of array of values (ordered) - defined with `[]`
+
+like: 
+```hcl
+servers = ["web","db"]
+ports   = [80,443]
+enabled = [true,false]
+startegy : 
+  matrix :
+    node-version : [18,20]
+```
+
