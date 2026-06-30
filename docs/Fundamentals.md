@@ -263,8 +263,29 @@ like:
 servers = ["web","db"]
 ports   = [80,443]
 enabled = [true,false]
-startegy : 
-  matrix :
-    node-version : [18,20]
+
+
+Lists help professionals avoid repeating themselves in Terraform code. They store multiple values of the same type in a specific order, let you access them by position (starting from 0), and work perfectly with features like count and for_each to create resources dynamically. Functions like length(), join(), and contains() make lists even more powerful for writing clean, maintainable infrastructure code.
+
+Quick Professional Reference:
+
+# Declare
+instane_names = ["web", "db","app"]
+
+#ACCESS
+instance_names[0] # "web" if it is presentin the list 
+
+#LENGTH 
+length(instance_names) #3 It counts  character of the word
+
+# LOOP
+count = length(instance_names) # create 3 resources
+
+# CHECK 
+contains(instance_names, "web") # true
+
+# TRANSFORM 
+join (", ", instance_names). # "web, db, app"
+
 ```
 
