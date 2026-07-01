@@ -289,3 +289,7 @@ join (", ", instance_names). # "web, db, app"
 
 ```
 
+
+# Map 
+
+A map is a collection of Key-Value pairs (like dictionary) where each key has a corresponding value
