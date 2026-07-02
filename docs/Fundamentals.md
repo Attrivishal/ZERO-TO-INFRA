@@ -293,3 +293,62 @@ join (", ", instance_names). # "web, db, app"
 # Map 
 
 A map is a collection of Key-Value pairs (like dictionary) where each key has a corresponding value
+
+# syntax
+  
+  {
+    key1 = "value1"
+    key2 = "value2"
+    key3 = "value3"
+  }
+
+  Lets see some example of mapping in terraform 
+
+  <!-- map of string -->
+   person = {
+    Name = "Vishal"
+    City = "Delhi"
+    Job = "Devops Engineer"
+   }
+
+  <!-- map of numbers -->
+   scores = {
+    Math = 99
+    science = 98
+    English = 100
+   }
+
+   <!-- map with different types -->
+   config = {
+    region = "us-east-1"
+    port = 8000
+    is_secue = true
+   }
+
+Let me show you a analogy:
+
+The ID Card Analogy:
+  ID Card : {
+    Name : "Vishal"
+    Age : 21
+    City : "New Delhi"
+    Married : false
+  }
+
+Key (field)               value (information)
+Name                          "Vishal"
+Age                             21
+City                          "New Delhi"
+Married                        false
+
+# Object in Terraform
+
+Object is a collection of data but it stores data only when  the correct data-type is matched , it does not stored that data which is not comes under thier data-type
+
+    for example: 
+       Suppose I am write Name : 22 
+         so this is wrong here , we can only write  string type of data here, in Name column. so it can match it's own dataype type which is "string".
+
+
+object is tightly structured with its own data-type. 
+
