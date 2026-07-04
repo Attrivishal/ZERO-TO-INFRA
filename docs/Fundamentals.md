@@ -442,3 +442,30 @@ variable "environment" {
   default     = "development"
 }
 ```
+
+# What is functions in Terraform 
+
+Functions in terraform performs small operation on data like: converting text to uppercase, joining strings, counting items, or formatting dates.
+"Just like a functions in programming languages"
+
+Why do we need fucntions?
+  -> without functions: we function we have to do manually everything (which is very hard to maintain)
+
+  -> with functions: Terraform does the work for us (easy and consistent)
+
+Let me give you some real example: 
+
+1. String functions:
+  upper(): It converts to uppercase 
+
+    hcl
+    <!-- without function -->
+    name = "Hello"
+    <!-- with function -->
+    name = upper("hello")   # "HELLO".  (UPPERCASE)
+
+    name = lower("HELLO")   # "hello".   (LOWERCASE)
+    
+
+
+
