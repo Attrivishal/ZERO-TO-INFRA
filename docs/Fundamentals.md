@@ -352,3 +352,21 @@ Object is a collection of data but it stores data only when  the correct data-ty
 
 object is tightly structured with its own data-type. 
 
+
+# Components
+Components are notes we write to explain what we are going to in the code or which service we are writing this code for.
+
+
+For example: 
+    # creating a ec2 server for website
+      resource "aws_instance" "web" {
+        #....
+      }
+
+
+    # creating a s3 Bucket for storing 
+    resource "aws_s3_bucket" "data"{
+      #...
+    }
+
+Basically, components are the comments which we are using in our code.  
