@@ -1,0 +1,22 @@
+# Local .terraform folders (plugins, modules, cache)
+**/.terraform/*
+.terraform/
+
+# Terraform state files
+*.tfstate
+*.tfstate.*
+terraform.tfstate
+terraform.tfstate.backup
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Sensitive var files (ignore by default to prevent leaking credentials)
+*.tfvars
+*.tfvars.json
+*.tfvars.example
+
+# Exception: Allow checking in tfvars in specific learning directories if needed
+# (For learning, we keep terraform.tfvars files benign and can track them if necessary, 
+# but ignoring them by default is the professional standard.)
