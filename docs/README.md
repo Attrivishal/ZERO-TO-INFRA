@@ -42,6 +42,12 @@ A deep dive into HashiCorp Configuration Language (HCL), the syntax powering Ter
     *   String & Collection transformations (`upper`, `lower`, `join`, `length`, `max`)
     *   Practical code examples
 
+*   **[05-Terraform-core.md](fundamentals/05-Terraform-core.md)**
+    *   Providers (The Translators)
+    *   Resources (The Builders)
+    *   Data Sources (The Readers)
+    *   Modules (The Reusable Blueprints)
+
 ---
 
 ## 🔙 Navigation

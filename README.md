@@ -18,6 +18,7 @@ All key concepts, syntax references, and explanations are structured in the [doc
    * [Data Types & Schema Structures](docs/fundamentals/02-data-types.md) — Strings, numbers, lists, maps, and objects.
    * [Variables & Input Precedence](docs/fundamentals/03-variables.md) — Writing dynamic, reusable configurations.
    * [Built-in Functions](docs/fundamentals/04-built-in-functions.md) — Transforming data programmatically.
+   * [Terraform Core Engine](docs/fundamentals/05-Terraform-core.md) — Providers, Resources, Data Sources, and Modules.
 
 ### 🛠️ Interactive Exercises (The Practical Corner)
 Run these step-by-step folders in sequence to apply your knowledge:

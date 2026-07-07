@@ -1,0 +1,1 @@
+#This files contains Resource we are going to use and module we are going to make and reuse them in different and in same files. And data source we are using to use existing data of prvider.

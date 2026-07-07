@@ -1,0 +1,1 @@
+#This file contains the outputs of the resources and modules we are going to use in orur terraform files.;
