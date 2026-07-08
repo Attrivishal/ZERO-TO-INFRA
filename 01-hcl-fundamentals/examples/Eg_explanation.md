@@ -109,4 +109,54 @@ Here You Notice something?
 
 Terraform cannot create anything until it downloads the required provider plugin.
 
+Now, What is Provider Again?
+ 
+ Remeber this Analogy before you start?
+  Terraform = You
+  AWS = Person speaking English 
+  Provider = Who translate that English to Terraform 
+
+  without translator ... We cannot comunicate  without provider ...
+
+  Terraform cannot communicate with AWS.
+
+
+Let's add our first provider 
+
+example: 
+
+  terraform {
+   required_version = ">= 1.8"
+
+   required_providers {
+      aws = {
+
+      }
+   }
+  }
+
+Now you have one question that what is this:
+       aws = {
+         source = "hasicorps/aws"
+       }
+
+let's understand it.
+
+This is saying my project is depends on a provider called "AWS"
+ 
+ And inside it, we'll describe where terraform should get it from and which version to use.
+
+So By writting this line:
+   source = "hashicorps/aws" we tell the terraform from here you have to get the provider
+
+Now you are thinking that what is "SOURCE"?
+
+See terraform Knows I need AWS. But where should it download the AWS Provider from?
+Because there are thousands of providers.
+terraform need an address.
+
+So that address is called:
+
+hcl 
+source
 
