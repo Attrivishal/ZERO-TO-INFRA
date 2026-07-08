@@ -77,3 +77,36 @@ So let me clear you some important things about this "required_version"
  - It is not version of the provider.
  - It is the verison of the "Terraform CLI" you installed when you downloaded terraform online.
 
+
+# What is required providers.
+
+If you know most of the people says that it is used to define the providers. That is true but you this is not full  information about "PROVIDERS"
+
+Imagine:
+ when you type :
+  terraform init   #On your terminal 
+
+Terraform things like this:
+ Read all .tf files
+ |
+ Find terraform block
+ |
+ Terraform Version
+ |
+ Do I need any Providers?
+ |
+ Yes
+ |
+ Which Providers?
+ |
+ Download them
+ |
+ store locally 
+ |
+ Ready to use
+
+Here You Notice something?
+
+Terraform cannot create anything until it downloads the required provider plugin.
+
+
