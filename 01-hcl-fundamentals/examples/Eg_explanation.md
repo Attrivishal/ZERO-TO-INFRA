@@ -120,7 +120,6 @@ Now, What is Provider Again?
 
   Terraform cannot communicate with AWS.
 
-
 Let's add our first provider 
 
 example: 
@@ -144,7 +143,7 @@ let's understand it.
 
 This is saying my project is depends on a provider called "AWS"
  
- And inside it, we'll describe where terraform should get it from and which version to use.
+And inside it, we'll describe where terraform should get it from and which version to use.
 
 So By writting this line:
    source = "hashicorps/aws" we tell the terraform from here you have to get the provider
