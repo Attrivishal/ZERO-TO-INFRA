@@ -144,3 +144,12 @@ Terraform knows it needs to interact with AWS, but since there are thousands of 
 That registry address is specified using the **`source`** attribute.
 
 
+# What is output.tf why we write this 
+  
+  In the output.tf file, we specify what we want Terraform to show on the screen once our resources are created. For example, after launching an EC2 instance, we can output its public IP address right in the terminal—so we don't have to open the AWS console just to find it.
+
+ The output.tf file is only used to show important information on the terminal after Terraform creates the resources.
+
+output.tf = Display important info after deployment
+
+## Structure of an Output Block.
