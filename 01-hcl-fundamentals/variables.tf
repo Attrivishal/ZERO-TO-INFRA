@@ -1,5 +1,7 @@
-#This files contains the all variables we are going to use in our terraform files.
+# This file contains all variables we are going to use in our Terraform files.
 
-variable = {
-   region = "us-east-1"
- }
+variable "region" {
+  description = "AWS region to deploy resources"
+  type        = string
+  default     = "us-east-1"
+}
