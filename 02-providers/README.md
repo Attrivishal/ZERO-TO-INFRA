@@ -137,7 +137,7 @@ resource "docker_container" "test_container" {
 }
 ```
 
-### Resource Distribution Summary
+### What all this works:
 
 | Resource | Target Environment | Purpose |
 | :--- | :--- | :--- |
