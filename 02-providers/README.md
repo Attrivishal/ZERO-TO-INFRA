@@ -83,3 +83,63 @@ Imagine a team of developers working on the same project:
 * **With the lock file (`.terraform.lock.hcl`):** When Developer B runs `terraform init`, Terraform reads the lock file and installs the exact same version (`6.54.0`). 
 
 This guarantees consistency, stability, and predictability across all local environments and CI/CD pipelines.
+
+---
+
+## 4. Advanced Provider Concepts: Multiple Providers
+
+So far, we have only used a single provider in our configuration. However, Terraform supports using **multiple providers** within the same project.
+
+### What are Multiple Providers?
+This concept refers to configuring and using more than one provider (e.g., `aws` and `docker`) within a single Terraform configuration.
+
+### Why use multiple providers?
+You might need to manage infrastructure across different platforms or environments simultaneously. 
+
+For instance, you might deploy your primary, public-facing servers on **AWS** so that users can access them, while running local test environments on **Docker** to verify changes quickly and avoid unnecessary cloud costs.
+
+* **Example Use Case:** AWS for the production environment and Docker for local testing.
+
+### Configuration Example
+
+Here is how you configure and use multiple providers in the same project:
+
+```hcl
+# Configure the AWS Provider (for cloud resources)
+provider "aws" {
+  region = "us-east-1"
+}
+
+# Configure the Docker Provider (for local resources)
+provider "docker" {
+  host = "unix:///var/run/docker.sock" # Local Docker socket
+}
+
+# 1. AWS Resource: Remote EC2 Server (Production)
+resource "aws_instance" "production_server" {
+  ami           = "ami-123"
+  instance_type = "t2.micro"
+
+  tags = {
+    Name = "My-production-server"
+  }
+}
+
+# 2. Docker Resource: Local Container (Testing)
+resource "docker_container" "test_container" {
+  image = "nginx:latest"
+  name  = "my-test-nginx"
+
+  ports {
+    internal = 80
+    external = 8080
+  }
+}
+```
+
+### Resource Distribution Summary
+
+| Resource | Target Environment | Purpose |
+| :--- | :--- | :--- |
+| `aws_instance.production_server` | AWS Cloud | Production server accessible to users |
+| `docker_container.test_container` | Local Machine | Lightweight container for local testing |
