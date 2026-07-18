@@ -154,7 +154,7 @@ means we don't want have to write the code for all the enviornments. so workspac
 Let me State it's 3 Main things:
 
 1. One Code, Multiple Environemnts : In easy way we can say we can use one code in multiple environment. 
-2. Seperate State files
+2. Seperate State files : we do have seperate files for all configuration.
 3. Independent Lifecycles
 
 
