@@ -112,3 +112,5 @@ Only then it reads resources.
 * `required_versions`
 * `required_providers`
 * `backend`
+
+More concepts will come in this file.
