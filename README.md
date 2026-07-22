@@ -35,3 +35,6 @@ Run these step-by-step folders in sequence to apply your knowledge:
 2. Clone this repository.
 3. Open [docs/README.md](docs/README.md) to review the core concepts.
 4. CD into [01-basics/](01-basics/) and follow the instructions in its `README.md` to run your first Terraform workspace.
+
+
+## MORE CONTENT WILL COME AFTER.
