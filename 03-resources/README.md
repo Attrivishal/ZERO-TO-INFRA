@@ -54,6 +54,17 @@ resource It tells terraform "I want to create something" 🛠️ resource
 
 3. Read the Documentation
   Only look for these:
-  -> Required arguments 
+  -> Required arguments : Arguments that is must terraform forces us to provide, without this terraform will throw an error.
+   example: (S3 bucket)
+   hcl 
+   resource "aws_s3_bucket" "example" {
+      bucket = "my-bucket"  # <- Required! without this, Terraform throw errors
+   }
+
+  How to find it in docs:
+  1. Looks for a section That says "required"
+  2. Or arguments marked with a red asterisk *
+ 
+
   -> optional arguments
   -> Attributes (generated after creation )
