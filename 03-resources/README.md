@@ -32,3 +32,28 @@ resource It tells terraform "I want to create something" 🛠️ resource
 "TYPE" What type of service we want to use, Write here 📦 "Ec2_instance" (EC2 server)
 "NAME" Here we defined the service name we describe 🏷️ "web_server"
 { } Here we configure all the details that we discuss above ⚙️ ami = "ami-123"
+
+
+## Guys, Listen here I am telling you the Apporach that how to tackle any question in a professional way. There are some steps to follow (7 steps)
+
+1. Understand the requirements.
+  Ask Yourself:
+   -> What AWS service or any cloud service am I creating?
+   -> Why it is used?
+
+   Example:
+     "Create an s3 bucket."
+
+2. Find the Terraform Resource 
+   Search the Terraform documentation.
+
+   Example:
+       S3 Bucket -> aws_s3_bucket
+       ec2 -> aws_instance
+       VPC -> aws_vpc
+
+3. Read the Documentation
+  Only look for these:
+  -> Required arguments 
+  -> optional arguments
+  -> Attributes (generated after creation )
