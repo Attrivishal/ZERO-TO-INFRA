@@ -68,3 +68,10 @@ resource It tells terraform "I want to create something" 🛠️ resource
 
   -> optional arguments
   -> Attributes (generated after creation )
+
+
+
+
+
+
+................
