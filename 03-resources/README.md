@@ -168,3 +168,4 @@ Testing is the most critical step. Once your code is written, use the CLI comman
   ```
 
 > 💡 **In short:** `terraform plan = Read code → Read state → Compare → Show plan.`
+
