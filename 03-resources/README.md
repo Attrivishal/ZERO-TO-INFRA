@@ -169,3 +169,10 @@ Testing is the most critical step. Once your code is written, use the CLI comman
 
 > 💡 **In short:** `terraform plan = Read code → Read state → Compare → Show plan.`
 
+
+## 7 Verify & Improve 
+  After terraform apply: 
+   -> verify in AWS console.
+   -> Improve the code using (variables,tags,outputs,etc).
+
+  
