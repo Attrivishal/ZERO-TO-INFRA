@@ -9,7 +9,7 @@ resource "aws_iam_user" "developer" {
     name = var.user_name
 }
 
-# IAM Group
-resource "aws_iam_group" "developers" {
-    name = var.group_name
-}
+# # IAM Group
+# resource "aws_iam_group" "developers" {
+#     name = var.group_name
+# }
