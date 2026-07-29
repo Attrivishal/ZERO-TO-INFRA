@@ -8,3 +8,12 @@ variable "bucket_name" {
     type = string
 }
 
+variable "user_name" {
+    description = "IAM user name"
+    type        = string
+}
+
+variable "group_name" {
+    description = "IAM group name"
+    type        = string
+}
