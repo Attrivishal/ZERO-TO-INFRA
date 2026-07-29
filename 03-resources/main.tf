@@ -1,15 +1,14 @@
 # Now we write our  real resource in this file.
-
 resource "aws_s3_bucket" "demo" {
-    bucket = var.bucket_name
+  bucket = var.bucket_name
 }
 
 # IAM user
 resource "aws_iam_user" "developer" {
-    name = var.user_name
+  name = var.user_name
 }
 
-# # IAM Group
-# resource "aws_iam_group" "developers" {
-#     name = var.group_name
-# }
+# IAM Group
+resource "aws_iam_group" "developers" {
+    name = var.group_name
+}
