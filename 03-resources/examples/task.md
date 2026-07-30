@@ -91,3 +91,88 @@ resource "aws_iam_user" "example" {
 ```
 
 "Optional arguments let you customize the user—like adding tags or organizing them with paths."
+
+
+## What is IAM Policy?
+  IAM Policy  is a permission given to the user or group to acces AWS specific resources. 
+
+  Structure of IAM Policy:
+   json
+   {
+    "version" : "2012-10-17",
+    "statement" : [
+      {
+        "Effects": "Allow",
+        "Action": "s3:ListBucket",
+        "Resource": "arn:aws:s3:::my-bucket"
+      }
+    ]
+   }
+
+Part          What it means                                  example
+Effect   ->   What is Allow or Deny                  ->   "Alow" or "Deny"
+Action   ->   Whay action is taken on which resource -> "s3:ListBucket"
+Resource ->   Which resources we are using?          ->  "arn:aws:s3:::my-bucket"
+
+## What is the difference between: 
+   1.IAM User
+   2.IAM Group
+   3.IAM Policy
+  
+  -> IAM User:(The Individual) A specific person or application with its own credentials (username,password,access key).
+    hcl 
+    resource "aws_iam_user" "vishal" {
+      name = "Vishal"
+    }
+
+  -> IAM Group:(The collection) is a Collection of users that all inherit the same permissions.
+    hcl 
+    resource "aws_iam_group" "developers" {
+      name = "developers"
+    }
+
+    resource "aws_iam_user" "vishal" {
+      name = "vishal"
+    }
+
+    resource "aws_iam_user" "Khushi" {
+      name = "Khushi"
+    }
+   
+   #Attach users to group
+    resource "aws_iam_group_membership" "devs" {
+      name  = "dev-membership"
+      users = [aws_iam_user.vishal.name, aws_iam_user.khushi.name]
+      group = aws_iam_group.developers.name
+    }
+
+  -> IAM Policy: (The rule) A document that defines what actions are allowed or denied on which resources.
+     rules are defined in JSON format. 
+    json 
+    {
+      "version" : "2012-12-17",
+      "statement": [
+        {
+          "Effects": "Allow",
+          "Action": "s3:ListBucket",
+          "Resource": "arn:aws:s3:::my-bucket"
+        }
+      ]
+    }
+
+The Relationship (How They Work Together):
+
+Simple Visual:
+
+    Company
+    │
+    ├── IAM Policy: "S3 Full Access" (The Rule)
+    │       │
+    │       └── Attached to: (Who gets it?)
+    │
+    ├── IAM Group: "Developers" (The Collection)
+    │       ├── Vishal (User) → Gets S3 Full Access
+    │       └── Priya (User)  → Gets S3 Full Access
+    │
+    └── IAM User: "Rahul" (Individual)
+                → Gets S3 Full Access (Directly)
