@@ -12,3 +12,8 @@ resource "aws_iam_user" "developer" {
 resource "aws_iam_group" "developers" {
     name = var.group_name
 }
+
+# IAM Policy
+resource "aws_iam_policy" "developers_policy" {
+  
+}
