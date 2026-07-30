@@ -15,5 +15,24 @@ resource "aws_iam_group" "developers" {
 
 # IAM Policy
 resource "aws_iam_policy" "developers_policy" {
-  
+    name        = var.policy_name
+    description = "Policy for developers group"
+    policy      = jsonencode({
+        Version = "2012-10-17"
+        Statement = [
+            {
+                Action   = [
+                    "s3:ListBucket",
+                    "s3:GetObject",
+                    "s3:PutObject"
+                ]
+                Effect   = "Allow"
+                Resource = [
+                    aws_s3_bucket.demo.arn,
+                    "${aws_s3_bucket.demo.arn}/*"
+                ]
+            }
+        ]
+    })
 }
+
