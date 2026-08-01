@@ -176,3 +176,38 @@ Simple Visual:
     │
     └── IAM User: "Rahul" (Individual)
                 → Gets S3 Full Access (Directly)
+
+## If i give you areal life example. 
+  Imagine you are as a DevOps ENgineer of your comapany XYZ.
+   And your Company has:
+   10 Developers 
+   Should you give every developer  right to become a admin.
+   Answer is NO.
+  Instead of , You create a policy like:
+
+  Developers policy:
+   -> Read S3
+   -> Read cloudwatch
+   -> Connect to Ec2
+   
+   And the policy or permission is given to Developers is:
+
+   Delete VPC
+   Delets RDS
+   Create IAM Users
+
+ Then We attach this policy to the developer group that we had created.
+ So that each developers automatically gets those permission.
+
+
+              AWS Flow
+               IAM User
+                  │
+                  ▼
+               IAM Group
+                  │
+                  ▼
+               IAM Policy
+                  │
+                  ▼
+              AWS Resources 
