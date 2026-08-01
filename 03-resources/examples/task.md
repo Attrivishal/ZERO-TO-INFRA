@@ -211,3 +211,10 @@ Simple Visual:
                   │
                   ▼
               AWS Resources 
+
+## some common Optional  arguments for policy when we are making
+ Like:
+1. name
+2. description
+3. path
+4. tags
