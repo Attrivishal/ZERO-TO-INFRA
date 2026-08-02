@@ -218,3 +218,9 @@ Simple Visual:
 2. description
 3. path
 4. tags
+
+## what comes under Policy:
+  
+ what action we are going to take?
+Where we taking this action on which resources?
+do we allow or deny the action?(Effect)
