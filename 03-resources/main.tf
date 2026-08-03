@@ -16,13 +16,14 @@ resource "aws_iam_group" "developers" {
 # IAM Policy
 resource "aws_iam_policy" "developers_policy" {
   name        = var.policy_name
+
   description = "Policy for developers group"
   policy = jsonecode({
     version = "2012-10-17"
+
     statement = [
       {
         Effect = "Allow"
-
         Action = [
           "s3:GetObject",
           "s3:ListBucket"
