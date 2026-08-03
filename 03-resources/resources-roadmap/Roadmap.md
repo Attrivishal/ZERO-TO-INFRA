@@ -9,7 +9,7 @@ Learn Terraform syntax, simple resource blocks, variables, references, and core 
 - [x] S3 Bucket
 - [x] IAM User
 - [x] IAM Group
-- [] IAM Policy
+- [x] IAM Policy
 - [ ] IAM User Group Membership
 - [ ] IAM Role
 - [ ] IAM Instance Profile
