@@ -18,10 +18,10 @@ resource "aws_iam_policy" "developers_policy" {
   name        = var.policy_name
 
   description = "Policy for developers group"
-  policy = jsonecode({
-    version = "2012-10-17"
+  policy = jsonencode({
+    Version = "2012-10-17"
 
-    statement = [
+    Statement = [
       {
         Effect = "Allow"
         Action = [
@@ -34,4 +34,27 @@ resource "aws_iam_policy" "developers_policy" {
     ]
   })
 }
+
+# More policy for practice 
+
+resource "aws_iam_policy" "developer_policy" {
+  name = var.policy_name
+  description = "Policy for developer user"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "s3:GetObject",
+          "s3:ListBucket"
+        ]
+        Resource = "arn:aws:s3:::company-bucket/*"
+      }
+    ]
+  })
+}
+
 
