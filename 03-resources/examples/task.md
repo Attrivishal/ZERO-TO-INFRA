@@ -224,3 +224,8 @@ Simple Visual:
  what action we are going to take?
 Where we taking this action on which resources?
 do we allow or deny the action?(Effect)
+
+Policy needs version and statement. under it 
+
+Statement is a list [].and one statement is one permission rule.
+
