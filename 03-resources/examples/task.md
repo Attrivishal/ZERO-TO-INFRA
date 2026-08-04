@@ -229,3 +229,11 @@ Policy needs version and statement. under it
 
 Statement is a list [].and one statement is one permission rule.
 
+
+## Why is Statement a List?
+  
+  Statement is a list becasue one IAM policy can contanin multiple persmission rules(Statements). Each statement is an independent rule
+
+## Why is Action a List?
+  
+  
