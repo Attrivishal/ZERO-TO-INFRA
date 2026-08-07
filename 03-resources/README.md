@@ -175,4 +175,3 @@ Testing is the most critical step. Once your code is written, use the CLI comman
    -> verify in AWS console.
    -> Improve the code using (variables,tags,outputs,etc).
 
-  
