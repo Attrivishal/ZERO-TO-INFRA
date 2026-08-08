@@ -234,6 +234,8 @@ Statement is a list [].and one statement is one permission rule.
   
   Statement is a list becasue one IAM policy can contanin multiple persmission rules(Statements). Each statement is an independent rule
 
-## Why is Action a List?
+
+## Now, What is IAM User Group Membership 
+
   
   
