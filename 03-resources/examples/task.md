@@ -237,5 +237,81 @@ Statement is a list [].and one statement is one permission rule.
 
 ## Now, What is IAM User Group Membership 
 
+  first understand what we did till now:- 
+
+   we currently have two independednt resources:
+    IAM USER
+    |-- vishal-attri
+
+    IAM GROUp
+    |--Developers
+
+  But AWS doesn't know automatically that this user belongs to this group.
+    We want:
+
+     Developers
+     |-- vishal-attri
+   
+  Like this, So this represents the relationship between the two.
+
+  And this an important concept of terraform :
+    some Terraform resources creates things, While others manages relationship between things.
   
-  
+  The Terraform resources which we are looking for?
+   hcl 
+   aws_iam_group_membership 
+
+   so the basic structure is:
+    resource "aws_iam_group_membership" "developers_membership"{
+
+    }
+
+    remember that here we are not creating another user and group we're just creating a membership relationship.
+
+    What does it need to create?
+    so, Terraform need two things.
+    Wich group? we are working on.
+     developers
+    Which users? who is the user?
+    vishal
+
+    So here where our previous leanring becomes usefull, 
+     previoulsy when we create the resouces for IAM users and for IAM group
+
+     resource "aws_iam_user" "developers" {
+      name = var.user_name
+     }
+
+     resource "aws_iam_group" "debelopers"{
+      name = var.group_name
+     }
+
+  so we don't have to write this again, terraform can reference the existing resources.
+
+  -> aws_iam_user.developers.name
+     it means to: vishal-attri
+  -> aws_iam_group.developers.name
+     it means to: developers
+
+  One new important thing: 
+    user is a list 
+  A group can contain:
+    1 user
+      or 
+    100 users 
+  Therefore, the membership resource expects a list of users.
+ 
+ Even we have only a one user:
+  it still takeit as a list
+    Users
+    |- vishal
+List:
+  hcl 
+  [
+    "vishal-attri"
+  ]
+
+  so our resources will have something like this:
+  uses = [
+    aws_iam_users.developer.name
+  ]
