@@ -315,3 +315,27 @@ List:
   uses = [
     aws_iam_users.developer.name
   ]
+
+Now think about the group:- 
+  Group itself is just one group:
+   developers
+   hcl
+   group = aws_iam_group.developer.name
+So the relationship becomes:
+      developers
+         |
+      membership
+         |
+        vishal
+
+So the complete resoruce is lool like this:
+
+hcl
+resource "aws_iam_group_membership" "developer_membership"{
+  name = "developer-membership"
+  group = aws_iam_group.developer.name
+
+  user = [
+    aws_iam_user.developer.name
+  ]
+}
