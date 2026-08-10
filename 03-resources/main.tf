@@ -15,7 +15,7 @@ resource "aws_iam_group" "developers" {
 
 # IAM Policy
 resource "aws_iam_policy" "developers_policy" {
-  name        = var.policy_name
+  name = var.policy_name
 
   description = "Policy for developers group"
   policy = jsonencode({
@@ -38,7 +38,7 @@ resource "aws_iam_policy" "developers_policy" {
 # More policy for practice 
 
 resource "aws_iam_policy" "developer_policy" {
-  name = var.policy_name
+  name        = var.policy_name
   description = "Policy for developer user"
 
   policy = jsonencode({
@@ -57,4 +57,13 @@ resource "aws_iam_policy" "developer_policy" {
   })
 }
 
+
+resource "aws_iam_group_membership" "developers_membership" {
+  name  = "developers-membership"
+  group = aws_iam_group.developers.name
+
+  users = [
+    aws_iam_user.developer.name
+  ]
+}
 
