@@ -413,3 +413,8 @@ resource "aws_iam_group_membership" "developer_membership"{
   ]
 }
 ```
+
+## Why do wee need a seperate resource?
+ Why can't i just put the USER inside aws_iam_group?
+
+Because AWS treats these as seperate concept.
