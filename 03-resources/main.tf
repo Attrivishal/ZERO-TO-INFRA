@@ -5,12 +5,14 @@ resource "aws_s3_bucket" "demo" {
 
 # IAM user
 resource "aws_iam_user" "developer" {
-  name = var.user_name
+  count = length(var.user_name)
+  name  = var.user_name[count.index]
 }
 
 # IAM Group
 resource "aws_iam_group" "developers" {
-  name = var.group_name
+  count = length(var.group_name)
+  name  = var.group_name[count.index]
 }
 
 # IAM Policy
@@ -57,13 +59,14 @@ resource "aws_iam_policy" "developer_policy" {
   })
 }
 
+#Membership of users in group
+# "[*] returns ALL users from a resource, so every group gets the same list of users—to assign different users, use a map that defines which users belong to which group."
 
 resource "aws_iam_group_membership" "developers_membership" {
+  count = length(var.group_name)
   name  = "developers-membership"
-  group = aws_iam_group.developers.name
+  group = aws_iam_group.developers[count.index].name
 
-  users = [
-    aws_iam_user.developer.name
-  ]
+  users = aws_iam_user.developer[*].name
+
 }
-
