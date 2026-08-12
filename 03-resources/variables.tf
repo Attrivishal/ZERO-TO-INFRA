@@ -10,12 +10,12 @@ variable "bucket_name" {
 
 variable "user_name" {
   description = "IAM user name"
-  type        = string
+  type        = list(string)
 }
 
 variable "group_name" {
   description = "IAM group name"
-  type        = string
+  type        = list(string)
 }
 
 variable "policy_name" {
