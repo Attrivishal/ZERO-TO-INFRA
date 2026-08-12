@@ -418,3 +418,41 @@ resource "aws_iam_group_membership" "developer_membership"{
  Why can't i just put the USER inside aws_iam_group?
 
 Because AWS treats these as seperate concept.
+For example:
+ EC2 -- Security Group 
+ User -- Group
+ Route Table -- Subnet 
+ Policy -- Group
+
+## And you might thinking that how to create multiple user for and how to use them in a code. 
+
+First, that we can create a multiple users by write the values in the tf.vars file without hardcoding in the main file. here we are creating multiple user so as we study that whenever we are creating more than 1 user we always use list so that that multiple users can comes under that list. how we are going to create this 
+
+like: 
+user_name = [
+     "vishal-attri",
+     "khushboo"
+]
+
+likewise we are creating multiple users 
+yes but there is one thing here you Run a terraform plan command the will not execute for this part. why because we only create a list in tf.vars file and previously are just using 1 user so  we wrote string in our variable.tf file that's why we need to change only string to list(string). and 
+
+Okay you think this will working fine. but this is not. Why? anyone can explain me?  
+
+okay fine let me explain you in easy way. Have you see we are using list of users and Also did some changes in the variable.tf file. so now the variable for username  we are using in our maint.tf file is also think there is only one user in the  no need do anything it can fetch automatically, But right we are using list of users, and you know how to access the list values by using inders value. so we need to do some changes in main.tf file also See like in this way 
+ 
+previously we in this way direct way to fetch user not with list 
+resource "aws_iam_user" "developers"{
+     name = var.user_name
+}
+
+
+resource "aws_iam_user" "developer"{
+      name = var.user_name[1]
+}
+
+
+now if you run the terraform plan command it will give you the second user that is listed in the configuration. 
+
+like wise we can sue multiple user in the terraform
+
