@@ -10,7 +10,7 @@ Learn Terraform syntax, simple resource blocks, variables, references, and core 
 - [x] IAM User
 - [x] IAM Group
 - [x] IAM Policy
-- [ ] IAM User Group Membership
+- [x] IAM User Group Membership
 - [ ] IAM Role
 - [ ] IAM Instance Profile
 
