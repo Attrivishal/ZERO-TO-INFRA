@@ -35,3 +35,45 @@ The important thing about a role is that is not permanentely associated with one
 
 For example: imagine we have a lambda function that needs to upload images to an s3 bucket.
 
+We have two otpions here to do this. 
+1. We can put the AWS keys inside the Lambda Function.
+2. We can give Lambda permission to assume an IAM role.
+
+But, we use @2nd Option. Instead of giving AWS keys inside lambda function. we give permission to lambda to assume IAM role.
+
+                    Lambda Function
+                          |
+                    Assume IAM role
+                          | 
+                    S3 permissions
+                          |
+                    S3 Bucket
+
+This allow lambda to access AWS resources without storing long term credentials isnide the application.
+
+Now there is a valid question that can come in your mind. And it is very important concept you all shoud know this.
+
+ I said that we don't need to give the AWS keys in lambda function, we can give the permission to lambda for assuming it's IAM role. 
+
+--> But do you think How is this happen, how lambda assume it role directly?
+ Here is the truth:
+ The answer is that Lambda doesn't  assume the role by itself AWS does it for us Automatically
+
+ SO basically we don't write the code to assume the role. AWS does it for you automatically when the lambda function starts.
+
+
+ ## WHy Do we need IAM Roles?
+
+ IAM Roles are mainly used to provides secure and temporary access to AWS resources. 
+
+ Suppose An Ec2 instance wants to read a files frim s3.
+
+ One apporach would be that we can store AWS access keys and secret acces keys inside the ec2 server But this is not a good aproach or practice because those credentials are store fo long time and could be  exposed to anyn one. 
+
+what we do in this case. we created AN IAM role:
+
+EC2
+|
+IAM Role
+|
+S3 read Permission 
