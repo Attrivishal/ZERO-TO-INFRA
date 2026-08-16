@@ -77,3 +77,22 @@ EC2
 IAM Role
 |
 S3 read Permission 
+
+So, Here Ec2 assumesthe role and gets temporay security credentials.
+And this far safer approach from the 1st one. because we do not store the credentials for long time inside any server or application.
+
+## IAM User And IAM Role?
+Both User And IAM comes under IAM identites, But they are used differently.
+
+  IAM User                                               IAM Role
+1. Usually represnts a person or long term identity.   1. Providers permission that can be temporarily assumed
+2. Commonly used for humans acces.                     2. Used for Acces AWS resources
+3. Can have long term credentials                      3. uses temporary credentials when assumed
+4. Example: Developer                                  4. Example: Lambda Execution role
+
+IAM User = Represent the identity
+IAM Role = Provides an identity that another trusted entity can temporarily assume. 
+
+
+## How Does an IAM role Work?
+
