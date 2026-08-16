@@ -31,3 +31,7 @@ IAM Role
 An IAM role is an AWS identity that provides a specific set of permission to a person, application, or aws service.
 
 The important thing about a role is that is not permanentely associated with one person like IAM User.
+
+
+For example: imagine we have a lambda function that needs to upload images to an s3 bucket.
+
