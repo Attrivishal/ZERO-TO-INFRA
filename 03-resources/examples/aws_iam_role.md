@@ -96,3 +96,138 @@ IAM Role = Provides an identity that another trusted entity can temporarily assu
 
 ## How Does an IAM role Work?
 
+An IAM role has two important concepts:
+1. Trust policy      : Who?
+2. Permission Policy : What?
+
+
+                 IAM ROLE
+                    │
+          ┌─────────┴─────────┐
+          │                   │
+          ▼                   ▼
+     Trust Policy       Permission Policy
+          │                   │
+       "WHO?"              "WHAT?"
+          │                   │
+          ▼                   ▼
+ Who can assume it?     What can they do?
+
+ ## Trust policy 
+
+ A trust policy  defines [WHO or WHAT] is alllowed to assume the IAM role.
+  Means for which resouces we are making this policy.
+
+The technical term for this is the trusted principal.
+
+For example: if we want lambda to use a role. the trust policy can specify lambda as a tusted principal. 
+
+Trust policy
+
+Who can assume this Role?
+            |
+            Lambda
+
+## Permssion Policy
+
+A permission policy defines what action the role is allowed or denied perform. 
+
+Suppose we are taling the same example:  
+A Lambda want to read the files in S3 Bucket. And we  lambda to use a role. so what permission lambda should be given to perform on s3 bucket.
+
+The permission Policy Could be: 
+  s3:GetObject
+  s3:PutObject
+
+This means:
+  What Role can do is?
+   - Read s3 bucket.
+   - Upload files in s3 bucket.
+
+## Trust Policy Vs Permission Policy.
+
+ Trust Policy      : Who can assume this role?
+
+ Permission Policy : What action is allowed to a role after it assumed. 
+
+ ## Example: Lambda Uploading Images to s3.
+Let's use a practical example:
+suppose we have 
+ user
+ |
+ Upload Images
+ |
+ Lambda function 
+ |
+ S3 Bucket
+
+ The lambda need function to upload an images to s3
+
+ we create: 
+
+ IAM Role
+ |-- Trust Policy
+ |      |-- Lambda can Assume the role
+ |-- Permission Polciy 
+        |-- Lambda can upload objects to s3
+
+The complete Flow: 
+Lambda Function
+       │
+       │ AssumeRole
+       ▼
+Trust Policy
+       │
+       │ Lambda is trusted
+       ▼
+Temporary Credentials
+       │
+       ▼
+Permission Policy
+       │
+       │ s3:PutObject
+       ▼
+S3 Bucket
+   
+Guys, I know it can be  complex. 
+
+Let's see one more example with the full flow.
+
+Suppose I want that EC2 instance needs to talk to Lambda function.
+
+IAM Role
+|-- Trust policy 
+|     |-- Ec2 can assume the role
+|-- Permission Policy
+      |-- ec2 can talks with lambda function
+
+The complete flow:
+
+EC2 Instance
+       │
+       │ (1) "I need to invoke a Lambda function"
+       ▼
+AssumeRole
+       │
+       │ (2) "Can EC2 assume this role?"
+       ▼
+Trust Policy (EC2)
+       │
+       │ (3) "Yes, EC2 is trusted."
+       ▼
+Temporary Credentials
+       │
+       │ (4) "Here are your temporary keys."
+       ▼
+Permission Policy (Lambda)
+       │
+       │ (5) "You have lambda:InvokeFunction permission."
+       ▼
+Lambda Function
+       │
+       │ (6) "Lambda invoked successfully!"
+
+ 
+ See these example very carefully and try to understand. 
+
+ 
