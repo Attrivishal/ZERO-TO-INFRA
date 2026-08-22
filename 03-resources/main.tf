@@ -71,3 +71,4 @@ resource "aws_iam_group_membership" "developers_membership" {
   users = aws_iam_user.developer[*].name
 
 }
+ 
