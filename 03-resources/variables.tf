@@ -22,3 +22,4 @@ variable "policy_name" {
   description = "IAM policy name"
   type        = string
 }
+
