@@ -58,13 +58,36 @@ resource "aws_iam_policy" "developers_policy" {
 #   })
 # }
 
+
+#IAM Role
+resource "aws_iam_role" "developer_role" {
+  name = "developer-s3-role"
+
+## Trust Policy for the role, which allows AWS Lambda service to assume this role. This is necessary for the Lambda function to access AWS resources on behalf of the user.
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+
+    Statement = [
+      {
+        Effects = "Allow"
+
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        }
+
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
 #Membership of users in group
 # "[*] returns ALL users from a resource, so every group gets the same list of users—to assign different users, use a map that defines which users belong to which group."
 
 resource "aws_iam_group_membership" "developers_membership" {
   count = length(var.group_name)
 
-  name  = "${aws_iam_group.developers[count.index].name}-membership"
+  name = "${aws_iam_group.developers[count.index].name}-membership"
   # "${aws_iam_group.developers[count.index].name}-membership" we use this to create a unique name for each group membership resource based on the group name.
   group = aws_iam_group.developers[count.index].name
 
