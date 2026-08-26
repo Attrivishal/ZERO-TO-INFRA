@@ -492,4 +492,5 @@ When working with IAM Roles, always follow these rules:
 4. **Use unique names**: Do not give generic names to roles, make sure the name clearly explains what the role does.
 
 
-
+## STS -> 
+  AWS Security Token Service(STS).
