@@ -63,13 +63,13 @@ resource "aws_iam_policy" "developers_policy" {
 resource "aws_iam_role" "developer_role" {
   name = "developer-s3-role"
 
-## Trust Policy for the role, which allows AWS Lambda service to assume this role. This is necessary for the Lambda function to access AWS resources on behalf of the user.
+  ## Trust Policy for the role, which allows AWS Lambda service to assume this role. This is necessary for the Lambda function to access AWS resources on behalf of the user.
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
 
     Statement = [
       {
-        Effects = "Allow"
+        Effect = "Allow"
 
         Principal = {
           Service = "lambda.amazonaws.com"
@@ -79,6 +79,37 @@ resource "aws_iam_role" "developer_role" {
       }
     ]
   })
+}
+
+## Permission policy for the role. which grants the role permission to access s3 bucket.
+
+resource "aws_iam_policy" "developers_s3_policy" {
+  name        = "developers-s3-policy"
+  description = "Policy for developers group to access S3 bucket"
+
+  policy = jsonencode({
+    version = "2012-10-17"
+
+    statement = [
+      {
+        Effect = "Allow"
+
+        Action = [
+          "s3:GetObject",
+          "s3:ListBucket"
+        ]
+
+        Resource = "${aws_s3_bucket.demo.arn}/*"
+      }
+    ]
+  })
+}
+
+# In this we are going to Attach the policy to the role
+#ARN- The Amazon Resource Name (ARN) is a unique identifier for AWS resources. In this case, we are using the ARN of the IAM policy to attach it to the IAM role.
+resource "aws_iam_role_policy_attachment" "developer_s3_policy_attachment" {
+  role       = aws_iam_role.developer_role.name
+  policy_arn = aws_iam_policy.developers_s3_policy.arn
 }
 
 #Membership of users in group
@@ -94,7 +125,7 @@ resource "aws_iam_group_membership" "developers_membership" {
   users = aws_iam_user.developer[*].name
 
 }
- 
+
 
 
  
