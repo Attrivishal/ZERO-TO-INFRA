@@ -1,1 +1,4 @@
-IAM Instance Profile
+## IAM Instance Profile
+
+1. What is an IAM Instance Profile?
+An IAM Instance Profile is a container that allows an EC2 instance to use an IAM Role.
