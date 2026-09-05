@@ -35,4 +35,44 @@ Actually this allow ec2 store temporary credential and avoid storing aws crenden
   Allows:
     Ec2 to use that IAM Role. 
  
- 
+So Always remember:
+
+IAM Role
+    |
+Identity + permissions
+
+Instance Profile
+    |
+Connects the Role to EC2
+
+
+## Suppose EC2 needs to read files from s3: 
+
+ EC2
+ |
+ instance profile
+ |
+ EC2-s3-role
+ |
+ Permission policy
+ |
+ s3:GetObject
+ |
+ se Bucket
+
+ This is how our data flows.
+
+ The role might have: 
+  Trust Policy:
+   EC2 can assume this role
+
+  Permission policy: 
+  S3:GetObject is allowed. 
+
+
+## Now we How do we write Instance profile in Terraform?
+ Terraform Resource 
+  resouces "aws_iam_instance_profile" "developer_profile" {
+    name = "developer-instance-profile"
+    role = aws_iam_role.developer_role.name
+  }
