@@ -1,7 +1,38 @@
 ## IAM Instance Profile
 
 1. What is an IAM Instance Profile?
+
 An IAM Instance Profile is a container that allows an EC2 instance to use an IAM Role.
 
+I know you guyzz are thinking that Why IAM Instance profile allow Ec2 to use An IAM role. Because Ec2 Instance Can not use Iam role directly. The instance 
+profile is the connector that allows the role to be attached to the instance. 
 
+EC2
+|
+Instance Profile
+|
+IAM Role
+|
+Permissions
 
+## Why do we need it?
+ Suppose an Ec2 instance needs to access an s3 bucket.
+
+ Instead of storing Aws keys inside ec2. 
+  like-> ec2 -> access keys -> s3 bucket.
+I use Instance profile, because it attached IAM role with Ec2
+  like-> ec2 -> instance profile -> IAM role -> s3 bucket
+
+Actually this allow ec2 store temporary credential and avoid storing aws crendentials  long term on server.
+
+## Instance Profile vs IAM Role 
+  IAM ROle 
+    Defines: 
+      1. Trust policy -> Who can asssume role?
+      2. Permissions -> What role can do?
+  
+  Instance Profile
+  Allows:
+    Ec2 to use that IAM Role. 
+ 
+ 
