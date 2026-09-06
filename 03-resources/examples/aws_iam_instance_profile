@@ -76,3 +76,14 @@ Connects the Role to EC2
     name = "developer-instance-profile"
     role = aws_iam_role.developer_role.name
   }
+
+## The most important argument in this Instance-Profile.
+ name
+ The name of the instance profile.
+ name = "developer-instance-profile."
+
+ role 
+ Specify the IAM role associated with the instance profile. 
+ role = aws.iam_role.developer_role.name
+
+ I want you to notice one  thing here. that we are using Terraform resource reference instead of hardcoding the Role name.
