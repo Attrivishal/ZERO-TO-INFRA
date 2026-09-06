@@ -12,7 +12,7 @@ Learn Terraform syntax, simple resource blocks, variables, references, and core 
 - [x] IAM Policy
 - [x] IAM User Group Membership
 - [x] IAM Role
-- [ ] IAM Instance Profile
+- [x] IAM Instance Profile
 
 **Goal:** Learn resource blocks, variables, references, and basic IAM concepts.
 
