@@ -20,3 +20,4 @@ crash.*.log
 # Exception: Allow checking in tfvars in specific learning directories if needed
 # (For learning, we keep terraform.tfvars files benign and can track them if necessary, 
 # but ignoring them by default is the professional standard.)
+.vscode/
