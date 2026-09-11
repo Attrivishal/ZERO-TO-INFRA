@@ -1,4 +1,4 @@
-# Now we write our  real resource in this file.
+# Now we write our real resource in this file.
 resource "aws_s3_bucket" "demo" {
   bucket = var.bucket_name
 }
@@ -17,9 +17,9 @@ resource "aws_iam_group" "developers" {
 
 # IAM Policy
 resource "aws_iam_policy" "developers_policy" {
-  name = var.policy_name
-
+  name        = var.policy_name
   description = "Policy for developers group"
+
   policy = jsonencode({
     Version = "2012-10-17"
 
@@ -59,7 +59,7 @@ resource "aws_iam_policy" "developers_policy" {
 # }
 
 
-#IAM Role
+# IAM Role (for Lambda)
 resource "aws_iam_role" "developer_role" {
   name = "developer-s3-role"
 
@@ -81,16 +81,15 @@ resource "aws_iam_role" "developer_role" {
   })
 }
 
-## Permission policy for the role. which grants the role permission to access s3 bucket.
-
+## Permission policy for the role, which grants the role permission to access s3 bucket.
 resource "aws_iam_policy" "developers_s3_policy" {
   name        = "developers-s3-policy"
   description = "Policy for developers group to access S3 bucket"
 
   policy = jsonencode({
-    version = "2012-10-17"
+    Version = "2012-10-17"
 
-    statement = [
+    Statement = [
       {
         Effect = "Allow"
 
@@ -106,15 +105,14 @@ resource "aws_iam_policy" "developers_s3_policy" {
 }
 
 # In this we are going to Attach the policy to the role
-#ARN- The Amazon Resource Name (ARN) is a unique identifier for AWS resources. In this case, we are using the ARN of the IAM policy to attach it to the IAM role.
+# ARN - The Amazon Resource Name (ARN) is a unique identifier for AWS resources. In this case, we are using the ARN of the IAM policy to attach it to the IAM role.
 resource "aws_iam_role_policy_attachment" "developer_s3_policy_attachment" {
   role       = aws_iam_role.developer_role.name
   policy_arn = aws_iam_policy.developers_s3_policy.arn
 }
 
-#Membership of users in group
+# Membership of users in group
 # "[*] returns ALL users from a resource, so every group gets the same list of users—to assign different users, use a map that defines which users belong to which group."
-
 resource "aws_iam_group_membership" "developers_membership" {
   count = length(var.group_name)
 
@@ -123,9 +121,38 @@ resource "aws_iam_group_membership" "developers_membership" {
   group = aws_iam_group.developers[count.index].name
 
   users = aws_iam_user.developer[*].name
-
 }
 
+## IAM Role for EC2 instance.
+resource "aws_iam_role" "developer_ec2_role" {
+  name = "developer-role"
 
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
 
- 
+    Statement = [
+      {
+        Effect = "Allow"
+
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+## Instance profile for the role.
+resource "aws_iam_instance_profile" "developer_profile" {
+  name = "developer-profile"
+  role = aws_iam_role.developer_ec2_role.name
+}
+
+## Creation of ec2 instance
+resource "aws_instance" "developer_instance" {
+  ami                  = "ami-0c55b159cbfafe1d0"
+  instance_type        = "t2.micro"
+  iam_instance_profile = aws_iam_instance_profile.developer_profile.name
+}
