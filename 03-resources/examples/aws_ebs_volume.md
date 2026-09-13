@@ -5,7 +5,7 @@
 ## 1. What is Amazon EBS?
     Amazon EBS (Elastic Block store) is a block-level storage service designed for use with Amazon EC2 instances.
 
-    In Simple terms we can say that, EBS volumes behave like a virtual hard disk that we can attach with our EC2 instance. It provides persistent storage that remians available if the instance is stopped or terminated. 
+    In Simple terms we can say that, EBS volumes behave like a virtual hard disk that we can attach with our EC2 instance. It provides persistent storage that remians available if the instance is stopped. 
 
     For Example: 
 
@@ -21,7 +21,7 @@
     2. EBS Volume - Provides persistent storGE (disk)
 
      You can tell  anyone in one line :-
-        "EBS is a virtual hard disk for EC2 - it provided persistent storage that survives instance restarts."
+        "EBS is AWS block storage that works like a virtual hard disk for EC2 and provides persistent storage."
 
 
 
@@ -42,8 +42,8 @@
      EC2 = Handles Compute
      EBS = Storage.
 
-     This is why seperation allows stoarge to be managed independently from 
-
+     This is why seperation allows stoarge to be managed independently from compute.  
+    
 ## 3. How EBS works
 
 ## 4. Important concepts
