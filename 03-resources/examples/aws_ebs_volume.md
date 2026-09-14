@@ -187,17 +187,17 @@ EBS Volume
 |
 AWS Storage Infrastructure
 
- This gives us  three layers.
-  Layer 1- AWS infrastructure
+This gives us three layers.
+Layer 1- AWS infrastructure
 
       EBS Volume
          |
-    Attachement 
+    Attachement
          |
         EC2
 
-  Layer 2- Operating system
-       
+Layer 2- Operating system
+
        Block Device
            |
      Partition (if used)
@@ -206,21 +206,92 @@ AWS Storage Infrastructure
            |
        Mount Point
 
-  Layer 3- Application
-        
+Layer 3- Application
+
         Application
             |
           Files
             |
            Data
-    So, 
+    So,
 
        AWS
         |
         OS
-        | 
+        |
     Application
-  Each layer has a different responsibility.
+
+And Each layer has a different responsibility.
+
+EBS Lifecyle -
+
+1.  What Happens When EC2 is Stopped?
+
+    If the EC2 is stopped for any reasons, then in this case RAM & CPU will stops compute. EBS Volume and its Data remain intact or we can say Data is still available.
+
+        Before Stop:
+          EC2 (Running)
+          |-- CPU : Active
+          |-- RAM : Active
+          |
+           -- EBS Volume(attached)
+                 |
+                  -- Data : Stored
+
+          After Stop:
+         EC2 (Running)
+          |-- CPU : Inactive
+          |-- RAM : Cleared
+          |
+           -- EBS Volume(Still attached)
+                 |
+                  -- Data : Stored
+
+2.  What happens when EC2 is terminated?
+
+    So, Basically this is very important to understand this.
+    If the Ec2 is Terminated. The EC2 instance is deleted forever. What happens to EBS is actually depends on the configurations.
+
+    There is a critical setting on deletion named "DeleteOnTermination"
+
+    If DeleteOnTermination = true In this case EBS volume is deleted with the instance.
+    if DeleteOnTermination = false In this case EBS volume will not delete or terminate.
+
+    So it all depends on this small but important configuration.
+
+    Let me show you with the Flow:
+
+        EC2 Terminated
+            |
+            |-- If  DeleteOnTermination = true
+            |           |
+            |            -- EBS Volume -> DELETED
+            |-- If  DeleteOnTermination = false
+            |           |
+                         -- EBS Volume -> REMAINS
+
+        "-------GOLDEN RULE-------"
+           Don't Memorize "EC2 terminated = EBS deleted"
+           Not always, as we seen about configuration.
+
+           ALWAYS DO - "I NEED TO CHECK THE VOLUME'S DELETION CONFIGURATION"
+3.  What Happens If the EBS Volume Itself is Deleted?
+   
+    If the EBS volume is destroyed, the data on that volume is gone forever (unless you have a snapshot).
+
+    Snapshot = A copy or we can say the backup of that data which is present in the volume.
+
+                EC2 Instance
+                    │
+                 EBS Volume
+                    │
+                     --- Important Application Data
+                            │
+                            │ (Volume Deleted) 
+                       Data → GONE 
+
+   
+
 ## 4. Imprtant concepts
 
 ## 5. EBS vs EC2
