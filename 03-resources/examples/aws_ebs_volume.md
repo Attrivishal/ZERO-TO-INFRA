@@ -296,10 +296,25 @@ EBS Lifecyle -
     
 In this we do not need to memorize every AWS details. Just to understnand the concepts that affect architecture, performance, cost, reliabilty and terraform decissions. 
 
+4.1 EBS Volume
+    
+ An EBS Volume is a actuall Block storage resource.
 
+Think:
 
+     EBS Volume
+      |-- Size
+      |-- Volume type
+      |-- Performance
+      |-- Availabilty Zone
 
-
+For example:
+   
+     Volume
+     |-- 20 GiB
+     |-- gp3
+     |-- us-east-1a
+     |-- Encrypted
 
 
 ## 5. EBS vs EC2
