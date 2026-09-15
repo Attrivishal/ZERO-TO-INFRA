@@ -293,6 +293,14 @@ EBS Lifecyle -
    
 
 ## 4. Imprtant concepts
+    
+In this we do not need to memorize every AWS details. Just to understnand the concepts that affect architecture, performance, cost, reliabilty and terraform decissions. 
+
+
+
+
+
+
 
 ## 5. EBS vs EC2
 
