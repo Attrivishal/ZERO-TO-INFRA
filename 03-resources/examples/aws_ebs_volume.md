@@ -299,6 +299,15 @@ In this we do not need to memorize every AWS details. Just to understnand the co
 4.1 EBS Volume
     
  An EBS Volume is a actuall Block storage resource.
+ 
+ The 5 Things Evey EBS Volume has: 
+
+    Size              How much stoarge         20GiB
+    Volume Type       How fast it is           gp3,io2,st1
+    Performance       IOPS and throughput      3,0000 OPS, 125 MB/s
+    Encryption        Is data encrypted?       Yes/No
+    Availabilty Zone  Where it lives            us-east-1a,us-east-1b
+
 
 Think:
 
@@ -316,10 +325,11 @@ For example:
      |-- us-east-1a
      |-- Encrypted
 
+ 
 
 ## 5. EBS vs EC2
 
-## 6. Availability Zones
+## 6. Availability Zones 
 
 ## 7. EBS Volume Types
 
