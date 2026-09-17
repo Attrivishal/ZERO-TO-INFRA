@@ -328,12 +328,124 @@ For example:
 
 4.2 Volume size
     
-    Size detemines how much storage capacity the volume provides.
+ Size detemines how much storage capacity the volume provides.
 
+For example: 
+   
+    20 GiB
+    50 GiB
+    100 GiB
+    500 GiB
 
+ Guys listen here is one important take:
+  
+    size = How much data can i store?
 
+  That doesnt't direclty mean 
 
+    size = How fast is my disk? 
+  
+  So, Basically if the size of the disk is much like (500 GiB) then it does not mean  speed is also higher. Speed may be slower. 
 
+  So that's where the concept like IOPS and throuhput comes in the picture. 
+
+4.3 Volume Type
+  
+  The volume type determines the storage technology and performance characteristics.  
+
+   "Speed and purpose" how fast our storage works. 
+
+  SO lemme explain with the real life Analogy:
+   
+   Think of vehicles:
+
+     1. Sports cars = Fast, expensive (for racing)
+     2. Family car = Balanced , Affordable (for daily driving)
+     3. Truck      = Slow, Huge load capacity (for movong goods)
+
+   So like this only we have different EBS volumne type - different types for different needs. 
+
+   The main two categories:
+
+    
+    SSD(Solid state Drive) ->     Fast,expensive  ->  Databases and Operating systems
+    HDD(Hard Disk Drive)   ->     Slow, cheap     ->   Big data, archives, logs
+    
+ Now we are seeing the 6 types of volumes:
+ SSD Types (Fast):
+       
+      Type         Name(nickname)          Best For  
+      gp3          General Purpose         most workloads (3,000 IOPS and 125 MiB/s)
+      gp2          Older general purpose   Older worloads,(low cost workloads )
+      io2          High performance        Critical Databases(Oracle,SQL Server)
+      io1          Older High performance  Databases
+ HDD Types (Cheap & Big) :
+
+     Type          Name(nickanme)           Best For
+     st1           Throughput optimized     Big data, logs
+     sc1           Cold Storage             Archive, Infrequent access.
+
+GiB   = GibiByte
+MiB/s = Mebibyte per second
+
+If we need speed? 
+
+    Then, Use gp3 or io2 for critical databases. 
+
+If wee need cheap space?
+  
+    Then, Use st1 (throughput optimized HDD) for logs/big data, or sc1 for cold archives.
+
+This is how our volume types is - You need to understand them carefully. 
+Now,If someone says.
+ -> "Create a 100 GiB gp3 volume"
+  100 GiB -> Storage Space 
+  gp3     -> Volume type(General Purpose)
+
+4.4 IOPS
+
+IOPS Means: Input Output Per Second. 
+ 
+It represents that how many individual I/O operations storage can handle per second. 
+ 
+ Imagine an Application making a lots of small reads/writes operations -
+      
+       Application
+           |
+          Read
+           |
+          Write
+           |
+          Read
+           |
+          Write
+           |
+          Read
+           |
+          Write
+           |
+         Storage
+
+Here, is the most important concept -
+ 1. IOPS Measures - How many operations per seconds. Not how much data per second.
+ 2. IOPS Measures - Number of reads/writes per second. Not the size of each operation. 
+ 3. IOPS Measures - Tranasctions speed. Not the Throughput. 
+      
+      Transaction Speed means = Number of individual read/write request the storage can handle in one per seconds. 
+
+      Throughput means =  Measure the actual volume of data transeferred per second. 
+   
+
+ IOPS by  Volume Type:
+     
+     Volume Type     Baseline IOPS                Max IOPS
+        gp3              3000                      80,000
+        gp2              3 IOPS/GiB                16,000
+        io2              Provisioned               256,000
+        st1              N/A Throughput based      N/A
+        sc1              N/A Throughput based      N/A
+ 
+ 
 ## 5. EBS vs EC2
 
 ## 6. Availability Zones 
