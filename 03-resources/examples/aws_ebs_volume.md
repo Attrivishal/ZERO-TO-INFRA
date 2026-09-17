@@ -322,8 +322,8 @@ For example:
      Volume
      |-- 20 GiB
      |-- gp3
+     |-- 125 MB/s
      |-- us-east-1a
-     |-- Encrypted
 
  
 
