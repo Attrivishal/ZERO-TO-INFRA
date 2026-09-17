@@ -325,7 +325,12 @@ For example:
      |-- 125 MB/s
      |-- us-east-1a
 
- 
+
+4.2 Volume size
+    
+    Size detemines how much storage capacity the volume provides.
+
+
 
 
 
