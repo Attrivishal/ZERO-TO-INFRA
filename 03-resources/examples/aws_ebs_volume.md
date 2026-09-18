@@ -445,8 +445,114 @@ Here, is the most important concept -
         st1              N/A Throughput based      N/A
         sc1              N/A Throughput based      N/A
  
- 
+ 4.5 Througput 
+   Throuhput is about how much data can be transeffered per unit of time. 
+   
+
+    And Usually measured in: 
+
+         MiB/s
+
+
+4.6 Availability Zone
+  
+  Every EBS Volume belongs to a specefic Availiablity Zone. 
+
+  It means Every EBS volume belongs to a specific Availability Zone. We cannot access one EBS volume in a different zone. If I create an EBS in us-east-1a and want to access it in us-east-1b, it's not possible. I need to create another EBS volume in that particular zone.
+   
+    for example: 
+     |--   us-east-1a
+     |        |
+     |         -- EBS Volume
+     |
+     |-- us-east-1b
+     |       |
+     |        -- EBS Volume
+     |
+     |
+     |-- us-east-1c
+     |      |
+     |       -- EBS Volume
+
+  An AWS volume is not a regional resource that can freely move between all AZ's 
+
+   This creates an important design relationship
+     
+     EC2
+      |
+      |
+       -- EBS
+           |
+           |
+            -- SAME AZ 
+
+  Suppose if you launch EC2 in a us-east-1c, You need to new choose your EBS volume for that EC2 instance in the same AZ in which you have your EC2 launced.
+
+4.7 Persistence
+  Persistence means the EBS volume exists independently from the EC2 instance's running state. 
+
+  Lemme explain you in a simple Analogy:
+
+    Think i have my laptop and an external hard drive:
+    -> My laptop = EC2 instance 
+    -> External hard drive = EBS Volume
+
+    If i Turn off my laptop (stop EC2),the external hard drive still exists  with all the data.
+
+    if i throw my laptop (terminate EC2), the external hard drive still may exists - but i need to check if it's set away thrown away too. 
+
+Okay this below is the simple defination - Please read this also.
+
+      "Persistence means our data will remain present in the EBS volume whether the EC2 instance is stopped or running—the EBS volume data will stay there. But in the case of EC2 termination, the data may be deleted if DeleteOnTermination is true. Otherwise not."
+
+      DeleteOnTermination = True -> EBS data loss
+       
+      DeleteOnTermination = Falso -> EBS data remains. 
+      
+      "Persistence = Data stays when EC2 is stopped or running. On termination, check DeleteOnTermination—if true, data is deleted; if false, it stays."
+       
+       EC2 Running → EBS Data 
+       EC2 Stopped → EBS Data 
+       EC2 Restarted → EBS Data 
+       EC2 Terminated → Check DeleteOnTermination
+                          |-- true  → EBS Data 
+                          |-- false → EBS Data 
+
+4.8 Encryption 
+
+  EBS encryption means the data stored on the volume is scrambled (encrypted) so that no one can read it without the proper key. 
+
+  I know "scrambled" is more technical term for you. Lemme explain this for you. 
+
+   Whenever Plaintext (readable information like a text, message,file or image) is scrambled into ciphertext (an unreadable, random-looking code) so no unauthorized person can read the information 
+
+  The simple Analogy: 
+    
+     Think like you have a diary with a lock:
+    -> you write your secrets in that diary (data)
+    -> You lock with a key (encryption)
+    -> Anyone who finds the diary can't read it without the key.
+    -> Only you (or someone who have the key) can unlock it and read it.
+
+ What Encryption protects:
+
+ Layer               What happens
+ At rest              Data on disk is encrypted
+ In transit           Data between EC2 and EBS is enrcypted 
+ Snapshots            Encrypted snapshots remains encrypted
+
+ how it happen:
+    
+        Application 
+            |
+         EBS Volume
+            |
+        Encrypted Storage
+            |
+        Data is stored -> No one can read it without the key. 
+
 ## 5. EBS vs EC2
+
 
 ## 6. Availability Zones 
 
