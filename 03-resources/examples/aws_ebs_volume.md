@@ -551,27 +551,83 @@ Okay this below is the simple defination - Please read this also.
             |
         Data is stored -> No one can read it without the key. 
 
-## 5. EBS vs EC2
+  Now I will going to tell you the most important conecpt of encryption in AWS is KMS Keys. Please understand it carefully. 
+
+    "So KMS keys are the encryption keys that AWS Key management service(KMS) create and manages to protect our data. "
+
+    When, we set encrypted = true , AWS uses its KMS key to actually perform the encryption and decryption operations. 
+
+Also there three types of KMS keys. 
+    
+    1. Customer Managed Keys: -
+         
+         This type of key is created and control by the user who is making these keys. "User" can rotate (change), disable, or delte it.
+          
+          But it cost us Monthly and the usage. 
+    2. AWS Managed Keys: -
+         
+         AWS creates and manages the key for you - And you can use it but can't change it. 
+ 
+    3. AWS Owned Keys: -
+         
+         This type of keys owned and managed  by the AWS itself. You never see these keys and it's free to use. 
+  
+  The One-Liner for you to make it more simple: 
+       
+       "
+        CUSTOMER MANAGED = WE  CONTROL ,
+        AWS MANAGED      = AWS CONTROL , 
+        AWS OWNED        = AWS CONTROLS IT, BUT WE CAN'T SEE THE KEYS.
+       "
 
 
-## 6. Availability Zones 
+4.9 EBS Attachment 
+    
+So, This is the concept where most of the students gets confused between EBS volume and  EBS attachment they think this the same concept, But technicaly it's not. 
+These both are two different concept in AWS. 
 
-## 7. EBS Volume Types
+Wait, let me explain in easy way. 
+      
+      Concept                 Definition
+    
+      EBS Volume      ->      The block storage resource itself. Exists  independently and can exists withour being attached to an EC2 instance. 
 
-## 8. Terraform Resource
+      EBS Attachemnt   ->      The Connection between EBS Volume and EC2 instance is called EBS attachment. It only exixts when a volume is connected to an instance. 
 
-## 9. Important Arguments
+The relationship between them. 
 
-## 10. Terraform Behavior
+         EBS Volume (Storage exists)
+                   |
+                   |
+                   | <-- Attachment of both (Connection) 
+                   |
+                   |
+             EC2 instance (Compute)
 
-## 11. What happens when configuration changes?
+         - The volume is the storage.
 
-## 12. Practical Example
+         - And the attachment is the link  that makes volume available to the instance.
 
-## 13. Common Mistakes
 
-## 14. Troubleshooting
+## 6. Terraform Resource
 
-## 15. Interview Questions
 
-## 16. Key Takeaways
+
+
+
+
+## 7. Important Arguments
+
+## 8. Terraform Behavior
+
+## 9. What happens when configuration changes?
+
+## 10. Practical Example
+
+## 11. Common Mistakes
+
+## 12. Troubleshooting
+
+## 13. Interview Questions
+
+## 14. Key Takeaways
