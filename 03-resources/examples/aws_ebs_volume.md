@@ -711,7 +711,15 @@ How to Reference It.
     encrypted          = .....
     }
 
+ The exact values depend on the requirements of the infrastructure. 
 
+  For example, a requirement might say:
+    
+     size              : 50 GiB
+     volume Type       : gp3
+     Availabilty_zone  : us-east-1a
+     encrypted         : Enabled
+     
 ## 6. Important Arguments
 
 ## 7. Terraform Behavior
