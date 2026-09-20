@@ -719,7 +719,8 @@ How to Reference It.
      volume Type       : gp3
      Availabilty_zone  : us-east-1a
      encrypted         : Enabled
-     
+      
+    
 ## 6. Important Arguments
 
 ## 7. Terraform Behavior
