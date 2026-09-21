@@ -719,9 +719,105 @@ How to Reference It.
      volume Type       : gp3
      Availabilty_zone  : us-east-1a
      encrypted         : Enabled
+
+5.4 Resource Arguments vs Resource Attributes
+
+  First it is important to distinguish between arguments and attributes.
+
+  Arguments :
+   
+    Arguments are values that we provide in the terraform configuration to tell terraform how the resource should be configured.
+   
+   For example: 
       
+      size               : 30 GiB
+      type               : "1o2"
+      availability_zones : "us-east-1a"
+      encrypted          : true
+
+  Attributes:
+     
+    Attributes are value that terraform can  expose about the resource after it is created or observed. 
+
+  For example:
+       
+      Volume ID 
+      ARN
+      Availability Zone
+      Size
+      Volume Type
+
+  And these values can be usefull when another terraform resource need information about the EBS Volume. 
+
+5.5 Resource Arguments we should understand. 
+  
+  Before writing the final terraform configuration, we should understand the "IMPORTANT ARGUMENTS SUPPORTED BY THE EBS_VOLUME". 
     
-## 6. Important Arguments
+  You need to pay more attention to:
+   
+     size             : Defines the storage capacity
+     type             : Define the EBS Volume type
+     availability_zone: Defines the availability zone where the volume is created
+     encrypted        : Check whether the volume is encrypted or not
+     iops             : configured provisioned IOPS where supported
+     throuhput        : Configure throughput where supported
+
+     And, One important thing that
+              
+              Size              : (IF NOT USING SNAPSHOTS)
+              availabolity_zone :
+          is must required. 
+
+5.6 using Variables :
+ 
+   This is the most  topic, I request you to please pay attention to this. 
+
+  You already know till now we are configuring  our values directly in the code (Hardcoded). But this is not the best way and efficient way to write our configuration.
+
+  see, In past we wrote like this:
+
+   size = 20 GiB
+
+  But the main problem with this hardcoded value is:
+
+      1. These value is difficult to reuse, if anyone want to use this resouce but they want different size so they have change its size always which is not a good practice in technical world. it costs you time. 
+
+      2. Hardcoded values can be compromised, This is not the case for "SIZE".
+
+       "Suppose you hardcoded your "availabilty_zone" in this case anyone see in which zone your "EBS_Volume" is created and compromise that."
+        
+      So, Instead of writing.
+
+      size = 20 GiB
+       
+       we can define the vaiable:
+
+         size = var.ebs_volume_size
+      
+      For example:
+        
+        variable "ebs_volume_size" {
+          description = Size of the EBS Volume in GiB "
+          type        = number
+        }
+
+       And:
+       ebs_volume_size = 20
+        
+        In we doing like this then,
+          
+          The flow becomes: 
+
+                     terrafomr.tfvars
+                            |
+                        variable 
+                            |
+                        aws_ebs_volume
+                            |
+                        AWS EBS Volume
+    This makes the configuration easier to modify and reuse.
+
+ ## 6. Important Arguments
 
 ## 7. Terraform Behavior
 
