@@ -838,7 +838,88 @@ How to Reference It.
   Terraform then compares this desired configuration with the infrastructure represented in its state and the actual infrastructure observed through the provider.
 
   If the volume does not exist, Terraform's plan will normally show that the resource needs to be created.
+
+
+5.8 Resource creation vs Attachment 
   
+  "CREATING RESOURCE IS NOT SAME AS ATTACHING IT"
+   
+   In terraform, creating an EBS Volume and attaching it to an EC2 instance are two seperate operations.
+
+     resource "aws_ebs_volume" "example" {
+         availability_zone = "us-east-1a"
+         size              = 20
+        type               = "gp3"
+     }
+
+   The configuration only creates the volume. It does not:
+      1. Attach the volume to any instane
+      2. configure the operating system
+      3. Create a filesystem
+      4. Mount the volume
+
+  The complete flow :
+     
+     After a volume is attached to EC2, additional OS-level work may still be required:
+           
+            EBS Volume 
+                |
+          Attach to EC2
+                |
+       OS detect the block device
+                |
+            Filesystem
+                |
+              Mount
+                |
+        Application uses the storage
+  
+
+5.9 Professional Workflow
+  
+  When creating an EBS Volume with the terraform, do not start by blindly copying a resource block.
+  
+   Use This workdlow:
+
+                 Requirements
+                      |
+              Indentify Resource
+                      |
+          Read Terraform Documentation
+                      |
+          identify Required Arguments
+                      |
+          Identify Required Optional Arguments
+                      |
+          Decide which value should be variables
+                      |
+          Write terraform configuration
+                      |
+               terraform fmt
+                      |
+               terraform validate
+                      |
+               terraform plan
+                      |
+                terraform apply
+                      |
+        The improtant skill is not memorizing the syntax.
+                       |
+        The important skill is being able to move from
+                      |
+              Infrastructure Requirement
+                      |
+              Terraform Documentation
+                      |
+               Correct Resource
+                      |
+              Correct Arguments
+                      |
+              Terraform configuration
+  
+  This workflow can be reused for other resources also such as VPC,EC2,RDS,IAM,S3, and many others. 
+
+
  ## 6. Important Arguments
 
 ## 7. Terraform Behavior
