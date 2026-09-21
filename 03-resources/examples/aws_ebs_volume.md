@@ -817,6 +817,28 @@ How to Reference It.
                         AWS EBS Volume
     This makes the configuration easier to modify and reuse.
 
+5.7 Example Configuration 
+   
+  A simple configuration can represent the following infrastructure requirement:
+
+  Create an encrypted 20 GiB gp3 EBS volume 
+  in Availability Zone us-east-1a.
+
+     Terraform 
+      
+       resource "aws_ebs_volume" "My-ebs" {
+        size               : 20 GiB
+        type               : gp3
+        availability_zone  : us-east-1a
+        encrypted          : true
+       }
+    
+    This tells terraform the desired configuration. 
+   
+  Terraform then compares this desired configuration with the infrastructure represented in its state and the actual infrastructure observed through the provider.
+
+  If the volume does not exist, Terraform's plan will normally show that the resource needs to be created.
+  
  ## 6. Important Arguments
 
 ## 7. Terraform Behavior
