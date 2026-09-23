@@ -920,7 +920,142 @@ How to Reference It.
   This workflow can be reused for other resources also such as VPC,EC2,RDS,IAM,S3, and many others. 
 
 
- ## 6. Important Arguments
+## 6. Important Arguments
+ 
+ Now we are discussing about the important arguments. 
+
+   The ebs_volume_volume resource uses arguments to define the configuration of an EBS Volume. 
+
+   Think of arguments as the settings you choose when creating a volume. 
+
+   The main arguments we need to understand are: 
+
+        Argument                          Purpose 
+        
+        size                             Defines the Volume capacity
+        type                             Defines the EBS Volume type
+        availability_zone                Defines where  the volume is created
+        encrypted                        Enables or disables encryption
+        iops                             Defines provisioned IOPS where supported
+        thoroughput                      Defines throughput where supported
+
+6.1 Size
+
+  Defines the storage capacity of the volume. 
+
+     size = 20
+  
+  This creates a volume with 20 GiB of capacity.
+
+     size -> Defines how much data can be stored. 
+
+  Important : 
+     
+     Size represents capacity, not directly the performance of the volume. 
+
+6.2 Type
+   
+   Defines the EBS volume type.
+
+        type = "gp3"
+   
+   Common type include:
+     
+        "gp3"
+        "gp2"
+        "io1"
+        "io2"
+        "sc1"
+        "st1"
+
+    Important: 
+        
+        The selected type effects the volume's performance characteristics and which performance arguments can be used. 
+
+6.3 availability_zone
+
+  Define the Availability Zone where the EBS volume will be created. 
+
+       availability_zone = "us-east-1a"
+  
+  Important: 
+
+        The EBS volume belongs to that Availability Zone, so it normally needs to be attached to an EC2 instance in the same Availability Zone.
+
+6.4 Encrypted 
+ 
+ Contorl whether the EBS Volume is encrypted.
+
+     encrypted = true
+
+  true means -> encryption enabled
+
+  Important:
+       
+       "If your infrastructure needs encryption, configure it yourself. Never assume it's already enabled."
+
+
+6.5 IOPS
+
+   Defines provisioned IOPS for volume type that support configurable IOPS. 
+
+      iops = 5000
+
+  IOPS represents the number of input/outputs operation the storage can handle per second. 
+
+  Important: 
+
+       "Whether you can use this argument—and what numbers you can put—depends on the volume type you picked. So check first."
+
+
+6.6 Throughput
+    
+   Define the storage throughput where supported.
+
+     throughput = 250
+  
+  Throughput represents the amount of data that can be transferred per second. 
+
+            IOPS
+             |
+     Number of I/O operations
+
+        Throughput
+            |
+     Amount of data transferred
+   
+   Important:
+             
+       "This argument may not work with every volume type. The volume type decides if you can use it and what numbers you can put."
+
+
+6.7 Basic example
+    
+  Putting the important arguments together.
+        
+        resource "aws_ebs_volume" "example" {
+             size              = 20
+             type              = "gp3"
+             availability_zone = "us-east-1a"
+             encrypted         = true
+            }
+
+  This represents: 
+                       
+                       20 GiB
+                         +
+                        gp3
+                         +
+                     us-east-1a
+                        +
+                      Encrypted
+
+   Important Rule :
+         
+        " Do not assume that every argument can be used with every EBS volume type."
+        
+Before adding performance-related arguments such as iops or throughput, check whether they are supported by the selected volume type and what values are valid.
+           
 
 ## 7. Terraform Behavior
 
