@@ -1059,6 +1059,24 @@ Before adding performance-related arguments such as iops or throughput, check wh
 
 ## 7. Terraform Behavior
 
+In this we are ging to check how Terraform behaves after we define the EBS resource. 
+
+  So, Basically we are  creating an EBS volume from the staring and we are thinking that when we create EBS Volume it directly gets created. But it's not. 
+
+     Terraform does not immediately creates an EBS volume when we write the resource block. 
+
+     it first compares:
+
+         Terraform Configuration 
+                   |
+            Desired state
+
+                  VS
+          Current infrastructure
+                  |
+                Actual State
+                 
+
 ## 8. What happens when configuration changes?
 
 ## 9. Practical Example
