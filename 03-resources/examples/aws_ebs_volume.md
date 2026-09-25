@@ -1155,7 +1155,21 @@ SECOND TIME:
         |
        Existing resource must be replaced → Old destroyed, new created  
 
-       
+
+8.1 Increasing Volume Size
+
+  Let's say you have this:
+
+     hcl
+    resource "aws_ebs_volume" "example" {
+    size = 20
+     }
+  
+  You change it to:
+
+    resource "aws_ebs_volume" "example" {
+    size = 50
+    }
 ## 9. Practical Example
 
 ## 10. Common Mistakes
