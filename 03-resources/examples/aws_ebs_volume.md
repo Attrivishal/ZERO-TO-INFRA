@@ -1129,7 +1129,33 @@ SECOND TIME:
 
    
 ## 8. What happens when configuration changes?
+    
+   Let's Start with What You Already Know
 
+  You know that Terraform compares your desired configuration with the actual infrastructure.
+  
+   
+  But here's the interesting part:
+
+     What happens when you change something that already exists?
+
+   The three posibilities. 
+    
+    When you change an EBS volume configuration, Terraform can respond in one of three ways:
+
+     1. No Change
+        |
+     Already matches desired state → Nothing happens
+
+    2. Update in-place (~)
+        |  
+       Existing resource can be modified → Same volume, updated
+
+    3. Replacement (-/+)
+        |
+       Existing resource must be replaced → Old destroyed, new created  
+
+       
 ## 9. Practical Example
 
 ## 10. Common Mistakes
