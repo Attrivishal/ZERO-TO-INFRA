@@ -1067,16 +1067,67 @@ In this we are ging to check how Terraform behaves after we define the EBS resou
 
      it first compares:
 
-         Terraform Configuration 
+         Terraform Configuration  (main.tf)
                    |
             Desired state
 
                   VS
-          Current infrastructure
-                  |
-                Actual State
-                 
 
+        Current infrastructure (AWS)
+                  |
+            Actual State
+
+    
+ FIRST TIME:
+┌─────────────────┐
+│ Desired State   │ (main.tf)
+└────────┬────────┘
+         │
+         │ COMPARE
+         │
+┌────────▼────────┐
+│ Actual State    │
+│ (AWS - nothing) │
+└────────┬────────┘
+         │
+         ▼
+    terraform apply
+         │
+         ▼
+┌─────────────────┐
+│ State File      │ ← Created NOW!
+│ terraform.tfstate│
+└─────────────────┘
+
+
+SECOND TIME:
+┌─────────────────┐
+│ Desired State   │
+└────────┬────────┘
+         │
+         │ COMPARE
+         │
+┌────────▼────────┐
+│ State File      │
+│ (now exists)    │
+└────────┬────────┘
+         │
+         │ COMPARE
+         │
+┌────────▼────────┐
+│ Actual State    │
+│ (AWS)           │
+└────────┬────────┘
+         │
+         ▼
+    terraform plan
+         │
+         ▼
+   "No changes"
+    
+    "First run: Terraform compares code vs AWS (no state file yet) → creates everything → saves state. Second run: Compares code vs state vs AWS → decides what to change."
+
+   
 ## 8. What happens when configuration changes?
 
 ## 9. Practical Example
