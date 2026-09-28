@@ -1297,6 +1297,31 @@ What You Must Do Before Applying:
   Because persistent storage contains data, such changes must be handled carefully.
 
 
+8.5  ~ vs -/+ 
+
+Let's understand these symbols:
+   
+   When you run terraform plan, Terraform uses symbols to show what it intends to do. 
+
+  You already know: 
+
+    Teraform compares desired state with actual state.
+
+    Then it creates a plan
+
+   But what do the symbols in the plan means?
+      
+       1. ~ : we call it update in-place 
+
+         what does update in-place means that it modify the existing resource. 
+
+      2. -/+ : we call it replacement 
+
+         What it does, that it destroy the old, and create a new one 
+         
+           - is for destroy old one
+           + is for create new one
+
 ## 9. Practical Example
 
 ## 10. Common Mistakes
