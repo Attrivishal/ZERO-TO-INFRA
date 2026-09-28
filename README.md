@@ -165,3 +165,5 @@ Here are a few quick takeaways to help you remember how Terraform thinks:
 3.  Read [docs/README.md](docs/README.md) to build your conceptual knowledge.
 4.  Navigate to [01-hcl-fundamentals/](01-hcl-fundamentals/) to write your first Terraform blocks!
 
+
+
