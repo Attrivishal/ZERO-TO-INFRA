@@ -1165,11 +1165,138 @@ SECOND TIME:
     size = 20
      }
   
-  You change it to:
+  You need change it to:
 
     resource "aws_ebs_volume" "example" {
     size = 50
     }
+  
+  Terraform detects the differemce:
+      
+      20 GiB
+         |
+      50 GiB
+
+  For EBS, Increasing the volume size can generally be performed without replacing the volume. 
+
+Terraform may therefore show:
+
+    ~ update in-place 
+
+This means the existing volume is modified rather than destroy and recreated. 
+
+
+8.2 Decreasing the volume size
+
+  Now suppose the existing volume size is: 
+
+     size = 100
+  
+  And we need to change it to:
+    
+     size = 50
+   
+  In this case EBS cannot simply reduced the size in place:
+
+    Therefore, this is not the same situation as increasing the size. 
+  
+  So, What we need to do here is?
+
+    100 GiB Volume
+         |
+    Create smaller volume (50 GiB)
+         |
+    Move required data
+         |
+    Use new volume
+
+ Here we are using, Migration Strategy.
+
+     1. Create a smaller volume (50 GiB)
+     2. Attach it to an EC2 instance
+     3. Copy the required data from the old volume to new volume
+     4. Detach old volume and attach new volume to the application
+     5. Delete old volume (after verifying data)
+    
+
+  One critical warning:
+
+       Never assume that changing size = 100 to. size = 50 will safley shrink the existing volume. 
+
+  But Why?     
+
+        - AWS does not support shrinking EBS volumes in-place
+             
+        - Terraform will destroy the old volume and create a new one
+        
+        - All data on the old volume will be lost unless you migrate it first
+
+What You Must Do Before Applying:
+
+ 1. Do I have a snapshot?	 
+
+        why it matters: Can i restore if somehing went wrong
+
+2. Have I migrated the data?
+         
+         why it matters: Is the data safe on the new volume?
+
+3. Is the Application ready?
+         
+         Why it matters: Will it break if the volume is replicated? 
+
+   "EBS cannot shrink. Decreasing size = -/+ replacement = migrate data first or lose it."
+
+8.3 Changine the Volume Type:
+
+  if anyone wants to change its volume type:
+    
+    For example:
+       
+       type = "gp3"
+            |
+            To
+      type = "io2"
+
+  Terraform check the resource behaviour definded by the AWS Provider and determines whether the change can be performed in place or requires replacement 
+
+  Therefore, always check:
+       
+       terraform plan
+
+ before applying the change.
+
+ The plan is the source of truth for what terraform intends to do. 
+
+ 8.4 Changing the Availability Zone
+   
+   if anyone want to change the availability zone of volume. 
+
+   Like The volume is in: 
+
+      availibility_zone = "us-east-1a"
+
+   To
+      
+      availability_zone = "us-east-1b"
+  
+  An EBS Volume belongs to a specific availability zone.
+
+  It cannot simply be moved between Availability Zones like changing a string value.
+
+ A change like this can therefore require the existing volume to be replaced or migrated.
+
+          us-east-1a
+               |
+          Existing EBS Volume 
+               |
+          us-east-1b
+               |
+          New EBS Volume
+
+  Because persistent storage contains data, such changes must be handled carefully.
+
+
 ## 9. Practical Example
 
 ## 10. Common Mistakes
