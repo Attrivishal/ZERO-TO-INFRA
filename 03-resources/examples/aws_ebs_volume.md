@@ -1543,7 +1543,48 @@ After all this, Now we have to do:
               
      
 ## 10. Common Mistakes
+    
+    When working with EBS volumes in terraform, beginners commonly make a few mistakes. 
 
+10.1 Confusing Size with performance
+
+    size = 100 
+      
+    Does not mean the volume has IOPS
+
+         size 
+          |
+        Storage capacity
+
+        IOPS
+         |
+    I/O Operations per second
+
+        throughput
+            |
+      Amount of data transferred per second. 
+  
+  These are different properties. 
+
+10.2 Using the wrong Availability Zone
+   
+   An EBS volume belongs to a specific Availability Zone. 
+  
+  For Example: 
+    
+    availability_zone = "us-east-1a"
+   
+   The Volume cannot simply be attached to an EC2 instance in another Availability Zone. 
+  
+  Always Consider:
+    
+    EC2 Availabiltiy Zone
+           |
+    EBS Availability Zone
+
+    Before creating an attachment.
+
+ 
 ## 11. Troubleshooting
 
 ## 12. Interview Questions
