@@ -156,3 +156,14 @@ resource "aws_instance" "developer_instance" {
   instance_type        = "t2.micro"
   iam_instance_profile = aws_iam_instance_profile.developer_profile.name
 }
+
+
+
+# EBS VOLUME CREATION
+
+resource "aws_ebs_volume" "My-ebs" {
+          size     = var.ebs_volume_size
+          type     = var.ebs_volume_type
+          availability_zone = var.ebs_availability_zone
+          encrypted = var.ebs_encrypted
+    }
