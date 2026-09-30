@@ -158,9 +158,7 @@ resource "aws_instance" "developer_instance" {
 }
 
 
-
 # EBS VOLUME CREATION
-
 resource "aws_ebs_volume" "My-ebs" {
           size     = var.ebs_volume_size
           type     = var.ebs_volume_type
