@@ -1501,8 +1501,47 @@ After all this, Now we have to do:
      
      terraform state list
      
+  We should see:
 
+     aws_ebs_volume.example
 
+   we can inspect the resource with: 
+  
+     terraform state show aws_ebs_volume.example
+   
+   This allow us to verify the information Terraform is managing for the EBS Volume. 
+
+9.9  Important Learning
+ 
+  This example demonstarte the complete terraform workflow: 
+
+              Think
+                |
+          Define Requirement
+                |
+            Choose Resource
+                |
+            Define Variables
+                |
+            Write resource
+                |
+             Format
+                |
+            Validate
+                |
+               Plan 
+                |
+              Review
+                |
+              Apply
+                |
+              Verify
+
+   Remember one thing is that goal is not to memorize this particular EBS Configuration. 
+
+    The Goal is to understand the workflow so that the same process can be applied to other terraform resources. 
+              
+     
 ## 10. Common Mistakes
 
 ## 11. Troubleshooting
