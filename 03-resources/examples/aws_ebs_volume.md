@@ -1322,7 +1322,186 @@ Let's understand these symbols:
            - is for destroy old one
            + is for create new one
 
+
+8.6 The Golden Rule
+
+   Before applying any change to an EBS resource:
+     
+  Always Run this command first:
+       
+         terraform plan 
+  Because terraform will tell you exactly what is plans to do-before it does it.
+
+  Then carefully check whether Terraform plans: 
+    
+    NO change
+     ~ update in-place
+     -/+ replacement
+  
+  for persistent storage, never look only at what value changed. 
+  
+  Also check for: 
+
+     what will happen to the exixting data?
+    
+  "Don't just ask what changed—ask what happens to the data. A small change can destroy everything."
+
 ## 9. Practical Example
+ 
+   Now this is time when i will show you some practical concepts:
+
+   Let's create an EBS Volume using terraform:
+
+9.1 Requirement
+
+  We need to create:
+
+  EBS Volume
+  |
+  | -- Size: 2- GiB
+  | -- Type: gp3
+  | -- Availiability Zone : us-east-1a
+  | -- Encryption : Enabled
+
+  These are the requirements for creating an EBS Volume. 
+
+9.2 Define Variables
+
+ First we have to define the variables for this volume so that we can use them in other volume also
+
+  file name is "variables.tf"
+
+    variable "ebs_volume_size" {
+    decsription = "Size of the volume"
+    type        = number
+    }
+
+    variable "ebs_volume_type" {
+    description = "EBS Volume type"
+    type        = string
+    }
+
+    variable "ebs_availability_zone" {
+    description = "Availability Zone for the EBS Volume"
+    type        = string
+    }
+    
+    variable "ebs_encrypted" {
+      description = "Whether the EBS volume should be encrypted"
+      type        = bool
+    }
+
+9.3 Provide values
+  
+  Now i have to provide the values for all. 
+
+  I define all the values in "terraform.tfvars" file.
+
+    ebs_volume_size        = 20 
+    ebs_volume_type        = gp3
+    ebs_availability_zone  = us-east-1a
+    ebs_encrypted          = true
+  
+9.4 Create the Resource
+
+   As i allready defines the varibale and provide values. 
+
+   But now we have to create the resource for which we defining the variables and all that. 
+
+   in main.tf:
+
+
+     resource "aws_ebs_volume" "My-ebs" {
+          size     = var.ebs_volume_size
+          type     = var.ebs_volume_type
+          availability_zone = var.ebs_availability_zone
+          encrypted = var.ebs_encrypted
+    }
+  The flow is : 
+         
+         terraform.tfvars (Defibed values)
+                |
+            Variables     (that we had created in variables.tf)
+                |
+          aws_ebs_volume 
+                | 
+          AWS EBS Volume 
+
+After all this, Now we have to do: 
+
+9.5 Format And validate
+  
+  Now we have to format all our code in a proper indentation and validate that our written configuration is valid or not?  
+
+  BY using this we can check our configuration is ready for next or not!
+  
+   First we have to run:
+     
+     terraform fmt
+  
+   then:
+     
+     terrafomr validate
+
+  terraform fmt formats the configuration.
+
+   terraform validate checks whether the configuration is syntactically and structurally valid.
+
+9.6 Create the Plan
+   
+   After all of this we need to create the plan for terraform what to do next?
+  
+  For that we have to run: 
+
+      terraform plan
+
+  if the EBS volume does not already exists, Terraform should plan to create it. 
+
+  The plan will contain a resource similar to:
+   
+    + create
+  
+  Terraform may also show values that will only be known after the resouce is created. 
+
+  But, Remember at this stage nothing has been created in AWS. 
+
+9.7 Apply the Configuration
+
+   So, After  the plan was created and reviewing it properly. we will going to run a command called "terraform apply"
+
+       teraform apply
+
+  Terrafomr create the EBS Volume in AWS. 
+  
+   The final flow of the structure is: 
+
+         Requirements
+              |
+          Variables
+              |
+          Terraform resource
+              |
+          Terraform fmt
+              |
+          Terrafomr Validate
+              |
+          Terraform Plan
+              |
+            Review 
+              |
+          Terraform apply
+              |
+        EBS Volume created
+
+9.8 Verify the Resource
+
+  So, after applying we need to verify the resource. 
+
+  We cab inspect the terraform state: 
+     
+     terraform state list
+     
+
 
 ## 10. Common Mistakes
 
