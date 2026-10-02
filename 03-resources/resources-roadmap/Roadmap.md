@@ -20,7 +20,7 @@ Learn Terraform syntax, simple resource blocks, variables, references, and core 
 
 Learn storage resources and how they relate to compute.
 
-- [ ] EBS Volume
+- [x] EBS Volume
 - [ ] EBS Snapshot
 - [ ] EFS File System
 
