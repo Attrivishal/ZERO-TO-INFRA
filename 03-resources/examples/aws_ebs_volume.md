@@ -1711,5 +1711,169 @@ Understand using this:
   
 ## 12. Interview Questions
 
+These questions cover the important EBS and Terraform concepts discussed in this documentation.
+
+### 12.1 Basic EBS Questions
+
+**1. What is Amazon EBS?**
+
+Amazon EBS (Elastic Block Store) is a block-level storage service that provides persistent storage for EC2 instances.
+
+---
+
+**2. What is the difference between EC2 and EBS?**
+
+```text
+EC2 → Compute
+EBS → Storage
+```
+
+EC2 provides computing resources such as CPU and memory, while EBS provides persistent block storage.
+
+---
+
+**3. Does an EBS volume automatically attach to an EC2 instance when created?**
+
+No.
+
+Creating an EBS volume and attaching it to an EC2 instance are separate operations.
+
+---
+
+**4. What is an Availability Zone in relation to EBS?**
+
+An EBS volume belongs to a specific Availability Zone and normally needs to be attached to an EC2 instance in the same Availability Zone.
+
+---
+
+### 12.2 EBS Performance Questions
+
+**5. What does `size` represent in an EBS volume?**
+
+`size` represents the storage capacity of the volume, measured in GiB.
+
+---
+
+**6. What is IOPS?**
+
+IOPS means **Input/Output Operations Per Second**. It represents how many I/O operations the storage can handle per second.
+
+---
+
+**7. What is throughput?**
+
+Throughput represents the amount of data that can be transferred per second.
+
+---
+
+**8. Is a larger EBS volume automatically faster?**
+
+No.
+
+Storage capacity and storage performance are different properties.
+
+```text
+Size      → Capacity
+IOPS      → I/O operations
+Throughput → Data transfer
+```
+
+---
+
+### 12.3 Terraform Questions
+
+**9. Which Terraform resource creates an EBS volume?**
+
+```hcl
+aws_ebs_volume
+```
+
+Example:
+
+```hcl
+resource "aws_ebs_volume" "example" {
+  ...
+}
+```
+
+---
+
+**10. What is the difference between a Terraform argument and attribute?**
+
+An **argument** is a value we provide to configure a resource.
+
+An **attribute** is information exposed by the resource that can be referenced elsewhere.
+
+Example:
+
+```hcl
+aws_ebs_volume.example.id
+```
+
+---
+
+**11. What does `terraform plan` do?**
+
+It compares the desired configuration with the current infrastructure/state and shows the changes Terraform intends to make.
+
+It does **not** apply the changes.
+
+---
+
+**12. What does `terraform apply` do?**
+
+It executes the changes described by the Terraform plan and creates or modifies the infrastructure.
+
+---
+
+**13. What does `+ create` mean in a Terraform plan?**
+
+It means Terraform plans to create a new resource.
+
+---
+
+**14. What does `~ update in-place` mean?**
+
+It means Terraform plans to modify the existing resource without replacing it.
+
+---
+
+**15. What does `-/+` mean?**
+
+It means Terraform plans to replace the existing resource by destroying the old resource and creating a new one.
+
+---
+
+### 12.4 Practical Questions
+
+**16. What happens if an EBS volume is changed from 20 GiB to 50 GiB?**
+
+Increasing the size of an EBS volume can generally be performed without replacing the volume. Terraform can therefore plan an in-place update.
+
+---
+
+**17. Can an EBS volume be reduced from 100 GiB to 50 GiB directly?**
+
+No. EBS volumes cannot simply be shrunk in place. A migration to a smaller volume may be required.
+
+---
+
+**18. What happens if you change the Availability Zone of an EBS volume?**
+
+An EBS volume belongs to a specific Availability Zone, so moving it to another Availability Zone can require replacement or a migration strategy.
+
+---
+
+**19. Why should `terraform plan` be checked before applying EBS changes?**
+
+Because EBS is persistent storage and may contain important data. The plan shows whether Terraform intends to create, update, replace, or destroy the resource.
+
+---
+
+**20. What is the most important rule when modifying infrastructure containing persistent storage?**
+
+Always understand what Terraform plans to do and consider what will happen to the existing data before applying the change.
+
+
 ## 13. Key Takeaways
 
