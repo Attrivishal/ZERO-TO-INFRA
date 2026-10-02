@@ -1654,7 +1654,61 @@ After all this, Now we have to do:
        "Always understand what Terraform plans to do before applying changes to persistent storage."
 
 ## 11. Troubleshooting
+  
+  So, I request you to all thay please think like a real engineer here while you are  troubleshooting something. Because this is the critical steps that every engineer must have to face. 
+
+  When working with the aws_ebs_volume, problems can occur during validation, planning or applying the configuration. 
+
+   So the best apporach is to indentify where the problem occurs first. 
+
+              terraform validate
+                      | 
+                      | Configuration problem
+                      |
+              terraform plan
+                      |
+                      | planning / provider problem
+                      |
+              terraform apply
+                      |
+                      |  AWS / resource operation problem
     
+
+Understand using this: 
+       Command                   What it checks?
+
+      terraform validate	      Your code (syntax, arguments)
+      terraform plan	          Your configuration (provider, compatibility)
+      terraform apply	          AWS (permissions, limits, API)
+  
+ Use this simple process:
+    
+                       
+
+                       Read the error
+                             |
+                      Indentify where It occured
+                             |
+                      Check the resource Arguments
+                             |
+                      Check the AWS Region / AZ (availability zone)
+                             |
+                      Check Volume Type Compatibility
+                             |
+                      Run terraform validate
+                             |
+                      Run terrafomr plan
+                             |
+                      Review the planned Action
+                             |
+                      Apply Only after Understanding the change
+
+ 
+  KEY RULE: 
+       
+       Don't troubleshoot by randomly changing values. Read the error, identify the cause, verify the documentation, and then make the smallest necessary change.
+        
+  
 ## 12. Interview Questions
 
 ## 13. Key Takeaways
