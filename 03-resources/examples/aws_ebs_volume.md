@@ -1543,6 +1543,7 @@ After all this, Now we have to do:
               
      
 ## 10. Common Mistakes
+
     
     When working with EBS volumes in terraform, beginners commonly make a few mistakes. 
 
@@ -1584,9 +1585,76 @@ After all this, Now we have to do:
 
     Before creating an attachment.
 
- 
-## 11. Troubleshooting
+10.3 Assuming every arguments works with Every Volume Type
+  
+  Arguments Such as:
+     
+     iops        = .....
+     throughput  = .....
 
+  It depends on the selected EBS volume type. 
+
+  So Do not blindly add them to every confuguration.  
+ 
+  Always check the resource documentation for the selected volume type.
+
+  Making it easy for you. Here are the volume type that support bith iops and thoroughput:
+     
+     Volume type      Supports (iops)    Support (througput)
+     gps                  Yes                 Yes
+     io2                  Yes                 No
+     io1                  Yes                 No
+
+  Only these volume type supports  iops and thoughput. 
+
+10.4 Reducing  an Existing Volume's Size
+  
+  Increasing 
+     
+     20 GiB -> 50 GiB
+
+  is different form reducing 
+
+     100 GiB -> 50 GiB
+    
+ EBS volume cannot simply be shrunk in place.
+
+ A size reduction may require a new volume and migrating the data.
+
+10.5 Applying changing without checking the plan
+  
+   This is the most common mistake that everyone do especially begineers.
+
+   Make sure, Never make storage changes blindly. 
+
+   Always Run:
+      
+      terraform plan
+   
+   and check whether terraform intends to:
+
+     + create
+     ~ update in-place
+     -/+ replace
+     -  destroy
+  
+  For EBS, this is especially important because the volume may contain important  data. 
+
+10.6 Forgetting that creating a volume does not attach it
+
+   Means if you created an EBS volume does not mean it automatically connect to an EC2 instance 
+
+  The volume and it's attachment are seperate resources/operations.
+
+  We need to attach it 
+
+
+ -------------------------> Important Rule <---------------------------
+     
+       "Always understand what Terraform plans to do before applying changes to persistent storage."
+
+## 11. Troubleshooting
+    
 ## 12. Interview Questions
 
 ## 13. Key Takeaways
