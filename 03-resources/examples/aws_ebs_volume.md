@@ -1877,7 +1877,6 @@ Always understand what Terraform plans to do and consider what will happen to th
 
 ## 13. Key Takeaways
 
-
 - **EBS** is persistent block-level storage designed primarily for use with EC2.
 - An EBS volume is a **separate storage resource** from the EC2 instance.
 - An EBS volume must be created in an **Availability Zone**.
