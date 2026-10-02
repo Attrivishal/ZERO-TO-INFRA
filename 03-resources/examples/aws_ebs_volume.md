@@ -1877,3 +1877,67 @@ Always understand what Terraform plans to do and consider what will happen to th
 
 ## 13. Key Takeaways
 
+  ## 13. Key Takeaways
+
+- **EBS** is persistent block-level storage designed primarily for use with EC2.
+- An EBS volume is a **separate storage resource** from the EC2 instance.
+- An EBS volume must be created in an **Availability Zone**.
+- Creating an EBS volume does **not automatically attach it to EC2**.
+- After attachment, the operating system may need to detect, format, and mount the volume.
+- `size` defines **storage capacity**.
+- `type` defines the **EBS volume type**.
+- `iops` defines I/O operations per second where supported.
+- `throughput` defines the amount of data transferred per second where supported.
+- `encrypted = true` enables encryption for the volume.
+- Terraform manages an EBS volume using the `aws_ebs_volume` resource.
+- `terraform plan` shows the changes Terraform intends to make.
+- `terraform apply` performs those changes.
+- `~` means **update in-place**.
+- `-/+` means **replacement**.
+- Increasing EBS size is different from decreasing it; EBS volumes cannot simply be shrunk in place.
+- Always review `terraform plan` before modifying persistent storage.
+- When troubleshooting, investigate the system **layer by layer**:
+
+```text
+AWS Infrastructure
+        ↓
+EBS Volume
+        ↓
+Attachment
+        ↓
+EC2
+        ↓
+Operating System
+        ↓
+Block Device
+        ↓
+Filesystem
+        ↓
+Mount Point
+```
+
+### Final Concept
+
+The most important Terraform mindset is:
+
+```text
+Requirement
+     ↓
+Terraform Resource
+     ↓
+Arguments
+     ↓
+Desired State
+     ↓
+terraform plan
+     ↓
+Review
+     ↓
+Apply
+     ↓
+Verify
+```
+
+For persistent resources such as EBS, always ask:
+
+> **"If Terraform changes or replaces this resource, what happens to the data?"**
