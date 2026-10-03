@@ -136,3 +136,8 @@ This distinction is important when working with terraform because Terraform mana
  If i tell you this in a one line: 
     
        EBS snapshots provide a backup and recovery mechanism for EBS volumes and can aslo be used to create additional volumes from a captured point in time. 
+
+
+3. How EBS Snapshot Work
+
+  An EBS Snapshot captures the data of an EBS volume at a particular point in time.
