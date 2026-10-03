@@ -116,3 +116,23 @@ This distinction is important when working with terraform because Terraform mana
  
         
           If the original volume is accidentally deleted or becomes unavailable, the snapshot can provide a recovery point.
+
+2.4 Creating Additional Volumes. 
+
+   A snapshot can also be used as the starting point for creating another EBS volume. 
+
+     For example:
+            
+                Original Volume
+                       |
+                    Snapshot
+                       |
+                 -------------
+                |             |
+            Volume 1       Volume 2
+
+    This can be usefull when another volume needs the same data as the original.
+
+ If i tell you this in a one line: 
+    
+       EBS snapshots provide a backup and recovery mechanism for EBS volumes and can aslo be used to create additional volumes from a captured point in time. 
