@@ -74,7 +74,7 @@ This distinction is important when working with terraform because Terraform mana
 
 
 
-2. Why Do we Need EBS Snapshots?
+## 2. Why Do we Need EBS Snapshots?
 
     EBS snapshots are mainly used to preserve the data of an EBS Volume so that it can be recovered or used again when needed. 
 
@@ -137,7 +137,205 @@ This distinction is important when working with terraform because Terraform mana
     
        EBS snapshots provide a backup and recovery mechanism for EBS volumes and can aslo be used to create additional volumes from a captured point in time. 
 
-
-3. How EBS Snapshot Work
+## 3. How EBS Snapshot Work
 
   An EBS Snapshot captures the data of an EBS volume at a particular point in time.
+  
+                  OR
+An EBS Snapshot is a backup of our EBS Volume at a specific moment in time. 
+
+ Let me explain you some words meaning:
+   
+  1.  Point-in time : A specific moment (eg, 2:30 PM on Monday)
+  2. Captures data. : Everything on the volume at that moment
+  3. Backup : A copy we can restore from later. 
+
+  
+    The basic flow: 
+           
+           EBS Volume 
+               |
+           EBS Snapshot
+               |
+          Point-in time Backup
+               |
+           Snapshot
+               |
+        create New EBS Volume
+               |
+            Attach to EC2 
+
+3.1 Creating a snapshot
+  
+  Suppose we have:
+      
+      EBS Volume 
+      Size : 20 GiB
+      Data : Application Data
+
+  We create a snapshot:
+     
+     EBS Volume
+         |
+      Snapshot
+
+  The snapshot represents the volume's data at that point-in time. 
+ 
+  The original EBS Volume continues to exist and can continue to be used. 
+
+3.2 Snapshot  as a recovery Source
+  
+   If we need to create another volume from the snapshot:
+      
+           EBS Snapshot
+               |
+           New EBS volume
+               |
+           Attach to EC2
+
+  The new volume can then be used as storage for an EC2 instance. 
+  
+3.3 Incremental Snapshots
+    
+    EBS snapshots are incremental after the first snapshot. 
+
+    This means the first snapshot saves everything. Every snapshot after that only saves what changed since what changed since the last snapshot. 
+
+   
+   Conceptually: 
+       
+          First snapshot
+               |
+          Initial data
+               |
+          Second snapshot
+               |
+         Only changed data is captured
+               |
+         Third snapshot 
+               |
+         New changed are captured
+   
+   So we do not need to think of every snapshots as a completely independent full copy of the volume's data. 
+   
+    
+
+   We don't need to worry about how snapshots are stored or how they connect to each other. AWS handles all of that behind the scenes. 
+
+   The One-Liner: 
+      
+      "First snapshot = everything. Every snapshot after = only what changed. This saves storage, time and money."
+
+      Incremental = Only changes are saved. 
+
+3.4 Snapshot Does not automatically restore the volume. 
+   
+    Creating a snapshot does not automatically create another EBS Volume. 
+
+      
+      Snapshot Created 
+            |
+      Snapshot exists
+            |
+      No new volume automatically created
+   
+   If we need a new volume, we explicitly create one from the snapshot.
+    
+     Snapshot 
+        |
+    Create Volume
+        |
+    New EBS Volume
+   
+
+  SO lastely: 
+  
+     " A snapshot is a point-in time backup of an EBS Volume. It can later be used as a source of creatinf another EBS Volume. "
+
+## 4. Important concept
+ 
+4.1 Snapshot 
+   
+   A snapshot is a point-in time backup of an EBS Volume.
+       
+       EBS Volume
+          |
+       Snapshot
+
+  The original volume and the snapshots are separate resources. 
+   
+   Why they are seperate resources:
+     
+     Concept            Original Volume                Snapshot
+      
+     What it is           -   storage we use      -       Backup of that storage
+
+     Where it lives       -   AWS (attach to EC2) -    AWS S3 (stored separately)
+
+     Can you write to it? -  YES                  -     NO (read-only)
+
+     Can you delete it?   -  YES                  -     YES (independently)
+
+     Purpose	           -  Run your application -	 Backup/restore
+
+
+4.2 Point-in time Backup
+   
+   A snapshot represents the state of the EBS volume at the time the snapshot was created. 
+
+   Suppose: 
+
+        Time ---------------------->
+         
+        10:00      11:00       12:00
+        |
+        |
+         --> Snapshot
+               capture the data at this point of time
+   
+   Once a snapshot is created, it captures a frozen moment in time. Any changes you make to the original volume after that do NOT affect the snapshot. The snapshot stays exactly as it was.
+   
+
+     Time -------------------------->
+
+     10:00        11:00        12:00
+      |
+      |
+       --- Snapshot
+           captures data at 10:00
+
+     At 11:00: You change a file
+               Snapshot still shows 10:00 data
+
+     At 12:00: You delete a file
+               Snapshot still shows 10:00 data
+
+   Let me Explain you by an example:
+
+   At 10:00 AM - we create a snapshot
+    
+    Volume has:
+      | -- File1.txt
+      | -- File2.txt
+      | -- database.db
+   
+    Snapshot captures: File1, File2, database.db 
+   
+   At 11:00 AM - I make changes in File2.txt
+
+    Volume has:
+      | -- File1.txt (same)
+      | -- File2.txt (changed)
+      | -- database.db (same)
+   
+    Snapshot still shows: File1.txt, File2.txt (same original like at 10:00 AM), database.db
+
+   At 12:00 PM - I delete the file File1.txt
+
+    Volume has: 
+      | -- File2.txt (changed)
+      | -- database.db (same)
+       
+    Snapshot still shows: file1, file2 (ORIGINAL), database.db
+   
+   The Snapshot never changes. 
