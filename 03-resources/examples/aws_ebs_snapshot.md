@@ -407,3 +407,8 @@ Important:
    The One-Liner: 
 
         "Snapshot = backup. You cannot attach it directly. You must create a volume from it first, then attach that volume to EC2."
+
+
+4.5 Snapshot and source Volume
+  
+  
