@@ -385,10 +385,9 @@ Important:
                        |
                         --- Can now use the stoarge
 
+Step 1: Snapshot already exists (or create one)
 
-# Step 1: Snapshot already exists (or create one)
-
-# Step 2: Create volume from snapshot
+Step 2: Create volume from snapshot
 
     resource "aws_ebs_volume" "from_snapshot" {
      availability_zone = "us-east-1a"
@@ -396,7 +395,7 @@ Important:
      size              = 20
     }
 
-# Step 3: Attach volume to EC2
+Step 3: Attach volume to EC2
 
       resource "aws_volume_attachment" "attach" {
           device_name = "/dev/sdf"
@@ -404,11 +403,117 @@ Important:
           instance_id = aws_instance.web.id
       }
 
-   The One-Liner: 
+The One-Liner:
 
         "Snapshot = backup. You cannot attach it directly. You must create a volume from it first, then attach that volume to EC2."
 
-
 4.5 Snapshot and source Volume
+
+Creating a snapshot does not remove or replace the original EBS Volume.
+
+     Original EBS Volume
+             |
+             |
+              -- Snapshot
+
+    Both can exist idenpendently.
+
+    The original volume can continue serving an application while the snapshot is retained as a recovery point.
+
+4.6 Snapshot Deletion
+
+A snapshot can be deleted when it is no longer required.
+
+However, Snapshots may be part of chain of incremental snapshots, so deletion should be considered carefully.
+
+     Incrementals Means = "Only what changed sice last time."
+
+For production environments, snapshot retention should normally be based on a defined backup and recovery requirement rather than deleting snapshots randomly.
+
+The last key point to remember:
+
+      An EBS volume is a point-in time recovery copy of an EBS volume. it can be retained independently and used to create a new EBS volume when required.
+
+## 5. Terraform resources
+
+Now we are going to see actuall work how to make snapshop in terraform.
+
+I request you to please be more focused here.
+
+So, Terraform provides the "aws_ebs_snapshot"  resource to create and manage an Amazon EBS Snapshot. 
+
+An EBS Snapshot is created from an existing EBS volume. Therefore, Terraform needs to know which EBS volume should be used as the snapshot source. 
+
+ The Terraform resource is: 
+     
+     resource "aws_ebs_snapshot" "my-snapshot" {
+        volume_id = aws_ebs_volume.my-snapshot.id
+     }
+
+5.1 Resource Structure 
+
+   Basically the general structure is looking like this:
+        
+        resource "aws_ebs_snapshot" "Any-prefered-name" {
+            volume_id = <EBS_VOLUME_ID>
+        }
+    
+   There are three importants parts:
+      
+   1. Resource 
+    
+            resource 
+
+      The resource block tells the terraform that we want to create an manage an infrastructure resource. 
+
+   2. aws_ebs_snapshot
+         
+            aws_ebs_snapshot
+    
+     This is the AWS provider resource type used to manage an EBS snapshot.
+    
+    3. Any-prefered-name
+         
+            Any-prefered-name
+      
+      This is the local terraform name assigned to the snapshot.
+
+      It is used when referring to this snapshot elsewhere in the terraform configuration. 
+
+5.2 Volume_id
   
+  This is the most important arguments:
+     
+     volume_id = aws_ebs_volume.local-terraform-name.id
+
+  volume_id specefies the EBS Volume from which terraform should create the snapshot.
+
+   For example:
+      
+      resource "aws_ebs_volume" "My-volume" {
+        availability_zone = us-east-1a        size              = 50 GiB
+        type              = gp3
+      }
+
+      resource "aws_ebs_snapshot" "My-snapshot" {
+        volume_id = aws_ebs_snapshot.My-snapshot.id
+      }
   
+  Terraform first create the EBS Volume. 
+
+  AWS assign the volume_id to the EBS Volume. 
+    
+  Like: 
+     
+     vol-0344455bdhdbfjffhh0
+  
+  Terraform then used that ID for the snapshot:
+    
+    EBS Volume 
+    vol-0344455bdhdbfjffhh0
+           |
+           | volume_id
+           |
+     EBS snapshot
+
+
