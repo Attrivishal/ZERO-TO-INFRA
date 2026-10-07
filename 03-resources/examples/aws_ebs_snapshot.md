@@ -517,3 +517,120 @@ An EBS Snapshot is created from an existing EBS volume. Therefore, Terraform nee
      EBS snapshot
 
 
+5.3 Resource Reference 
+   
+    Resource Reference means how terraform connects one resource to another.  it tells the terraform use the value from that resource here.
+
+   This Expression:
+      
+      aws_ebs_volume.My-snapshot.id
+
+   is a terraform resource reference.
+
+   it means: 
+
+       aws_ebs_volume
+            |
+            | 
+             -- My-snapshot
+                   |
+                   | 
+                    -- id 
+   
+   Terraform retrieves the ID of the EBS Volume created by:
+      
+      resource "aws_ebs_volume" "My-volume"
+
+   And passes that ID to:
+     
+       volume_id
+    
+    This is preferable to manually hardcoding an AWS volume ID because terraform can track relatioship between the resources. 
+
+5.4 Implicit Dependency 
+    
+    An implicit dependency is a relationshp terraform automatically detects when one resource references another. You don't have to tell Terraform about it - it figure it out on its own. 
+  
+   How it  works:
+
+   When you write this:
+      
+       resource "aws_ebs_snapshot" "My-snapshot" {
+        volume_id = aws_ebs_volume.My-snapshot.id
+       }
+    
+   Terraform see the reference (aws_ebs_volume.My-snapshot.id) and understands:
+       
+       "The snapshot depends on the EBS Volume because the snapshot configuration references the volume."
+    
+   The Dependency
+       
+        aws_ebs_volume.My-volume
+                   |
+                   | .id
+                   |
+        aws_ebs_snapshpt.My-snapshot
+                
+ 
+    Resource = aws_ebs_My-snapshot 
+    
+    Depends on = aws_ebs_My-volume
+
+   Why this matters:
+      
+      Terraform knows that the volume must exist before the snapshot can be created. 
+
+   We cannot create a snapshot of a volume that doesn't exists yet. terraform understands this automatically. 
+
+
+   The expected execution order is:
+     
+       1. Create EBS Volume
+                |
+       2. Obtain EBS Volume ID
+                |
+       3. Create EBS snapshot
+
+   You normally do not need to manually specify depends_on for this relationship.
+
+5.5 Complete Example
+ 
+   A simple configuration can obtain both the EBS volume and its snapshot:
+        
+         resource "aws_ebs_volume" "My-volume" {
+            availability_zone   = us-east-1a
+            size                = 20 GiB
+            type                = gp3
+
+             tags = {
+                Name = "example-volume"
+             }
+         }
+
+
+         resource "aws_ebs_snapshot" "My_snapshot" {
+            volume_id = aws_ebs_volume.My-volume.id
+
+            tags = {
+                Name = "example-snapshot"
+            }
+         }
+
+ The infrastructure relationship is:
+
+         ----------------------
+        |     EBS Volume       |
+        |                      |
+        |  size : 20           |
+        |  Type : gp3          |
+        |  AZ   : us-east-1a   |
+         ----------------------
+                    |
+                    | volume_id
+                    |
+         ----------------------
+        |     EBS snapshot     |
+        |                      |
+        |  Point-in-time copy  |
+        |                      |
+         ---------------------- 
