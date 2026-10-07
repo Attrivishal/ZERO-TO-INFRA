@@ -634,3 +634,93 @@ An EBS Snapshot is created from an existing EBS volume. Therefore, Terraform nee
         |  Point-in-time copy  |
         |                      |
          ---------------------- 
+
+## Important Arguments
+  
+   As we already saw the argument for snapshot, but let focus them again just to remember. 
+
+   The aws_ebs_snapshot resource uses arguments to define how the EBS snapshot should be created.
+     
+   The important arguments are:
+
+     Arguments         Purpose
+
+     Volume_id        Specifies the EBS Volume from which the snapshot is created
+     description      Describes the purpose or content of the snapshot
+     tags             Adds metadata to the snapshot
+
+
+6.1 volume_id
+   
+ This is the most important argument. 
+   
+   it specefies which EBS volume should be used as the source for the snapshot.
+
+   Example:
+       
+       volume_id = aws_ebs_volume.My-volume.id
+    
+   The relationship is:
+        
+        EBS volume 
+           |
+           | .id
+           |
+        volume_id
+           |
+           |
+        EBS snapshot
+
+  Terraform gets the ID of the EBS volume and passes it to the snapshot resource.
+
+6.2 Description 
+    
+   The description argument can be used to describe the snapshot.
+     
+   Example:
+
+      description = "backup of the application data volume"
+    
+   This helps identify  the purpose of a snapshot, especially when an environment contains many snapshots.
+
+
+6.3 tags
+   
+   tags can be used to add metadata to the snapshot.
+
+  Example: 
+      
+      tags = {
+        Name = "application-backup"
+        Environment = "dev"
+      }
+    
+    Tags can help with identification, organization, automation, and cost management. 
+
+6.4 Basic configuration 
+   
+   A simple snapshot configuration can therefore look like:
+     
+      resoruce "aws_ebs_snapshot" "My-snapshot" {
+        volume_id = aws_ebs_volume.My-volume.id
+        description = "Backup of application volume"
+
+        tags = {
+            Name = "Application-snapshot"
+        }
+      }
+  The important relationship is:
+     
+       aws_ebs_volume.My-volume
+                |
+                | .id
+                | 
+       aws_ebs_snapshot.My-snapshot 
+   
+   Key Point
+      
+       volume_id connects the snapshot to the EBS volume that terraform should snapshot.
+
+   Because the volume_id references another Terraform resource, Terraform can automatically understand the dependency between the volume and the snapshot. 
+
+   
