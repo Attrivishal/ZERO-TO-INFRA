@@ -775,3 +775,48 @@ An EBS Snapshot is created from an existing EBS volume. Therefore, Terraform nee
 
 Terraform can then compare the desired configuration with the existing resource during future terraform plan operations.
 
+
+7.3 Changing volume_id
+  
+What happen when you change the volume_id. 
+
+If the source volume changes. Terraform may need to REPLACE THE SNAPSHOT because the snapshot represents a backup of a specific volume. 
+
+       Old Notebook (Volume A)
+           |
+       Photocopy (snapshot from volume A)
+           |
+       New Notebook (Volume B)
+           |
+       New Photocopy (Snapshot from Volume B)
+
+  The old photocopy was of volume A. If you now want a snapshot of Volume B, You must create a new one.
+
+  Why this happens:
+     
+     Reason                                   Explanation
+
+     Snapshot is tied to a volume           It's copy of that specific volume
+     
+     changing the source = new snapshot     The old snapshot can't magically become a copy of the new volume
+
+     Terraform detects this                  It knows the snapshot must be created
+
+
+ What terraform will show:
+    
+    terraform plan
+       
+       # aws_ebs_snapshot.My-snapshot must be replaced
+       -/+ resouce "aws_ebs_snapshot" "My-snapshot" {
+         ~ volume_id = "vol-12345" -> "vol-67890" # forces replacement
+       }
+
+       Plan: 1 to add, 0 to change, 1 to destroy.
+
+    Translation: "I will destroy the old snapshot and create a new one."
+
+    
+
+     
+
