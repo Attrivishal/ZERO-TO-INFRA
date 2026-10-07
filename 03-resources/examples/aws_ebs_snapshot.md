@@ -723,4 +723,55 @@ An EBS Snapshot is created from an existing EBS volume. Therefore, Terraform nee
 
    Because the volume_id references another Terraform resource, Terraform can automatically understand the dependency between the volume and the snapshot. 
 
-   
+
+
+
+
+
+## 7. Terraform Behavior
+
+   In this we will going to see the Terraform behavior, How terraform behaves.
+
+   Terraform uses the configuration, state,and actual AWS infrastructure to determine what needs to happen to the EBS Snapshot.
+
+7.1 Snapshot Does Not Exist
+
+ If the snapshots is defined in the terraform configuration but does not exists in terraform state or AWS, Terraform plans to create it.
+
+         Configuration 
+              |
+         Terraform Plan
+              |
+         Snapshot does not exist
+              |
+         + create snapshot
+
+  Example:
+
+   + resource "aws_ebs_volume" "My-snapshot" {
+      volume_id = "Vol-xxxxxxx"
+   }
+
+   + means Terraform plans to create the resource
+
+7.2 Terraform Tracks the snapshot
+  
+  After: 
+
+      Terraform Apply
+  
+  Terraform records the snapshot in its state:
+       
+          Terraform Configuration 
+                   |
+                   |
+                 Apply 
+                   |
+                   |
+                AWS Snapshot
+                   |
+                   |
+             Terraform state
+
+Terraform can then compare the desired configuration with the existing resource during future terraform plan operations.
+
