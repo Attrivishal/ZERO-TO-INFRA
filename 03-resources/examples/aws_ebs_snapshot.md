@@ -1218,4 +1218,93 @@ Always think that what can be the problem behind this why the snapshot creation 
    Terraform resource references should be preferred over manually hardcoding IDs.
 
 
-11.3 Source 
+11.3 Source volume is Unexpected
+   
+ Check the source from a specific EBS volume. 
+
+      Volume 
+      |
+      | -- Volume ID
+      | -- Availability Zone
+      | -- State
+      | -- Encryption 
+
+
+Make sure Terraform is referencing the volume you actually intend to back up. 
+
+11.4 Terraform Plan is Unexpected
+    
+   If terraform wants to create, replace, or display a snapshot unexpectedly, do not immediately apply it. 
+ 
+  Run: 
+      
+      terraform plan
+   
+  Then inspect:
+      
+      Configuration 
+            |
+      Terraform State
+            |
+      AWS Infrastructure
+            |
+      Planned Change
+
+ Determine which part differs before making a change. 
+
+11.5  Snapshot Exists in AWS but Not in terraform state
+   
+Terraform manages resources through its state.
+
+    If a snapshot already exists in AWS but Terraform does not know about it, Terraform may attempt to create another snapshot.
+
+  check: 
+    
+    terraform state list
+    
+ If the snapshot is not listed, investigate the state and existing AWS resource before applying. 
+
+ 11.6 Terraform wants to Destroy a snapshot Unexpectedly
+
+  if the plan shows:
+     
+     - destroy
+ 
+  first determine why?
+   
+   check:
+     
+     terraform plan
+    
+  Look for:
+
+    - the resource being removed from configuration
+    - changed resource arguments
+    - state differences
+    - configuration changes that require replacement
+
+  Because snapshots can contain backup data, do not approve unexpected destroy operation until you understand its impact. 
+
+  11.7  Troubleshooting Flow
+     
+   Use this investigation order:
+      
+      Terraform Configuration 
+               |
+      terraform validate
+               |
+       terraform plan 
+               |
+        Terraform state
+               |
+         AWS EBS Volume 
+               |
+         AWS EBS Snapshot
+               |
+         IAM Permission / AWS API
+
+ This prevents random changes and helps identify which layer is actually causing the problem.
+
+  Key Point:
+      
+       "Troubleshoot EBS Snapshot problems systematically: verify the Terraform configuration, inspect the plan and state, verify the source volume and snapshot in AWS, and finally investigate permissions or AWS API errors."
