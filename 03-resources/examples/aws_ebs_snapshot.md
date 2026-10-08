@@ -440,56 +440,56 @@ Now we are going to see actuall work how to make snapshop in terraform.
 
 I request you to please be more focused here.
 
-So, Terraform provides the "aws_ebs_snapshot"  resource to create and manage an Amazon EBS Snapshot. 
+So, Terraform provides the "aws_ebs_snapshot" resource to create and manage an Amazon EBS Snapshot.
 
-An EBS Snapshot is created from an existing EBS volume. Therefore, Terraform needs to know which EBS volume should be used as the snapshot source. 
+An EBS Snapshot is created from an existing EBS volume. Therefore, Terraform needs to know which EBS volume should be used as the snapshot source.
 
- The Terraform resource is: 
-     
+The Terraform resource is:
+
      resource "aws_ebs_snapshot" "my-snapshot" {
         volume_id = aws_ebs_volume.my-snapshot.id
      }
 
-5.1 Resource Structure 
+5.1 Resource Structure
 
-   Basically the general structure is looking like this:
-        
+Basically the general structure is looking like this:
+
         resource "aws_ebs_snapshot" "Any-prefered-name" {
             volume_id = <EBS_VOLUME_ID>
         }
-    
-   There are three importants parts:
-      
-   1. Resource 
-    
-            resource 
 
-      The resource block tells the terraform that we want to create an manage an infrastructure resource. 
+There are three importants parts:
 
-   2. aws_ebs_snapshot
-         
-            aws_ebs_snapshot
-    
-     This is the AWS provider resource type used to manage an EBS snapshot.
-    
-    3. Any-prefered-name
-         
-            Any-prefered-name
-      
-      This is the local terraform name assigned to the snapshot.
+1.  Resource
 
-      It is used when referring to this snapshot elsewhere in the terraform configuration. 
+          resource
+
+    The resource block tells the terraform that we want to create an manage an infrastructure resource.
+
+2.  aws_ebs_snapshot
+
+           aws_ebs_snapshot
+
+    This is the AWS provider resource type used to manage an EBS snapshot.
+
+3.  Any-prefered-name
+
+          Any-prefered-name
+
+    This is the local terraform name assigned to the snapshot.
+
+    It is used when referring to this snapshot elsewhere in the terraform configuration.
 
 5.2 Volume_id
-  
-  This is the most important arguments:
-     
+
+This is the most important arguments:
+
      volume_id = aws_ebs_volume.local-terraform-name.id
 
-  volume_id specefies the EBS Volume from which terraform should create the snapshot.
+volume_id specefies the EBS Volume from which terraform should create the snapshot.
 
-   For example:
-      
+For example:
+
       resource "aws_ebs_volume" "My-volume" {
         availability_zone = us-east-1a        size              = 50 GiB
         type              = gp3
@@ -498,105 +498,103 @@ An EBS Snapshot is created from an existing EBS volume. Therefore, Terraform nee
       resource "aws_ebs_snapshot" "My-snapshot" {
         volume_id = aws_ebs_snapshot.My-snapshot.id
       }
-  
-  Terraform first create the EBS Volume. 
 
-  AWS assign the volume_id to the EBS Volume. 
-    
-  Like: 
-     
+Terraform first create the EBS Volume.
+
+AWS assign the volume_id to the EBS Volume.
+
+Like:
+
      vol-0344455bdhdbfjffhh0
-  
-  Terraform then used that ID for the snapshot:
-    
-    EBS Volume 
+
+Terraform then used that ID for the snapshot:
+
+    EBS Volume
     vol-0344455bdhdbfjffhh0
            |
            | volume_id
            |
      EBS snapshot
 
+5.3 Resource Reference
 
-5.3 Resource Reference 
-   
     Resource Reference means how terraform connects one resource to another.  it tells the terraform use the value from that resource here.
 
-   This Expression:
-      
+This Expression:
+
       aws_ebs_volume.My-snapshot.id
 
-   is a terraform resource reference.
+is a terraform resource reference.
 
-   it means: 
+it means:
 
        aws_ebs_volume
             |
-            | 
+            |
              -- My-snapshot
                    |
-                   | 
-                    -- id 
-   
-   Terraform retrieves the ID of the EBS Volume created by:
-      
+                   |
+                    -- id
+
+Terraform retrieves the ID of the EBS Volume created by:
+
       resource "aws_ebs_volume" "My-volume"
 
-   And passes that ID to:
-     
+And passes that ID to:
+
        volume_id
-    
-    This is preferable to manually hardcoding an AWS volume ID because terraform can track relatioship between the resources. 
 
-5.4 Implicit Dependency 
-    
-    An implicit dependency is a relationshp terraform automatically detects when one resource references another. You don't have to tell Terraform about it - it figure it out on its own. 
-  
-   How it  works:
+    This is preferable to manually hardcoding an AWS volume ID because terraform can track relatioship between the resources.
 
-   When you write this:
-      
+5.4 Implicit Dependency
+
+    An implicit dependency is a relationshp terraform automatically detects when one resource references another. You don't have to tell Terraform about it - it figure it out on its own.
+
+How it works:
+
+When you write this:
+
        resource "aws_ebs_snapshot" "My-snapshot" {
         volume_id = aws_ebs_volume.My-snapshot.id
        }
-    
-   Terraform see the reference (aws_ebs_volume.My-snapshot.id) and understands:
-       
+
+Terraform see the reference (aws_ebs_volume.My-snapshot.id) and understands:
+
        "The snapshot depends on the EBS Volume because the snapshot configuration references the volume."
-    
-   The Dependency
-       
+
+The Dependency
+
         aws_ebs_volume.My-volume
                    |
                    | .id
                    |
         aws_ebs_snapshpt.My-snapshot
-                
- 
-    Resource = aws_ebs_My-snapshot 
-    
+
+
+    Resource = aws_ebs_My-snapshot
+
     Depends on = aws_ebs_My-volume
 
-   Why this matters:
-      
-      Terraform knows that the volume must exist before the snapshot can be created. 
+Why this matters:
 
-   We cannot create a snapshot of a volume that doesn't exists yet. terraform understands this automatically. 
+      Terraform knows that the volume must exist before the snapshot can be created.
 
+We cannot create a snapshot of a volume that doesn't exists yet. terraform understands this automatically.
 
-   The expected execution order is:
-     
+The expected execution order is:
+
        1. Create EBS Volume
                 |
        2. Obtain EBS Volume ID
                 |
        3. Create EBS snapshot
 
-   You normally do not need to manually specify depends_on for this relationship.
+You normally do not need to manually specify depends_on for this relationship.
 
 5.5 Complete Example
- 
-   A simple configuration can obtain both the EBS volume and its snapshot:
-        
+
+A simple configuration can obtain both the EBS volume and its snapshot:
+
          resource "aws_ebs_volume" "My-volume" {
             availability_zone   = us-east-1a
             size                = 20 GiB
@@ -616,7 +614,7 @@ An EBS Snapshot is created from an existing EBS volume. Therefore, Terraform nee
             }
          }
 
- The infrastructure relationship is:
+The infrastructure relationship is:
 
          ----------------------
         |     EBS Volume       |
@@ -633,15 +631,15 @@ An EBS Snapshot is created from an existing EBS volume. Therefore, Terraform nee
         |                      |
         |  Point-in-time copy  |
         |                      |
-         ---------------------- 
+         ----------------------
 
 ## Important Arguments
-  
-   As we already saw the argument for snapshot, but let focus them again just to remember. 
 
-   The aws_ebs_snapshot resource uses arguments to define how the EBS snapshot should be created.
-     
-   The important arguments are:
+As we already saw the argument for snapshot, but let focus them again just to remember.
+
+The aws_ebs_snapshot resource uses arguments to define how the EBS snapshot should be created.
+
+The important arguments are:
 
      Arguments         Purpose
 
@@ -649,20 +647,19 @@ An EBS Snapshot is created from an existing EBS volume. Therefore, Terraform nee
      description      Describes the purpose or content of the snapshot
      tags             Adds metadata to the snapshot
 
-
 6.1 volume_id
-   
- This is the most important argument. 
-   
-   it specefies which EBS volume should be used as the source for the snapshot.
 
-   Example:
-       
+This is the most important argument.
+
+it specefies which EBS volume should be used as the source for the snapshot.
+
+Example:
+
        volume_id = aws_ebs_volume.My-volume.id
-    
-   The relationship is:
-        
-        EBS volume 
+
+The relationship is:
+
+        EBS volume
            |
            | .id
            |
@@ -671,36 +668,35 @@ An EBS Snapshot is created from an existing EBS volume. Therefore, Terraform nee
            |
         EBS snapshot
 
-  Terraform gets the ID of the EBS volume and passes it to the snapshot resource.
+Terraform gets the ID of the EBS volume and passes it to the snapshot resource.
 
-6.2 Description 
-    
-   The description argument can be used to describe the snapshot.
-     
-   Example:
+6.2 Description
+
+The description argument can be used to describe the snapshot.
+
+Example:
 
       description = "backup of the application data volume"
-    
-   This helps identify  the purpose of a snapshot, especially when an environment contains many snapshots.
 
+This helps identify the purpose of a snapshot, especially when an environment contains many snapshots.
 
 6.3 tags
-   
-   tags can be used to add metadata to the snapshot.
 
-  Example: 
-      
+tags can be used to add metadata to the snapshot.
+
+Example:
+
       tags = {
         Name = "application-backup"
         Environment = "dev"
       }
-    
-    Tags can help with identification, organization, automation, and cost management. 
 
-6.4 Basic configuration 
-   
-   A simple snapshot configuration can therefore look like:
-     
+    Tags can help with identification, organization, automation, and cost management.
+
+6.4 Basic configuration
+
+A simple snapshot configuration can therefore look like:
+
       resoruce "aws_ebs_snapshot" "My-snapshot" {
         volume_id = aws_ebs_volume.My-volume.id
         description = "Backup of application volume"
@@ -709,36 +705,32 @@ An EBS Snapshot is created from an existing EBS volume. Therefore, Terraform nee
             Name = "Application-snapshot"
         }
       }
-  The important relationship is:
-     
+
+The important relationship is:
+
        aws_ebs_volume.My-volume
                 |
                 | .id
-                | 
-       aws_ebs_snapshot.My-snapshot 
-   
-   Key Point
-      
+                |
+       aws_ebs_snapshot.My-snapshot
+
+Key Point
+
        volume_id connects the snapshot to the EBS volume that terraform should snapshot.
 
-   Because the volume_id references another Terraform resource, Terraform can automatically understand the dependency between the volume and the snapshot. 
-
-
-
-
-
+Because the volume_id references another Terraform resource, Terraform can automatically understand the dependency between the volume and the snapshot.
 
 ## 7. Terraform Behavior
 
-   In this we will going to see the Terraform behavior, How terraform behaves.
+In this we will going to see the Terraform behavior, How terraform behaves.
 
-   Terraform uses the configuration, state,and actual AWS infrastructure to determine what needs to happen to the EBS Snapshot.
+Terraform uses the configuration, state,and actual AWS infrastructure to determine what needs to happen to the EBS Snapshot.
 
 7.1 Snapshot Does Not Exist
 
- If the snapshots is defined in the terraform configuration but does not exists in terraform state or AWS, Terraform plans to create it.
+If the snapshots is defined in the terraform configuration but does not exists in terraform state or AWS, Terraform plans to create it.
 
-         Configuration 
+         Configuration
               |
          Terraform Plan
               |
@@ -746,26 +738,26 @@ An EBS Snapshot is created from an existing EBS volume. Therefore, Terraform nee
               |
          + create snapshot
 
-  Example:
+Example:
 
-   + resource "aws_ebs_volume" "My-snapshot" {
-      volume_id = "Vol-xxxxxxx"
-   }
+- resource "aws_ebs_volume" "My-snapshot" {
+  volume_id = "Vol-xxxxxxx"
+  }
 
-   + means Terraform plans to create the resource
+- means Terraform plans to create the resource
 
 7.2 Terraform Tracks the snapshot
-  
-  After: 
+
+After:
 
       Terraform Apply
-  
-  Terraform records the snapshot in its state:
-       
-          Terraform Configuration 
+
+Terraform records the snapshot in its state:
+
+          Terraform Configuration
                    |
                    |
-                 Apply 
+                 Apply
                    |
                    |
                 AWS Snapshot
@@ -775,12 +767,11 @@ An EBS Snapshot is created from an existing EBS volume. Therefore, Terraform nee
 
 Terraform can then compare the desired configuration with the existing resource during future terraform plan operations.
 
-
 7.3 Changing volume_id
-  
-What happen when you change the volume_id. 
 
-If the source volume changes. Terraform may need to REPLACE THE SNAPSHOT because the snapshot represents a backup of a specific volume. 
+What happen when you change the volume_id.
+
+If the source volume changes. Terraform may need to REPLACE THE SNAPSHOT because the snapshot represents a backup of a specific volume.
 
        Old Notebook (Volume A)
            |
@@ -790,23 +781,22 @@ If the source volume changes. Terraform may need to REPLACE THE SNAPSHOT because
            |
        New Photocopy (Snapshot from Volume B)
 
-  The old photocopy was of volume A. If you now want a snapshot of Volume B, You must create a new one.
+The old photocopy was of volume A. If you now want a snapshot of Volume B, You must create a new one.
 
-  Why this happens:
-     
+Why this happens:
+
      Reason                                   Explanation
 
      Snapshot is tied to a volume           It's copy of that specific volume
-     
+
      changing the source = new snapshot     The old snapshot can't magically become a copy of the new volume
 
      Terraform detects this                  It knows the snapshot must be created
 
+What terraform will show:
 
- What terraform will show:
-    
     terraform plan
-       
+
        # aws_ebs_snapshot.My-snapshot must be replaced
        -/+ resouce "aws_ebs_snapshot" "My-snapshot" {
          ~ volume_id = "vol-12345" -> "vol-67890" # forces replacement
@@ -816,7 +806,73 @@ If the source volume changes. Terraform may need to REPLACE THE SNAPSHOT because
 
     Translation: "I will destroy the old snapshot and create a new one."
 
-    
+7.4 Changing Description or Tags
 
+changes to metadata such as:
+
+      description = "updated backup"
+
+or:
+
+     tags = {
+        Name = "updated-snapshot"
+     }
+
+are evaluated by Terraform during terraform plan.
+
+The Key Question:
+
+      Can Terraform update the snapshot in place, or does the change require replacement?
+
+      change                What happens
+
+      Description           Usually updated in-place
+      Tags                  Usually updated in-place
+      Volume ID             Forces replacement (-/+)
+
+The One-liner:
+
+      "Description and tags = update in-place. Volume ID = replace. Always check the plan."
+
+7.5 Important Backup Consideration - Documentation
+
+    The Key point
+
+       An EBS Snapshot backup data. Do not treat it like a disposible resource.
+
+Before Destroying or Replacing a Snapshot
+
+    Always ask these questions:
+ 
+     Question              	               Why It Matters
+
+     Is this snapshot still required?      Do we need it for recovery?
+     Is it being used for recovery?        Is someone depending on it?
+     Is it the only backup available?      If yes, deleting means data loss
+     Will destroying it cause data loss?   What is the impact?
+
+  Always think as the production mindset:
      
+     "Do not treat snapshot resource like disposable resources without first understanding their backup role."
 
+  You just need to follow some approach: 
+
+  First I will tell you Wrong approach : -
+
+  Wrong Approach 
+
+  1. "It's just a snapshot, ----  delete it"
+  2. "Terraform will handle it"
+  3. "I'll create another one"
+
+  Right Approach
+
+  1. "Is this snapshoy needed for recovery?"
+  2. "What happens to that data?"
+  3. "Is this the only backup?"
+  
+
+  The One-Liner:
+      
+      "Snapshot are backups. Before destroying one, ask: Do we need it? Is it the only backup? Will data be lost?"
+      
