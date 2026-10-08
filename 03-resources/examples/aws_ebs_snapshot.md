@@ -875,4 +875,347 @@ Before Destroying or Replacing a Snapshot
   The One-Liner:
       
       "Snapshot are backups. Before destroying one, ask: Do we need it? Is it the only backup? Will data be lost?"
+
+
+
+## 8. What happen when Configuration changes?
+
+   Terraform compares the updated configuration with the existing state and infrastructure, then determines the required action. 
+
+8.1 Changine description
+  
+  If only the snashot description changes, terraform evaluates the change during terraform plan.
       
+       description = "Updated application backup"
+  
+  Terraform shows whether the existing snapshot can be updated or needs replacement. 
+
+8.2 Chaning tags
+   
+   for example:
+
+      tags = {
+        Name = "production-backup"
+        Environment = "prod"
+      }
+    
+    Terraform detect the metadat change during terraform plan and determines the required action. 
+
+8.3 changing volume_id
+  
+   changing:
+      
+      volume_id = aws_ebs_volume.My-volume.id
+    
+   to another EBS volume changes the source of the snapshot.
+
+   Conceptually:
+       
+          OLD Volume
+             |
+             |
+          OLD Snapshot
+             |
+             |
+          New Volume 
+             |
+             |
+          New Snapshot
+    
+   This is an importanat change because a snapshot represents a backup of a specific EBS Volume. 
+
+
+   Always inspect the plan before applying it. 
+
+
+8.4 Removing the Snapshot from configuration 
+
+   If the snapshot resource is removed from the terraform configuration while terraform still manages it. Terraform may plan to destroy the snapshot. 
+
+
+            Configuration
+                  |
+            Snapshot removed
+                  |
+            Terraform plan
+                  |
+            Destroy snapshot 
+    
+   Because a snapshot can represent backup data, do not approve this without checking whether the snapshot is still required. 
+
+
+8.5 Update vs Replacement vs Destroy
+
+   Terraform plans can indicate different actions:
+     
+
+     Symbol               Meaning
+
+     ~                    update in-place
+     -/+                  Destroy and create
+     -                    Destroy
+     +                    Create
+
+  For Example:
+     
+     ~ update in-place
+     
+     means terraform can modify the existing resource. 
+
+     -/+ replace
+
+     means terraform must destroy the existing resouce and create a new one.
+
+     - destroy
+
+     means terraform plans to remove the resouce.
+
+  Most important key point: 
+
+        "Never assume that a configuration change is harmless. Run terraform plan and understand whether Terraform will update, replace, create, or destroy the snapshot before applying the change."
+
+
+## 9. Practical Example
+
+   In this section w'll see the practical example of EBS snapshot "aws_ebs_snapshot"
+
+9.1 Create the EBS Volume 
+
+     resource "aws_ebs_volume" "My-volume" {
+        availability_zone = "us-east-1a"
+        size              = 20
+        type              = "gp3"
+        encypted          = true
+
+        tags = {
+            Name = "application-volume"
+        }
+     }
+
+9.2 Create the EBS Snapshot
+
+  The snapshot reference the volume using the volume_id.
+
+     resource "aws_ebs_snapshot" "My-snapshot" {
+        volume_id = aws_ebs_volume.My-volume.id
+        description = "backup of application volume"
+
+
+        tags = {
+            Name = "Application-snapshot"
+        }
+     }
+ Terraform automatically understand that the volume must exixts before the snapshot because the snapshot references:
+    
+    aws_ebs_volume.My-volume.id
+
+  The dependency is therefore:
+
+         EBS Volume
+            |
+         Volume_id
+            |
+        EBS Snapshot
+
+9.3 Run Terraform Plan 
+    
+  First, format and validate the configuration:
+      
+      terraform fmt
+      terraform validate 
+
+   Then create the execution plan:
+     
+      terraform plan
+    
+   You should see terraform planning to create both resources:
+     
+     + aws_ebs_volume.My-volume
+    + aws_ebs_snapshot.My-snapshot
+
+    Plan: 2 to add, 0 to change, 0 to destroy.
+
+  The exact output will vary depending on the rest of your configuration. 
+
+
+9.4 Apply the configuration
+   
+   if the plan is correct:
+       
+       terraform apply
+  
+  Terraform creates the volume first and then create the snapshot from that volume. 
+
+                  Terraform
+                     |
+                 Creates EBS Volume
+                     |
+                 Volume ID generated
+                     |
+                 Create EBS Snapshot
+                     |
+                 Snapshot created
+
+
+9.5 Verify Terraform state
+ 
+  After  you run terraform apply and it executed successfully. 
+  
+   then you with the help of this command you can check the state of the terraform
+         
+          terraform state list 
+    
+   You should see resources similar to: 
+      
+      aws_ebs_volume.My-volume
+      aws_ebs_snapsho.My-snapshot
+    
+   You can inspect the snapshot with:
+     
+     terraform state show aws_ebs_snapshot.My-snapshot
+
+   This allows you to see the attributes terraform is tracking for the snapshot. 
+
+
+9.6 verify the Dependency
+   
+   The important relationship is:
+
+        aws_ebs_volume.My-volume
+                 │
+                 │ id
+        aws_ebs_snapshot.My-snapshot
+
+  The snapshot is created from the volume identified by:
+
+        volume_id = aws_ebs_volume.My-volume.id
+
+  This is an example of a resource reference creating an implicit dependency.
+
+   Key Point:
+
+     "In practice, Terraform creates the EBS volume first, uses its generated volume ID to create the snapshot, and then records both resources in Terraform state."
+
+
+ ## 10. Common mistakes
+
+
+10.1 Using The wrong Volume_id
+
+  The snapshot must reference an existing EBS Volume.
+      
+      volume_id = aws_ebs_volume.My-volume.id
+  
+  A wrong resource reference will cause Terraform to fail during validation for planning.
+
+10.2 Confusing a snapshot with a volume
+
+  An EBS volume is active storage that can be attached to an EC2 instance. 
+
+  A snapshot is a backup of a volume. 
+
+       EBS Volume -> Active Storage
+       EBS Snapshot -> Backup
+  
+  A snapshot cannot simply be treated as an attached storage volume. 
+
+10.3 Assuming a snapshot Automatically Creates a Volume
+
+ Creating a snapshot does not automatically create another EBS volume. 
+
+The recovery flow is: 
+
+         Snaphot
+            |
+         Create New EBS volume
+            |
+        Attach volume to EC2
+
+10.4. Snapshotting a Non-Existent Volume
+ 
+     If the referenced EBS Volume does not exist, terraform cannot create the snapshot from it. 
+
+      Always verify the source volume and its dependency before applying the configuration.
+
+10.5 Accidently Destroying a required Backup
+  
+  removing a snapshot from terraform configuration can cause terraform to plan its destruction.
+   
+   Before applying:
+       
+       terraform plan
+   
+   check carefully for:
+        
+        - destroy
+   
+   A snapshot may contain important  recovery data, so destruction should be intentional. 
+
+10.6 Skipping terraform plan
+   
+    Do not immediately run:
+        
+        terraform apply
+    
+  without understanding the proposed changes.
+   
+   Use:
+     
+        terraform plan 
+   
+   to verify whether Terraform will:
+    
+    - create the snapshot
+    - update metadata
+    - replace the snapshot
+    - destroy the snapshot
+  
+   key point:
+
+        "The most important practice with EBS Snapshots is to understand what data the snapshot represents and carefully review Terraform's planned actions before creating, replacing, or destroying it."
+    
+
+
+## 11. Troubleshooting 
+
+  This is very important concept for  cloud and devops role. You need to take this seriously. 
+
+  When an EBS Snapshot operation fails, investigate the problem layer by layer instead of changing Terraform configuration randomly. 
+
+11.1  Snapshot Creation Fails 
+
+Always think that what can be the problem behind this why the snapshot creation is failed then do the following steps.
+  
+  start with:
+      
+      terraform plan -> it will show you all the plan what terraform will going to create from the configuration that you had wrote. 
+
+      terraform apply 
+
+   check the terraform  error message first:
+     
+   Then verify:
+     
+     - the source EBS volume exists 
+     - the volume_id is correct
+     - the AWS region is correct
+     - the AWS credentials have sufficient permissions
+
+11.2 volume_id is Invalid
+  
+    Here we checking whether the volume_id is actually valid or not.
+
+   check the resource reference:
+         
+         volume_id = aws_ebs_volume.My-volume.id
+    
+   Make sure: 
+     
+     - the referenced resource name is correct
+     - the volume exists
+     - the volume ID belongs to the expected AWS environment 
+
+   Terraform resource references should be preferred over manually hardcoding IDs.
+
+
+11.3 Source 
