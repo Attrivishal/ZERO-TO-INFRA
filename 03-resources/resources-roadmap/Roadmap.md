@@ -21,7 +21,7 @@ Learn Terraform syntax, simple resource blocks, variables, references, and core 
 Learn storage resources and how they relate to compute.
 
 - [x] EBS Volume
-- [ ] EBS Snapshot
+- [x] EBS Snapshot
 - [ ] EFS File System
 
 **Goal:** Understand AWS storage options and their relationship with compute resources.

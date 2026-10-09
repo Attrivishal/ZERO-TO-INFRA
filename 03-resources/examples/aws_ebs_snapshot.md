@@ -1308,3 +1308,126 @@ Terraform manages resources through its state.
   Key Point:
       
        "Troubleshoot EBS Snapshot problems systematically: verify the Terraform configuration, inspect the plan and state, verify the source volume and snapshot in AWS, and finally investigate permissions or AWS API errors."
+
+
+This prevents random changes and helps identify which layer is actually causing the problem.
+
+## 12. Interview Questions
+    
+
+### 12.1 What is an EBS Snapshot?
+
+An EBS Snapshot is a point-in-time backup of an Amazon EBS volume. It can be used to preserve data and create a new volume for recovery.
+
+### 12.2 What is the difference between an EBS Volume and an EBS Snapshot?
+
+| EBS Volume | EBS Snapshot |
+|---|---|
+| Provides block-level storage | Provides a point-in-time backup |
+| Can be attached to an EC2 instance | Can be used to create a new volume |
+| Used for active storage | Used for backup and recovery |
+
+### 12.3 Are EBS Snapshots incremental?
+
+Yes. The first snapshot captures the data needed for the backup, while subsequent snapshots store changes since the previous snapshot. AWS manages the underlying snapshot data.
+
+### 12.4 Does creating a snapshot automatically create a new EBS volume?
+
+No. A snapshot is a backup. You must explicitly create a new EBS volume from that snapshot if you want to use the data as storage.
+
+### 12.5 How does Terraform know that the EBS volume must exist before the snapshot?
+
+Terraform identifies the dependency through the resource reference:
+
+```hcl
+volume_id = aws_ebs_volume.My-volume.id
+```
+
+This creates an **implicit dependency**, so Terraform creates the volume before creating the snapshot.
+
+### 12.6 What happens if you change `volume_id`?
+
+The snapshot's source volume changes. Terraform evaluates the change and determines the required action. Inspect `terraform plan` to confirm whether replacement is required.
+
+### 12.7 What happens if you remove a snapshot from Terraform configuration?
+
+If Terraform manages the snapshot and it is removed from configuration, Terraform will generally plan to destroy it unless another lifecycle or state-management mechanism changes that behavior.
+
+Always inspect the plan before applying.
+
+### 12.8 What is Terraform state, and why does it matter for snapshots?
+
+Terraform state records the resources Terraform manages and their attributes. It helps Terraform compare the configuration with the infrastructure and determine what actions are required.
+
+### 12.9 How would you troubleshoot a snapshot creation failure?
+
+I would:
+
+1. Read the Terraform error message.
+2. Run `terraform validate` and `terraform plan`.
+3. Verify the source volume ID and its existence.
+4. Check the AWS region and IAM permissions.
+5. Inspect the actual volume and snapshot in AWS.
+
+### 12.10 How would you prevent accidental snapshot deletion?
+
+I would review every planned destruction, verify that the backup is no longer required, and consider Terraform lifecycle protection such as `prevent_destroy` when appropriate.
+
+**Important:** `prevent_destroy` blocks Terraform plans that would destroy the protected resource while that lifecycle rule remains in the configuration. It is not a substitute for a backup-retention strategy.
+
+### Key Takeaway
+
+> Understand the distinction between active storage and backup data, how Terraform resource references create dependencies, and how to inspect planned changes before modifying or deleting snapshots.
+
+
+
+## 12. Key Takeways
+  
+13.1 Core Concepts
+
+An EBS Snapshot is a point-in-time backup of an EBS volume.
+
+Snapshots support data protection and recovery.
+
+A snapshot can be used to create a new EBS volume.
+
+Subsequent snapshots are incremental.
+
+A snapshot does not automatically create or attach a new volume.
+
+13.2 Terraform Concepts
+
+  aws_ebs_snapshot is the Terraform resource used to manage EBS snapshots.
+
+  volume_id identifies the source EBS volume.
+
+ Resource references create implicit dependencies.
+
+ Terraform state tracks managed resources and their attributes.
+
+terraform plan helps identify changes before they are applied.
+
+13.3 Important Commands
+
+    terraform fmt
+    terraform validate
+    terraform plan
+    terraform apply
+    terraform state list
+    terraform state show aws_ebs_snapshot.My-snapshot
+
+13.4 Production Mindset
+
+ Before changing or deleting a snapshot:
+
+  Inspect the Terraform plan.
+
+  Confirm whether the backup is still required.
+
+  Understand the impact of replacement or destruction.
+
+ Verify that an appropriate recovery strategy exists.
+
+ Final Summary
+
+    "EBS Snapshots provide point-in-time backups for EBS volumes. Terraform can manage their lifecycle through resource references, state tracking, and execution plans. Always treat snapshot changes carefully because they can affect data recovery."
