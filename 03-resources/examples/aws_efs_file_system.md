@@ -1,5 +1,7 @@
 ## Let's start with the  new topic :)
-   
+
+   EFS = ELASTIC FILE SYSTEM 
+
    The name of the new topic is "AWS EFS file System". We are going to deep dive in this topic and understand  about this topic in simplest way with the help of some example and analogy. 
 
    I request you to please stay focused throughout the way. 
@@ -48,3 +50,55 @@
         │ (copy 1)    │     │ (copy 2)    │     │ (copy 3)    │
 
     Problem: 3 separate copies of the same file!
+
+2.1 The Problem with Instance-Local Storage
+   
+       Problem                  Explanation
+
+    1. No sharing              Each instance has its own storage
+    2. Duplicate data          Same files stored multiples times
+    3. Manual Sync             You must update each copy manually in every instance
+    4. Inconsistency           Different instances may have different versions
+    5. Wasted space             Storage is duplicated
+
+
+ Let's see the simple analogy:
+     
+     Think you 3 friends are working in 3 separate offices:
+       
+       - Each has their own filling cabinet (EBS Volume)
+       - If someone update a document, they must photocopy it and mail it to the other 2 offices also
+       - If they forgot to do so, the other offices have old versions.
+
+   That is why this is getting very serious issue amongs the system.
+    
+   And Then what  EFS = ELASTIC FILE SYSTEM Provides that EBS doesn't :
+
+      EFS provides a shared file system that multiple EC2 instances can access at the same time. 
+
+   
+   Like this I am going to show with the help of diagram: 
+     
+
+     ---------     --------      --------
+    | #1 EC2 |    | #2 EC2 |    | #3 EC2 |
+     ---------     --------      --------
+        |              |             |
+        |              |             |
+         ----------------------------
+                       |
+                       | 
+              -------------------- 
+             |  EFS File system   |
+             | (shared) photo.png | 
+             | (one copy of)      |
+              --------------------
+
+   So we can see that in this approach all instance see the SAME File. One Copy. Always in SYNC
+
+   
+ Just to give you all. A normal way to see EBS - EFS is:
+     
+      EBS = private storage for one instance.
+      
+      EFS = shared storage for many instances.
