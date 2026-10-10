@@ -100,5 +100,36 @@
  Just to give you all. A normal way to see EBS - EFS is:
      
       EBS = private storage for one instance.
-      
+
       EFS = shared storage for many instances.
+
+2.2 Shared storage Across Multiple  EC2 Instances
+
+Let's connect Know that EBS Volumes are attached to ONE EC2 instance at a time. 
+
+So if you have:
+ 
+  1. EC2-A with its own EBS Volume
+  2. EC2-B with its own EBS Volume
+
+They cannot share files. Each has it own separate storage. 
+
+Now the Questions is: What if you want both EC2-A and EC2-B tp access the sames files?
+ 
+  That exactly what EFS solves:
+      
+  Let me show with the diagram:
+      
+                  Users
+                    |
+         Application Load  balancer
+               /          \
+               |          |
+               |          |
+            EC2-A        EC2-B
+              |            |
+              |            |
+               ------------
+                  Amazon 
+                    EFS 
+                Shared files
