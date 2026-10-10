@@ -175,4 +175,21 @@ Problem: Two copies. If one changes, the other doesn't know.
       EFS provides shared access to files, not automatic application-level synchronization. 
 
    
+2.3 Why EFS Is Useful
+ 
+    In this part we will going to see why EFS is usefull. 
+
+ A. Shared Application Files: 
+     
+     Multiple application servers may need access to common files, including:
+
+     1. user-uploaded images and documents 
+     2. Shared application assets
+     3. Common file repositories
+     4. Files processed by multiple worker instances
+
+ B. Horizontal Scalling:
+  
+
+     
    
