@@ -133,3 +133,46 @@ Now the Questions is: What if you want both EC2-A and EC2-B tp access the sames 
                   Amazon 
                     EFS 
                 Shared files
+   
+    1. Users         : Those People who actually accessing  your application.
+
+    2. Load balancer : Distributes traffic to EC2-A and EC2-B
+
+    3. EC2-A, EC2-B  : Your applicayion servers
+    Amazon EFS    : Shared files storage both servers can access
+
+  
+  This means: 
+
+      Both the instance access the same files instead of maintaing indepndent copies. 
+
+  Without EFS (What you already know):
+    
+     EC2-A → EBS Volume A → photo.png (copy 1)
+     EC2-B → EBS Volume B → photo.png (copy 2)
+
+Problem: Two copies. If one changes, the other doesn't know.
+
+ With EFS (The new solution) we are learning about:
+      
+       EC2-A --
+        |---> EFS: photo.png (ONE copy)
+       EC2-B --
+
+ Both see the same file. Always.
+
+ For example:
+    
+    If EC2-A writes a file to EFS, EC2-B can access that file through the same file system—subject to filesystem permissions and access configuration.
+
+    Step 1: EC2-A writes "file1.pdf" to EFS
+    Step 2: EC2-B reads "file2.pdf" from EFS
+    Result: EC2-B sees the same file EC2-A wrote
+
+
+  But there is one catch here: (warning) 
+     
+      EFS provides shared access to files, not automatic application-level synchronization. 
+
+   
+   
