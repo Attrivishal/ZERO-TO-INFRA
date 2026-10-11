@@ -189,6 +189,8 @@ Problem: Two copies. If one changes, the other doesn't know.
      4. Files processed by multiple worker instances
 
  B. Horizontal Scalling:
+     
+     When  we can connect multiple instances like (EC2 or ECS containers) to the same shared file system  at the time. 
   
 
      
