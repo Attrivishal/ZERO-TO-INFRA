@@ -206,4 +206,54 @@ Problem: Two copies. If one changes, the other doesn't know.
 
     This seprates the application's compute capacity from its shared file storage.
 
-C. 
+C. Storage That Grows with usage:
+    
+   Okay listen, Firstly let's connect that you already know.
+  
+  You already that witht EBS, you provision a specefix size:
+      
+      resource "aws_ebs_volume" "My-volume" {
+        size = 20    # <- You must choose a fixed size
+      }
+   
+  So if you need more space, you must manually increase it (and if you want less, you cannot shrink it).
+
+ Now the Question is? 
+     
+     What if you don't know how much storage you will need in future. What if it changes constantly?
+
+     That's exactly EFS solves
+
+  The Core Difference:
+     
+     EBS                                   EFS
+     You provision fixed size              It grows and chrinks automatically
+     20 GiB means 20 GiB not more space    No fixed size - pay for what you use
+     Mannual resize needed                 Automatic scaling 
+  
+  Let me show you with the visuals:
+     
+      EBS Volume:
+      ---------------------------------------------------
+     |   |||||||||||||||||||| (Total space)
+     |   ||||||| (Used space)
+     |
+     |   Fixed at 20 GiB
+     |     (you pay for 20 GiB even you only use 5 GiB)
+      ---------------------------------------------------
+        
+      EFS File system:
+      ------------------------------------------------------------------
+    |   Grows and shrinks automatically
+    |
+    |      |||||||| (space)  <- 5 GiB used
+    |      You pay only for what you use 
+    |
+    |     Later if you want to use more 10 GiB:
+    |         
+    |      it will automatocally increased without manual intervention.
+    |       ||||||||||||||| (10 GiB space)
+      ------------------------------------------------------------------
+          
+  
+          
