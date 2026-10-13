@@ -304,7 +304,38 @@ D. Decoupling Storage from Compute:
 
     You may need to detach and reattach it. It's not automatically available to a new instance. 
 
-  Now the Question is:  What is the application's files were stored separately from the instance?
+  Now the Question is:  What if the application's files were stored separately from the instance?
 
- 
+   That's exaclty what EFS solved.
 
+  Suppose this is the Scenario: (Already Choose EFS)
+    
+     An EC2 instance fails and must be replaced.
+       
+       Old EC2 instance
+             |
+             X Instance fails (failure)
+             |
+       New EC2 instance
+             |
+             |
+
+        Same Amazon EFS
+             |
+             Existing Files
+
+  
+  What Happen here:
+
+     1. Old instance fails
+     2. I launched a new EC2 instance 
+     3. The new instance mounts the same EFS file system
+     4. All files are still there- no copying needed
+
+     The files do not need to be copied from the failed instance because they are stored separately.
+    
+  The Key Concept:
+     
+     Storage is decoupled from compute. The files live on EFS, not on the instance.
+
+    
