@@ -292,3 +292,19 @@ C. Storage That Grows with usage:
      "EFS = grows and shrink automatically. you pay for what you use. But quotas and charges still apply."
 
 
+D. Decoupling Storage from Compute:
+
+    You already know that with EBS, storage is attached to a specific EC2 instance. 
+
+         EC2 Instance -> EBS Volume (attached)
+  
+  What happens if that EC2 instance fails?
+    
+    The EBS volume may survive, But it's tied to that instance lifecycle. 
+
+    You may need to detach and reattach it. It's not automatically available to a new instance. 
+
+  Now the Question is:  What is the application's files were stored separately from the instance?
+
+ 
+
