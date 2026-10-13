@@ -189,7 +189,10 @@ Problem: Two copies. If one changes, the other doesn't know.
      4. Files processed by multiple worker instances
 
  B. Horizontal Scalling:
-  
+   
+     Horizontal scalling means adding more compute instancres to handle increased workloads.
 
-     
+     without  shared storage, every instance might needs its own copy  of the application's files.
+
+     with EFS , Multpiple instances can access the same fike syst
    
