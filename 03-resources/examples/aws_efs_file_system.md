@@ -293,6 +293,8 @@ C. Storage That Grows with usage:
 
 
 D. Decoupling Storage from Compute:
+     
+     Decoupled meaning: Storage and compute are separate. They are not tied together. 
 
     You already know that with EBS, storage is attached to a specific EC2 instance. 
 
@@ -339,3 +341,39 @@ D. Decoupling Storage from Compute:
      Storage is decoupled from compute. The files live on EFS, not on the instance.
 
     
+  The two Architecture:
+      
+      Coupled (EBS - Old Way):
+         
+         ┌─────────────────────────────┐
+         │  EC2 Instance               │
+         │                             │
+         │  ┌─────────────────────┐    │
+         │  │   EBS Volume        │    │
+         │  │   (Storage)         │    │
+         │  │   files live here   │    │
+         │  └─────────────────────┘    │
+         │                             │
+         │  Compute + Storage together │
+         └─────────────────────────────┘
+    
+     Storage is INSIDE the instance's world. If the instance fails, storage is tied to it.
+  
+  Decoupled (EFS - New Way):
+      
+
+       ┌─────────────────┐
+       │  EC2 Instance   │
+       │  (Compute only) │
+       └────────┬────────┘
+                │
+                │ (mounts)
+                ▼
+       ┌─────────────────┐
+       │   EFS           │
+       │   (Storage)     │
+       │   files live    │
+       │   here          │
+       └─────────────────┘
+
+       Storage is SEPARATE from the instance. If the instance fails, storage is still there, untouched.
