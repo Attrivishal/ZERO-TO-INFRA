@@ -256,4 +256,39 @@ C. Storage That Grows with usage:
       ------------------------------------------------------------------
           
   
-          
+  Think like that there is a water tank:
+
+     1. EBS = A fixed-size tank. I buy a 100-litre tank. If I only use 20 litres, I still paid for 100 litres. That's not efficient and effective. 
+
+     2. EFS = A tank that expands and contracts based on how much water I need to put in that tank according to our needs. I Just have to pay only for the water that actually present in a tank. 
+
+   This is the simple analogy you need to understand it. then you will be able to get the whole point. 
+  
+
+  But guysssss. let me tell you one thing that there is a twist here!
+     
+     Now as you all that EFS grows and shrink automatically, but it's not unlimited. There are still limits(quotas) and you have to pay (charges) for that also.
+
+  The Visuals:
+    
+        EFS File System
+        │
+        ├── Grows automatically 
+        │
+        ├── But has limits (quotas) 
+        │   ├── Max file size
+        │   ├── Max file system size
+        │   └── Max throughput
+        │
+        └── And you pay for usage 
+             ├── Storage used
+             ├── Throughput
+             └── Requests
+   
+  The One-Liner:
+     
+     "EBS = Fixed Size, you provioned it. means we decide how much space do we needed."
+
+     "EFS = grows and shrink automatically. you pay for what you use. But quotas and charges still apply."
+
+
