@@ -377,3 +377,14 @@ D. Decoupling Storage from Compute:
        └─────────────────┘
 
        Storage is SEPARATE from the instance. If the instance fails, storage is still there, untouched.
+
+
+E. Managed File Storage
+    
+     AWS manages the underlying  EFS storage infrastructure.
+   
+     MEANS -> AWS handles all the physical storage, hardware, replication, and scalling behind the scenes. You don't see it, touch it, or manage it. 
+     
+      
+
+     
