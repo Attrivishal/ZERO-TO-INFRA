@@ -398,7 +398,7 @@ Let me Compare you with one table:
       Files that should remain available when an instance is replaced  EFS
       Shared storage using standard file-system access EFS**
 
-Why EBS Cnnot Replace EFS?
+Why EBS Cannot Replace EFS?
     
     Important Distinction: EBS volumes are generally shared writable file system for multiple EC2 instances.
 
