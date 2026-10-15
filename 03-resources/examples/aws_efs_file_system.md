@@ -409,4 +409,56 @@ What you might think                             Reality
 "I can use EBS as a shared file system"            No. It is a block storage, not a shared file system
 
 "EBS Multi-attach solves this"                     Only for specific volume types, and requires cluster-aware file system
+
+2.5 Production Scenario 
    
+   Consider a web application running on three EC2 instances behind an application Load Balancer.
+
+   Users upload documents, and background workers process those documents. 
+
+   The requirements are:
+    
+     - Every application instance must access uploaded files.
+
+     - Worker instances must process files from the same repository.
+
+     - Replacing an EC2 instance must not remove the shared files.
+
+     - Storage must grow as users upload more documents.
+
+  In this case Suitable Archtitecture is:
+                           
+
+                           Users
+                             |
+                   Application load Balancer
+                             |
+                  -------------------------
+               |             |              |
+               EC2-A       EC2-B          EC2-C
+               |             |              |
+                  --------------------------
+                             |
+                        Amazon EFS
+                             | 
+                     Shared Documents
+
+  All instances mount the shared EFS file system through appropirately configured mount targets and network access.
+   
+   For production, you would also evaluate:
+
+   EFS encryption at rest and in transit
+
+      - Network access through security groups
+
+      - POSIX file permissions and IAM authorization where appropriate
+
+      - Availability Zone placement and mount-target design
+
+      - Backup and recovery requirements
+
+      - Performance mode, throughput mode, and storage-class costs
+                     
+   
+   "EFS is not automatically the best option for every workload. If an application needs a database engine, object storage, or high-performance block storage, a different service may be more appropriate."
+
