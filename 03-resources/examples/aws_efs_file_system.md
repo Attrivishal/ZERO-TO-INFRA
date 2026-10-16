@@ -467,3 +467,6 @@ What you might think                             Reality
 Amazon EFS is useful when multiple compute instances need shared, persistent, elastic file storage. It separates shared file data from individual EC2 instances and supports architectures in which application servers can scale or be replaced without maintaining separate copies of the same files.
 
 Remember: EFS solves the shared-file-storage problem. It does not replace every use case for EBS, S3, or a database.
+
+
+
