@@ -513,3 +513,23 @@ The Main Components:
      3. EC2 instance                 Runs the application that reads and writes files
      4. VPC                          Provides  the network environment used for communication 
      5. NFS Protocol                 Enables clients to access the remote file system
+
+How Each Component Connects:
+   
+         EC2 Instance (AZ A)
+                │
+                │ NFS
+                ▼
+         Mount Target (AZ A)
+               │
+               │
+               ▼
+         EFS File System
+               ▲
+               │
+         Mount Target (AZ B)
+               ▲
+               │ NFS
+               │
+         EC2 Instance (AZ B)
+                
