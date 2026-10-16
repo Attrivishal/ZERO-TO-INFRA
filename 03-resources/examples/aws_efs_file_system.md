@@ -399,25 +399,25 @@ Let me Compare you with one table:
       Shared storage using standard file-system access EFS**
 
 Why EBS Cannot Replace EFS?
-    
+
     Important Distinction: EBS volumes are generally shared writable file system for multiple EC2 instances.
 
-What you might think                             Reality
+What you might think Reality
 
-"You can attach EBS to multiple EC2 instances"     Not you cannot, Genrally EBS is designed for one instance 
+"You can attach EBS to multiple EC2 instances" Not you cannot, Genrally EBS is designed for one instance
 
-"I can use EBS as a shared file system"            No. It is a block storage, not a shared file system
+"I can use EBS as a shared file system" No. It is a block storage, not a shared file system
 
-"EBS Multi-attach solves this"                     Only for specific volume types, and requires cluster-aware file system
+"EBS Multi-attach solves this" Only for specific volume types, and requires cluster-aware file system
 
-2.5 Production Scenario 
-   
-   Consider a web application running on three EC2 instances behind an application Load Balancer.
+2.5 Production Scenario
 
-   Users upload documents, and background workers process those documents. 
+Consider a web application running on three EC2 instances behind an application Load Balancer.
 
-   The requirements are:
-    
+Users upload documents, and background workers process those documents.
+
+The requirements are:
+
      - Every application instance must access uploaded files.
 
      - Worker instances must process files from the same repository.
@@ -426,8 +426,7 @@ What you might think                             Reality
 
      - Storage must grow as users upload more documents.
 
-  In this case Suitable Archtitecture is:
-                           
+In this case Suitable Archtitecture is:
 
                            Users
                              |
@@ -440,14 +439,14 @@ What you might think                             Reality
                   --------------------------
                              |
                         Amazon EFS
-                             | 
+                             |
                      Shared Documents
 
-  All instances mount the shared EFS file system through appropirately configured mount targets and network access.
-   
-   For production, you would also evaluate:
+All instances mount the shared EFS file system through appropirately configured mount targets and network access.
 
-   EFS encryption at rest and in transit
+For production, you would also evaluate:
+
+EFS encryption at rest and in transit
 
       - Network access through security groups
 
@@ -458,9 +457,9 @@ What you might think                             Reality
       - Backup and recovery requirements
 
       - Performance mode, throughput mode, and storage-class costs
-                     
-   
-   "EFS is not automatically the best option for every workload. If an application needs a database engine, object storage, or high-performance block storage, a different service may be more appropriate."
+
+
+"EFS is not automatically the best option for every workload. If an application needs a database engine, object storage, or high-performance block storage, a different service may be more appropriate."
 
 2.6 Key Takeaway
 
@@ -468,5 +467,49 @@ Amazon EFS is useful when multiple compute instances need shared, persistent, el
 
 Remember: EFS solves the shared-file-storage problem. It does not replace every use case for EBS, S3, or a database.
 
+3. How Amazon EFS Works
 
+   Amazon EFS Provides a shared file system that can be accessed by multiple clients over a network. AWS manages the underlying storage infrastructure, while you configure the file system, network connectivity, and access permissions.
 
+3.1 High-Level Architecture
+
+    An EFS architecture includes a file system, mount  targets, a VPC, and clients such as EC2 instances. Each client connects through an appropirate mount target in its network environment.
+
+The Diagram:
+
+             AWS VPC
+    ┌─────────────────────────────────┐
+    │                                 │
+    │  Availability Zone A            │
+    │  ┌──────────────┐               │
+    │  │ EC2 Instance │               │
+    │  └──────┬───────┘               │
+    │         │ NFS                   │
+    │  ┌──────▼───────┐               │
+    │  │ Mount Target │               │
+    │  └──────┬───────┘               │
+    │         │                       │
+    │         │                       │
+    │  ┌──────▼───────────────────┐  │
+    │  │       Amazon EFS          │  │
+    │  │       File System         │  │
+    │  └──────▲───────────────────┘  │
+    │         │                       │
+    │  ┌──────┴───────┐               │
+    │  │ Mount Target │               │
+    │  └──────▲───────┘               │
+    │         │ NFS                   │
+    │  ┌──────┴───────┐               │
+    │  │ EC2 Instance │               │
+    │  └──────────────┘               │
+    │  Availability Zone B            │
+    └─────────────────────────────────┘
+
+The Main Components:
+     
+     Components                  What it does
+     1. EFS File system             stores the shared files and directories
+     2.  Mount Target                Provides a network endpoint through which clients access the file system
+     3. EC2 instance                 Runs the application that reads and writes files
+     4. VPC                          Provides  the network environment used for communication 
+     5. NFS Protocol                 Enables clients to access the remote file system
