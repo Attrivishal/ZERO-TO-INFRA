@@ -507,7 +507,7 @@ The Diagram:
 
 The Main Components:
      
-     Components                  What it does
+     Components                     What it does
      1. EFS File system             stores the shared files and directories
      2.  Mount Target                Provides a network endpoint through which clients access the file system
      3. EC2 instance                 Runs the application that reads and writes files
@@ -532,4 +532,4 @@ How Each Component Connects:
                │ NFS
                │
          EC2 Instance (AZ B)
-                
+
