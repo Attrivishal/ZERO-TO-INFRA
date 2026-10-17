@@ -677,4 +677,40 @@ Important Arguments:
      With Mount Target:
      EFS File System -> Mount Target (doorway) -> EC2 can Connect 
  
-   
+   Here one is Important thing that:
+      
+      Each mount target is associated with a subnet in a specific Availability Zone and has a network interface and private IP address.
+
+      Subnet = A range of IP address in Your VPC(virtual private cloud)
+
+   Below are the visuals:
+      
+      EFS File System 
+             |
+             | -- Mount Target - AZ A (us-east-1a)
+             |         |
+             |         |
+             |          ---- Private IP: 10.1.0.50
+             |
+             | -- Mount Target - AZ B (us-east-1b)
+             |         |
+             |         |
+             |          ---- Priavte IP: 10.1.1.50
+
+     
+     Each AZ gets its own mount target with its own IP address.
+
+  Now you might be thinking that why Multiple Mount Targets?
+    
+    let me give you an answer
+      
+        For a regional EFS file system, AWS recommened configuring mount tatgets in each availability zone where clients need access.
+  
+     Scenario	                  Mount Targets Needed
+     EC2 in AZ A only	          One mount target in AZ A
+     EC2 in AZ A and AZ B	     One mount target in AZ A + one in AZ B
+     EC2 in 3 AZs	               Three mount targets (one per AZ)
+
+  Why? 
+     
+     Because each EC2 instance connects to the mount target in its own AZ. This reduces latency and avoids cross-AZ data transfer costs.
