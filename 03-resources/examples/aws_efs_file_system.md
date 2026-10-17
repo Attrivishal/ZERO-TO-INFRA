@@ -533,3 +533,91 @@ How Each Component Connects:
                │
          EC2 Instance (AZ B)
 
+
+3.2 Create the EFS File System
+ 
+  let's connect this to what you already Know:
+
+  You already know that with EBS, you create a volume and specify it's size:
+
+     
+     resource "aws_ebs_volume" "My-Volume" {
+          size = 20 # <- You must choose a fixed size
+     }
+
+  
+  Now with EFS, the first step is similar but different. 
+
+  I create a file system, but i don't specify a fixed size. it grows and shrinks automatically.
+
+  What Happens in this step
+    
+    An EFS file system is created in AWS. it is the shared storage resource. 
+
+ Step 1: Create EFS File System
+               |
+               |
+         AWS creates the file system 
+               |
+               |
+         You get a filesystem ID: fs-0123456789abcdef0
+
+  
+  The File System ID:
+     
+    It has its own  file system ID, such as -fs-0123456789abcdef0. This ID indentifies the EFS resource. 
+   
+    Resource	        ID Format	                  Example
+    EBS Volume	        vol-xxxxxxxxxxxxxxxxx	        vol-0a1b2c3d4e5f6g7h8
+    EFS File System    fs-xxxxxxxxxxxxxxxxx	        fs-0123456789abcdef0
+    EC2 Instance	   i-xxxxxxxxxxxxxxxxx	        i-0a1b2c3d4e5f6g7h8
+     
+     The ID is  how you refernce the file system later. 
+
+  The Key Difference From EBS:
+
+       Aspect              EBS                                    EFS
+       Size                You specifies fixed size (20 GiB)     No fixed size grows\shrinks automatically 
+
+       Creation            Create volume + attach to Ec2         creates file system+ mount targets
+
+       Access              Attached to one instance               Shared accross many instance 
+
+
+    "Unlike an EBS volume, you do not specify a fixed volume size when creating an EFS file system. Its storage usage grows and shrinks as data is added and removed."
+
+ 
+   Important Warning: 
+       
+       "At this stage, creating the file system alone does not mean an EC2 instance can access it. Network access must also be configured."
+
+  The Visual:
+    
+     Step 1:  Create EFS File System 
+                    |
+                    |
+             EFS File system
+             ID -  ID: fs-0123456789abcdef0    
+             (created, but not accessible yet)
+                    |
+                    | Next step - Configure network access
+                    |
+     Step 2: Create Mount Targets
+     Step 3: Configure Security Groups
+     Step 4: Mount from EC2 
+
+  Let me tell you with the help of Analogy:
+    
+    Think of a new office Building:
+
+     Step1 : The Building is constructed (EFS File system create)
+     But = No doors 
+
+     Step2 : Install doors and roads (Mount targets)
+
+     Step3 : Give Keys to employees (Security groups)
+     Step4 : Employees can enter (EC2 Mounts the file system)
+
+     Creating the Building is just the first step: You still need doors  and keys.
+
+
