@@ -8,7 +8,7 @@ I request you to please stay focused throughout the way.
 
 This section explain the engineering problems EFS solves. When to choose it over EBS, and the trade-offs you need to understand as a cloud/Devops Engineer.
 
-1. Why do we need Amazon EFS?
+## 1. Why do we need Amazon EFS?
 
 So the core problem is:
 
@@ -50,7 +50,7 @@ So, The scenario is:
 
     Problem: 3 separate copies of the same file!
 
-2.1 The Problem with Instance-Local Storage
+## 2.1 The Problem with Instance-Local Storage
 
        Problem                  Explanation
 
@@ -98,7 +98,7 @@ Just to give you all. A normal way to see EBS - EFS is:
 
       EFS = shared storage for many instances.
 
-2.2 Shared storage Across Multiple EC2 Instances
+## 2.2 Shared storage Across Multiple EC2 Instances
 
 Let's connect Know that EBS Volumes are attached to ONE EC2 instance at a time.
 
@@ -167,7 +167,7 @@ But there is one catch here: (warning)
 
       EFS provides shared access to files, not automatic application-level synchronization.
 
-2.3 Why EFS Is Useful
+## 2.3 Why EFS Is Useful
 
     In this part we will going to see why EFS is usefull.
 
@@ -376,7 +376,7 @@ E. Managed File Storage
 
      You remain responsible for configuring access, security groups, mount targets, permissions, backup policies, and application-level behaviour.
 
-2.4 Why Not Uses EBS for Everything?
+## 2.4 Why Not Uses EBS for Everything?
 
 You already Know that:
 
@@ -410,7 +410,7 @@ What you might think Reality
 
 "EBS Multi-attach solves this" Only for specific volume types, and requires cluster-aware file system
 
-2.5 Production Scenario
+## 2.5 Production Scenario
 
 Consider a web application running on three EC2 instances behind an application Load Balancer.
 
@@ -461,17 +461,17 @@ EFS encryption at rest and in transit
 
 "EFS is not automatically the best option for every workload. If an application needs a database engine, object storage, or high-performance block storage, a different service may be more appropriate."
 
-2.6 Key Takeaway
+## 2.6 Key Takeaway
 
 Amazon EFS is useful when multiple compute instances need shared, persistent, elastic file storage. It separates shared file data from individual EC2 instances and supports architectures in which application servers can scale or be replaced without maintaining separate copies of the same files.
 
 Remember: EFS solves the shared-file-storage problem. It does not replace every use case for EBS, S3, or a database.
 
-3. How Amazon EFS Works
+## 3. How Amazon EFS Works
 
    Amazon EFS Provides a shared file system that can be accessed by multiple clients over a network. AWS manages the underlying storage infrastructure, while you configure the file system, network connectivity, and access permissions.
 
-3.1 High-Level Architecture
+## 3.1 High-Level Architecture
 
     An EFS architecture includes a file system, mount  targets, a VPC, and clients such as EC2 instances. Each client connects through an appropirate mount target in its network environment.
 
@@ -534,7 +534,7 @@ How Each Component Connects:
          EC2 Instance (AZ B)
 
 
-3.2 Create the EFS File System
+## 3.2 Create the EFS File System
  
   let's connect this to what you already Know:
 
@@ -585,8 +585,25 @@ How Each Component Connects:
 
 
     "Unlike an EBS volume, you do not specify a fixed volume size when creating an EFS file system. Its storage usage grows and shrinks as data is added and removed."
+  
+   
+ And this how we create a EFS using AWS resources: 
 
- 
+     resources "aws_efs_file_system" "My-efs" {
+          creation_token = "My-efs"
+          encrypted      = true
+
+          tags {
+               Name = "app-shared-storage"
+          }
+     }
+
+     That single block creates the file system in AWS. 
+
+Important Arguments:
+      
+      1. Creation 
+
    Important Warning: 
        
        "At this stage, creating the file system alone does not mean an EC2 instance can access it. Network access must also be configured."
@@ -618,5 +635,9 @@ How Each Component Connects:
      Step3 : Give Keys to employees (Security groups)
      Step4 : Employees can enter (EC2 Mounts the file system)
 
-     Creating the Building is just the first step: You still need doors  and keys.
+  Creating the Building is just the first step: You still need doors and keys.
+
+  The One-Liner
+
+    "Step-1: Create the EFS file system. it has as ID(fs-xxx). No fixed size. But it's not accessible yet- network access must be configured next."
 
