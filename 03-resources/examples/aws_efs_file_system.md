@@ -602,7 +602,17 @@ How Each Component Connects:
 
 Important Arguments:
       
-      1. Creation 
+      1. Creation_token:  A unique name you give to your file system so AWS doesn't accidently create duplicates.
+     
+      2. encrypted - The Lock : Encrypts your data so no one can read it without the key.
+
+      3. tags - The Labels: Labels you attach to your file system so you  can find it easily later.
+
+      tags = {
+         Name        = "my-app-efs"   # - Easy to find
+         Environment = "production"   # - Which environment?
+         Team        = "devops"       # - Who owns it?
+      }
 
    Important Warning: 
        
@@ -641,3 +651,30 @@ Important Arguments:
 
     "Step-1: Create the EFS file system. it has as ID(fs-xxx). No fixed size. But it's not accessible yet- network access must be configured next."
 
+
+## 3.3 Step 2 - Create Mount Targets
+  
+   Let's Connect this to what  you already know
+
+   You already know that:
+     
+     - Step 1: You created the EFS file system (fs-fs-0123456789abcdef0)
+     - But: The file system exists in AWS - it's not accessible yet
+
+   Now the questions: How does an Ec2 instance actually connect to it?
+
+   That's what mount targets solve.
+
+   Now you are thinking that what is mount Target?
+
+     A mount target privides a network endpoint for accessing an EFS file system from a VPC.
+
+   Think of it like a doorway into the filesystem.
+
+     without Mount Target:
+     EFS File System (isolated, no way in)
+
+     With Mount Target:
+     EFS File System -> Mount Target (doorway) -> EC2 can Connect 
+ 
+   
