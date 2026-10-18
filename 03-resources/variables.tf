@@ -59,3 +59,10 @@ variable "private_subnet_ids" {
   description = "List of private subnet IDs for the EFS mount targets"
   type        = list(string)
 }
+
+variable "environment" {
+  description = "Environment name (e.g., dev, staging, prod)"
+  type        = string
+  default     = "dev"
+}
+
