@@ -46,3 +46,16 @@ variable "ebs_encrypted" {
   description = "Whether the EBS volume should be encrypted"
   type        = bool
 }
+
+
+## EFS Variables
+
+variable "vpc_id" {
+  description = "The ID of the VPC where the EFS will be created"
+  type        = string
+}
+
+variable "private_subnet_ids" {
+  description = "List of private subnet IDs for the EFS mount targets"
+  type        = list(string)
+}
