@@ -714,3 +714,8 @@ Important Arguments:
   Why? 
      
      Because each EC2 instance connects to the mount target in its own AZ. This reduces latency and avoids cross-AZ data transfer costs.
+
+
+## 3.4 Step 3 - Configure Network Access
+  
+   
