@@ -199,3 +199,4 @@ resource "aws_security_group" "efs" {
     cidr_blocks = ["10.0.0.0/16"] # ← Your VPC CIDR
   }
 }
+
