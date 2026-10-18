@@ -160,21 +160,42 @@ resource "aws_instance" "developer_instance" {
 
 # EBS VOLUME CREATION
 resource "aws_ebs_volume" "My-ebs" {
-          size     = var.ebs_volume_size
-          type     = var.ebs_volume_type
-          availability_zone = var.ebs_availability_zone
-          encrypted = var.ebs_encrypted
-    }
+  size              = var.ebs_volume_size
+  type              = var.ebs_volume_type
+  availability_zone = var.ebs_availability_zone
+  encrypted         = var.ebs_encrypted
+}
 
 ## Step 1 : Create the file system 
-   
-   resource "aws_efs_file_system" "My-efs" {
-    creation_token = "My-efs"
-    encrypted      = true
-   }
 
-## Step 2 : Create mount target (one per AZ)
-    resource "aws_efs_mount_target" "az_a" {
-      file_system_id = aws_efs_file_system.My-efs.id
-      subnet_id      = 
-    }
+resource "aws_efs_file_system" "My-efs" {
+  creation_token = "My-efs-shared-storage-${var.environment}"
+  encrypted      = true
+
+  tags = {
+    Name        = "My-efs-shared-storage"
+    Environment = var.environment
+  }
+}
+
+## Step 2 : Create mount target in ONE Subnet
+resource "aws_efs_mount_target" "My-efs" {
+
+  file_system_id  = aws_efs_file_system.My-efs.id
+  subnet_id       = var.private_subnet_ids[0]
+  security_groups = [aws_security_group.efs.id]
+}
+
+## The Security Group
+
+resource "aws_security_group" "efs" {
+  name   = "efs-sg"
+  vpc_id = var.vpc_id # ←  VPC ID
+
+  ingress {
+    from_port   = 2049 # ← NFS port
+    to_port     = 2049
+    protocol    = "tcp"
+    cidr_blocks = ["10.0.0.0/16"] # ← Your VPC CIDR
+  }
+}
