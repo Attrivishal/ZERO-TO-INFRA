@@ -165,3 +165,16 @@ resource "aws_ebs_volume" "My-ebs" {
           availability_zone = var.ebs_availability_zone
           encrypted = var.ebs_encrypted
     }
+
+## Step 1 : Create the file system 
+   
+   resource "aws_efs_file_system" "My-efs" {
+    creation_token = "My-efs"
+    encrypted      = true
+   }
+
+## Step 2 : Create mount target (one per AZ)
+    resource "aws_efs_mount_target" "az_a" {
+      file_system_id = aws_efs_file_system.My-efs.id
+      subnet_id      = 
+    }
