@@ -721,3 +721,22 @@ Important Arguments:
    EFS uses network connectivity to communicate with clients.
 
    The client must be able to reach a mount target, and the security groups must be permit the required traffic.
+
+   For standard EFS NFS access, the important port is:
+
+     Protocol           Port        Purpose
+     TCP                2049        NFS communication between client and EFS mount target
+
+   A typical security group arrangement is:
+     
+      EC2 Security Group
+          |
+          | Outbound TCP 2049
+          |
+       EFS Mount Target Security Group
+          |
+          | Inbound TCP 2049
+          |
+        Amazon EFS
+     
+      The mount target security group should allow inbound TCP port 2049 from the intended EC2 client security group.
