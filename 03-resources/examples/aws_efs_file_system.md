@@ -718,4 +718,6 @@ Important Arguments:
 
 ## 3.4 Step 3 - Configure Network Access
   
-   
+   EFS uses network connectivity to communicate with clients.
+
+   The client must be able to reach a mount target, and the security groups must be permit the required traffic.
