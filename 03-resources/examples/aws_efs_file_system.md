@@ -740,3 +740,8 @@ Important Arguments:
         Amazon EFS
      
       The mount target security group should allow inbound TCP port 2049 from the intended EC2 client security group.
+
+## 3.5  Step 4 - Mount EFS on the EC2 Instance
+
+
+      
