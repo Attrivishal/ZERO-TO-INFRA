@@ -767,3 +767,7 @@ Important Arguments:
     EC2 cannot access it                    EC2 can read/write files
 
     Like a locked locker                    Like an open door with a path to walk through 
+
+  The Mount Point
+
+   The directory might be: /mnt 
