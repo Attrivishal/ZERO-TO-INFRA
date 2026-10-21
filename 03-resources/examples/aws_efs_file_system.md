@@ -742,6 +742,28 @@ Important Arguments:
       The mount target security group should allow inbound TCP port 2049 from the intended EC2 client security group.
 
 ## 3.5  Step 4 - Mount EFS on the EC2 Instance
-
-
+     
+  Lets Connect this to what you already Know
+     
+     You Already Know:
       
+      - step 1: Created EFS file system (fs-0123456789abcdef0)
+      - step 2: Created mount tragets ( the doorways)
+      - step 3: Configure Security Groups (port 2049 allowed)
+
+ Now the question is: How does the EC2 instance actually use the EFS?
+   
+    That's what mounting solves.
+
+  What is Mounting?
+    
+    Mounting connects the remote file system to a directory on the instance's operating system. 
+
+ Think of it like this:
+    
+    Without Mounting                       With Mounting
+    EFS exists in AWS                       EFS appears as a folder on EC2
+
+    EC2 cannot access it                    EC2 can read/write files
+
+    Like a locked locker                    Like an open door with a path to walk through 
