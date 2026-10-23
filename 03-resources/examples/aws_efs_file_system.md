@@ -770,6 +770,6 @@ Important Arguments:
 
   The Mount Point
 
-   The directory might be: /mnt/ 
+   The directory might be: /mnt/efs
 
-   
+
