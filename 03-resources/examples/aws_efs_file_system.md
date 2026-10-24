@@ -770,6 +770,24 @@ Important Arguments:
 
   The Mount Point
 
-   The directory might be: /mnt/efs
+    The directory might be:-  /mnt/efs
+
+ On a suitably configured Linux EC2 instance, the mount operation can be performed with the EFS mount helper:
+
+    sudo mkdir -p /mnt/efs - Linux command 
+    sudo mount -t efs fs-0123456789abcdef0:/ /mnt/efs
+
+   This example assumes the EFS mount helper is installed and configured and that the file system is reachable through the VPC. 
+
+   After Mounting, applications can access the files through the mount directory.
+         
+                EC2 Operating System
+                        |
+                        |
+                     /mnt/efs
+                        |
+               Remote EFS File System
+   
+   The directory acts as the local access point, but the data is stored in EFS rather than on the instance's local disk.
 
 
