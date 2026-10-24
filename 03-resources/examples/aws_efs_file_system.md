@@ -458,7 +458,6 @@ EFS encryption at rest and in transit
 
       - Performance mode, throughput mode, and storage-class costs
 
-
 "EFS is not automatically the best option for every workload. If an application needs a database engine, object storage, or high-performance block storage, a different service may be more appropriate."
 
 ## 2.6 Key Takeaway
@@ -469,7 +468,7 @@ Remember: EFS solves the shared-file-storage problem. It does not replace every 
 
 ## 3. How Amazon EFS Works
 
-   Amazon EFS Provides a shared file system that can be accessed by multiple clients over a network. AWS manages the underlying storage infrastructure, while you configure the file system, network connectivity, and access permissions.
+Amazon EFS Provides a shared file system that can be accessed by multiple clients over a network. AWS manages the underlying storage infrastructure, while you configure the file system, network connectivity, and access permissions.
 
 ## 3.1 High-Level Architecture
 
@@ -506,16 +505,16 @@ The Diagram:
     └─────────────────────────────────┘
 
 The Main Components:
-     
+
      Components                     What it does
      1. EFS File system             stores the shared files and directories
      2.  Mount Target                Provides a network endpoint through which clients access the file system
      3. EC2 instance                 Runs the application that reads and writes files
-     4. VPC                          Provides  the network environment used for communication 
+     4. VPC                          Provides  the network environment used for communication
      5. NFS Protocol                 Enables clients to access the remote file system
 
 How Each Component Connects:
-   
+
          EC2 Instance (AZ A)
                 │
                 │ NFS
@@ -533,61 +532,56 @@ How Each Component Connects:
                │
          EC2 Instance (AZ B)
 
-
 ## 3.2 Create the EFS File System
- 
-  let's connect this to what you already Know:
 
-  You already know that with EBS, you create a volume and specify it's size:
+let's connect this to what you already Know:
 
-     
+You already know that with EBS, you create a volume and specify it's size:
+
      resource "aws_ebs_volume" "My-Volume" {
           size = 20 # <- You must choose a fixed size
      }
 
-  
-  Now with EFS, the first step is similar but different. 
+Now with EFS, the first step is similar but different.
 
-  I create a file system, but i don't specify a fixed size. it grows and shrinks automatically.
+I create a file system, but i don't specify a fixed size. it grows and shrinks automatically.
 
-  What Happens in this step
-    
-    An EFS file system is created in AWS. it is the shared storage resource. 
+What Happens in this step
 
- Step 1: Create EFS File System
-               |
-               |
-         AWS creates the file system 
-               |
-               |
-         You get a filesystem ID: fs-0123456789abcdef0
+    An EFS file system is created in AWS. it is the shared storage resource.
 
-  
-  The File System ID:
-     
-    It has its own  file system ID, such as -fs-0123456789abcdef0. This ID indentifies the EFS resource. 
-   
+Step 1: Create EFS File System
+|
+|
+AWS creates the file system
+|
+|
+You get a filesystem ID: fs-0123456789abcdef0
+
+The File System ID:
+
+    It has its own  file system ID, such as -fs-0123456789abcdef0. This ID indentifies the EFS resource.
+
     Resource	        ID Format	                  Example
     EBS Volume	        vol-xxxxxxxxxxxxxxxxx	        vol-0a1b2c3d4e5f6g7h8
     EFS File System    fs-xxxxxxxxxxxxxxxxx	        fs-0123456789abcdef0
     EC2 Instance	   i-xxxxxxxxxxxxxxxxx	        i-0a1b2c3d4e5f6g7h8
-     
-     The ID is  how you refernce the file system later. 
 
-  The Key Difference From EBS:
+     The ID is  how you refernce the file system later.
+
+The Key Difference From EBS:
 
        Aspect              EBS                                    EFS
-       Size                You specifies fixed size (20 GiB)     No fixed size grows\shrinks automatically 
+       Size                You specifies fixed size (20 GiB)     No fixed size grows\shrinks automatically
 
        Creation            Create volume + attach to Ec2         creates file system+ mount targets
 
-       Access              Attached to one instance               Shared accross many instance 
+       Access              Attached to one instance               Shared accross many instance
 
 
     "Unlike an EBS volume, you do not specify a fixed volume size when creating an EFS file system. Its storage usage grows and shrinks as data is added and removed."
-  
-   
- And this how we create a EFS using AWS resources: 
+
+And this how we create a EFS using AWS resources:
 
      resources "aws_efs_file_system" "My-efs" {
           creation_token = "My-efs"
@@ -598,12 +592,12 @@ How Each Component Connects:
           }
      }
 
-     That single block creates the file system in AWS. 
+     That single block creates the file system in AWS.
 
 Important Arguments:
-      
+
       1. Creation_token:  A unique name you give to your file system so AWS doesn't accidently create duplicates.
-     
+
       2. encrypted - The Lock : Encrypts your data so no one can read it without the key.
 
       3. tags - The Labels: Labels you attach to your file system so you  can find it easily later.
@@ -614,78 +608,77 @@ Important Arguments:
          Team        = "devops"       # - Who owns it?
       }
 
-   Important Warning: 
-       
+Important Warning:
+
        "At this stage, creating the file system alone does not mean an EC2 instance can access it. Network access must also be configured."
 
-  The Visual:
-    
-     Step 1:  Create EFS File System 
+The Visual:
+
+     Step 1:  Create EFS File System
                     |
                     |
              EFS File system
-             ID -  ID: fs-0123456789abcdef0    
+             ID -  ID: fs-0123456789abcdef0
              (created, but not accessible yet)
                     |
                     | Next step - Configure network access
                     |
      Step 2: Create Mount Targets
      Step 3: Configure Security Groups
-     Step 4: Mount from EC2 
+     Step 4: Mount from EC2
 
-  Let me tell you with the help of Analogy:
-    
+Let me tell you with the help of Analogy:
+
     Think of a new office Building:
 
      Step1 : The Building is constructed (EFS File system create)
-     But = No doors 
+     But = No doors
 
      Step2 : Install doors and roads (Mount targets)
 
      Step3 : Give Keys to employees (Security groups)
      Step4 : Employees can enter (EC2 Mounts the file system)
 
-  Creating the Building is just the first step: You still need doors and keys.
+Creating the Building is just the first step: You still need doors and keys.
 
-  The One-Liner
+The One-Liner
 
     "Step-1: Create the EFS file system. it has as ID(fs-xxx). No fixed size. But it's not accessible yet- network access must be configured next."
 
-
 ## 3.3 Step 2 - Create Mount Targets
-  
-   Let's Connect this to what  you already know
 
-   You already know that:
-     
+Let's Connect this to what you already know
+
+You already know that:
+
      - Step 1: You created the EFS file system (fs-fs-0123456789abcdef0)
      - But: The file system exists in AWS - it's not accessible yet
 
-   Now the questions: How does an Ec2 instance actually connect to it?
+Now the questions: How does an Ec2 instance actually connect to it?
 
-   That's what mount targets solve.
+That's what mount targets solve.
 
-   Now you are thinking that what is mount Target?
+Now you are thinking that what is mount Target?
 
      A mount target privides a network endpoint for accessing an EFS file system from a VPC.
 
-   Think of it like a doorway into the filesystem.
+Think of it like a doorway into the filesystem.
 
      without Mount Target:
      EFS File System (isolated, no way in)
 
      With Mount Target:
-     EFS File System -> Mount Target (doorway) -> EC2 can Connect 
- 
-   Here one is Important thing that:
-      
+     EFS File System -> Mount Target (doorway) -> EC2 can Connect
+
+Here one is Important thing that:
+
       Each mount target is associated with a subnet in a specific Availability Zone and has a network interface and private IP address.
 
       Subnet = A range of IP address in Your VPC(virtual private cloud)
 
-   Below are the visuals:
-      
-      EFS File System 
+Below are the visuals:
+
+      EFS File System
              |
              | -- Mount Target - AZ A (us-east-1a)
              |         |
@@ -697,38 +690,37 @@ Important Arguments:
              |         |
              |          ---- Priavte IP: 10.1.1.50
 
-     
+
      Each AZ gets its own mount target with its own IP address.
 
-  Now you might be thinking that why Multiple Mount Targets?
-    
+Now you might be thinking that why Multiple Mount Targets?
+
     let me give you an answer
-      
+
         For a regional EFS file system, AWS recommened configuring mount tatgets in each availability zone where clients need access.
-  
+
      Scenario	                  Mount Targets Needed
      EC2 in AZ A only	          One mount target in AZ A
      EC2 in AZ A and AZ B	     One mount target in AZ A + one in AZ B
      EC2 in 3 AZs	               Three mount targets (one per AZ)
 
-  Why? 
-     
+Why?
+
      Because each EC2 instance connects to the mount target in its own AZ. This reduces latency and avoids cross-AZ data transfer costs.
 
-
 ## 3.4 Step 3 - Configure Network Access
-  
-   EFS uses network connectivity to communicate with clients.
 
-   The client must be able to reach a mount target, and the security groups must be permit the required traffic.
+EFS uses network connectivity to communicate with clients.
 
-   For standard EFS NFS access, the important port is:
+The client must be able to reach a mount target, and the security groups must be permit the required traffic.
+
+For standard EFS NFS access, the important port is:
 
      Protocol           Port        Purpose
      TCP                2049        NFS communication between client and EFS mount target
 
-   A typical security group arrangement is:
-     
+A typical security group arrangement is:
+
       EC2 Security Group
           |
           | Outbound TCP 2049
@@ -738,56 +730,139 @@ Important Arguments:
           | Inbound TCP 2049
           |
         Amazon EFS
-     
+
       The mount target security group should allow inbound TCP port 2049 from the intended EC2 client security group.
 
-## 3.5  Step 4 - Mount EFS on the EC2 Instance
-     
-  Lets Connect this to what you already Know
-     
+## 3.5 Step 4 - Mount EFS on the EC2 Instance
+
+Lets Connect this to what you already Know
+
      You Already Know:
-      
+
       - step 1: Created EFS file system (fs-0123456789abcdef0)
       - step 2: Created mount tragets ( the doorways)
       - step 3: Configure Security Groups (port 2049 allowed)
 
- Now the question is: How does the EC2 instance actually use the EFS?
-   
+Now the question is: How does the EC2 instance actually use the EFS?
+
     That's what mounting solves.
 
-  What is Mounting?
-    
-    Mounting connects the remote file system to a directory on the instance's operating system. 
+What is Mounting?
 
- Think of it like this:
-    
+    Mounting connects the remote file system to a directory on the instance's operating system.
+
+Think of it like this:
+
     Without Mounting                       With Mounting
     EFS exists in AWS                       EFS appears as a folder on EC2
 
     EC2 cannot access it                    EC2 can read/write files
 
-    Like a locked locker                    Like an open door with a path to walk through 
+    Like a locked locker                    Like an open door with a path to walk through
 
-  The Mount Point
+The Mount Point
 
     The directory might be:-  /mnt/efs
 
- On a suitably configured Linux EC2 instance, the mount operation can be performed with the EFS mount helper:
+On a suitably configured Linux EC2 instance, the mount operation can be performed with the EFS mount helper:
 
-    sudo mkdir -p /mnt/efs - Linux command 
+    sudo mkdir -p /mnt/efs - Linux command
     sudo mount -t efs fs-0123456789abcdef0:/ /mnt/efs
 
-   This example assumes the EFS mount helper is installed and configured and that the file system is reachable through the VPC. 
+This example assumes the EFS mount helper is installed and configured and that the file system is reachable through the VPC.
 
-   After Mounting, applications can access the files through the mount directory.
-         
+After Mounting, applications can access the files through the mount directory.
+
                 EC2 Operating System
                         |
                         |
                      /mnt/efs
                         |
                Remote EFS File System
-   
-   The directory acts as the local access point, but the data is stored in EFS rather than on the instance's local disk.
+
+The directory acts as the local access point, but the data is stored in EFS rather than on the instance's local disk.
+
+## 3.6 Step 5 - Read and Write Files
+
+Before this you already know that:
+
+     We mounted EFS at /mnt/efs on Ec2 instance
+     Now the folder exists, and it's conncted to EFS
+     Next: We have to actually use it.
 
 
+How do you actually use it?
+
+That's what this step is about.
+
+    Once Mounted, EFS works like a normal folder. You read and write files like you always do.
+
+1. Writing a file (EC2-A)
+
+Here we use linux command to write a file.
+
+    echo "Hello from EC2-A" | sudo tee /mnt/efs/example.txt
+
+    echo "Hello from EC2-A"        ->  creates the text
+    | (Pipe command)               ->  Connect one command to another command
+    sudo tee /mnt/efs/example.txt  -> Write the text to the EFS file
+
+2.  Reading a file (EC2-B)
+
+    Here also we are using linux command to read a file.
+
+         cat /mnt/efs/example.txt
+
+    Output:
+
+          Hello from EC2-A
+
+    cat command in Linux is used for read the content from any file.
+
+The Visual:
+
+        EC2-A
+          |
+          | Write example.txt
+          |
+        Amazon EFS
+          |
+          | Read example.txt
+          |
+        EC2-B
+
+    Both clients access the same underlying file system. They do not need to transfer the file manually between instances.
+
+     POSIX Permissions:  Linux file permission that control who can read, write, or execute a file.
+
+## 3.7 step 6- Understand Availability Across AZs
+
+As you Already Know
+
+    You created a mount target in one subnet (one AZ)
+    EC2 instances can read and write files through the mount target
+
+Now the question is: What if EC2 instances are in different Availability Zones?
+
+That's what this step explains.
+
+What is Regional EFS file system?
+
+      A regional EFS File system stores data redundantly across multiple Availability Zones within its AWS region.
+
+       Region: us-east-1
+       │
+       ├── AZ A (us-east-1a)
+       │       └── EFS data (copy 1)
+       │
+       ├── AZ B (us-east-1b)
+       │       └── EFS data (copy 2)
+       │
+       └── AZ C (us-east-1c)
+               └── EFS data (copy 3)
+
+     Your data is stored in multiple AZs. If one AZ fails, your data is still available in another AZ.
+
+What this means:
+
+      "This allows supported clients in different Availability Zones to access the same file system, provided network connectivity and permissions are configured correctly."
