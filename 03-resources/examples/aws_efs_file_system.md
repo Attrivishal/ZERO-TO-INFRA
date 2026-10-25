@@ -866,3 +866,4 @@ What is Regional EFS file system?
 What this means:
 
       "This allows supported clients in different Availability Zones to access the same file system, provided network connectivity and permissions are configured correctly."
+
