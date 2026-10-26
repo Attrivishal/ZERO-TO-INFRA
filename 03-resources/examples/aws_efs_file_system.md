@@ -923,4 +923,22 @@ What this means:
 
    What you need beyound the file system:
       
-       "Creating the file system is only the first step: clients also need appropriate network connectivity, security rules, operating-system configuration, and permissions."
+       "Creating the file system is only the first step: clients also need appropriate network connectivity, security rules, operating-system configuration, and permissions." 
+
+   
+   The complete Picture:
+      
+
+       EFS File System (stores files)
+              │
+              ▼
+       Mount Target (network endpoint)
+              │
+              ▼
+      EC2 Instance (mounts and accesses)
+              │
+              ▼
+      Normal File Operations (read/write)
+
+
+ That's all from my side related to this topic :) 
