@@ -905,4 +905,22 @@ What this means:
 
      Security groups can be created before mount targets, and the exact dependencies depend on how the configuration references each resource.
 
+## 3.9 Key Takeaway
+   
+   The Core Idea:-
+       
+       Amazon EFS works by providing a shared file system that clients access over a network through using NFS.
 
+
+   The three Main Components:
+      
+      EFS File System:    Stores the shared Files
+      
+      Mount Traget:      Provide network endpoints
+
+      EC2 instance:      Mounts the file system and access it through normal file operations.
+
+
+   What you need beyound the file system:
+      
+       "Creating the file system is only the first step: clients also need appropriate network connectivity, security rules, operating-system configuration, and permissions."
