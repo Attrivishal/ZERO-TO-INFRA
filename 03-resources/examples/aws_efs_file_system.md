@@ -867,3 +867,42 @@ What this means:
 
       "This allows supported clients in different Availability Zones to access the same file system, provided network connectivity and permissions are configured correctly."
 
+## 3.8  Complete EFS ACCESS Flow
+   
+   The Complete flow is:
+     
+      1. Create EFS File System 
+                 |
+                 |
+      2.  Create Mount Targets
+                 |
+                 |
+      3. Configure Security Groups 
+                 |
+                 |
+     4.  Install Required Clients Tools
+                 |
+                 |
+     5. Mount EFS on EC2
+                 |
+                 |
+     6. Read and Write Files
+
+  For Terraform, the key dependency chain is:
+    
+     EFS File System
+           |
+           |
+     EFS Mount Target 
+           |
+           |
+     Network Acess and client Configuration 
+           |
+           |
+     EC2 Mounts the file System
+
+     This is a conceptual workflow, not a strict dependency graph for every Terraform resource. 
+
+     Security groups can be created before mount targets, and the exact dependencies depend on how the configuration references each resource.
+
+
