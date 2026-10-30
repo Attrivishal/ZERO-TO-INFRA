@@ -972,3 +972,61 @@ They must be reachable from the clients that need access.
 A Regional EFS file system supports one mount target per Availability Zone per VPC.
 
 Remember: Creating an EFS file system and creating its mount targets are separate operations.
+
+## 4.3 Regional vs One ZOne File systems
+
+EFS provides two main storage availability options.
+
+Feature               Regional              One Zone
+
+Data storage         Across multiple AZs    In one AZ
+
+Availability design  Multi-AZ resilience    Depends on one AZ
+
+Typical use          Production workloads needing multi-AZ resilience                          Workloads that can accept single-AZ storage availability
+
+Cost                Generally higher         Generally lower
+
+A Regional file system is usually the starting choice for production applications that require resilience across Availability Zones.
+
+One Zone may be appropriate for development, test, or other workloads that can accept its availability limitations.
+
+Important: Regional and One Zone describe the file system's storage placement, not the number of EC2 instances that can access it
+
+## 4.4 Network File System (NFS)
+
+  EFS uses the Network File System protocol for standard file-system access.
+
+NFS allows a client to access files on a remote server as though they were available through a mounted directory.
+
+For standard EFS access, the important network port is:
+
+Protocol        Port     Purpose
+
+TCP              2049    NFS traffic
+
+For example, an EC2 instance might access EFS through /mnt/efs.
+
+EC2 Application
+      |
+      ▼
+  /mnt/efs
+      |
+      ▼
+  NFS over TCP
+      |
+      ▼
+EFS Mount Target
+      |
+      ▼
+ EFS File System
+
+## 4.5 VPC and Security Groups
+  
+  EFS clients need network connectivity to a mount target.
+
+The mount target's security group should permit inbound TCP port 2049 from the intended client security group. The client security group's outbound rules must also permit the connection.
+
+Use narrowly scoped rules instead of allowing NFS access from all IP addresses.
+
+Remember: A valid file system ID alone is insufficient. Network reachability and security rules must also be correct.
