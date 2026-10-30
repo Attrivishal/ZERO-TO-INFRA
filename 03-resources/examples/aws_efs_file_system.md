@@ -944,3 +944,9 @@ What this means:
  That's all from my side related to this topic :) 
 
  
+ ## 4. Important EFS Concepts
+   
+    Amazon EFS includes several Concepts that determine how a file system is accessed, secured, scaled, and maintained.
+
+## 4.1 EFS File System
+  
