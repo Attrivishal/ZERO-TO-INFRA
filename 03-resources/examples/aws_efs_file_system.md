@@ -790,7 +790,6 @@ Before this you already know that:
      Now the folder exists, and it's conncted to EFS
      Next: We have to actually use it.
 
-
 How do you actually use it?
 
 That's what this step is about.
@@ -867,17 +866,17 @@ What this means:
 
       "This allows supported clients in different Availability Zones to access the same file system, provided network connectivity and permissions are configured correctly."
 
-## 3.8  Complete EFS ACCESS Flow
-   
-   The Complete flow is:
-     
-      1. Create EFS File System 
+## 3.8 Complete EFS ACCESS Flow
+
+The Complete flow is:
+
+      1. Create EFS File System
                  |
                  |
       2.  Create Mount Targets
                  |
                  |
-      3. Configure Security Groups 
+      3. Configure Security Groups
                  |
                  |
      4.  Install Required Clients Tools
@@ -888,46 +887,42 @@ What this means:
                  |
      6. Read and Write Files
 
-  For Terraform, the key dependency chain is:
-    
+For Terraform, the key dependency chain is:
+
      EFS File System
            |
            |
-     EFS Mount Target 
+     EFS Mount Target
            |
            |
-     Network Acess and client Configuration 
+     Network Acess and client Configuration
            |
            |
      EC2 Mounts the file System
 
-     This is a conceptual workflow, not a strict dependency graph for every Terraform resource. 
+     This is a conceptual workflow, not a strict dependency graph for every Terraform resource.
 
      Security groups can be created before mount targets, and the exact dependencies depend on how the configuration references each resource.
 
 ## 3.9 Key Takeaway
-   
-   The Core Idea:-
-       
+
+The Core Idea:-
+
        Amazon EFS works by providing a shared file system that clients access over a network through using NFS.
 
+The three Main Components:
 
-   The three Main Components:
-      
       EFS File System:    Stores the shared Files
-      
+
       Mount Traget:      Provide network endpoints
 
       EC2 instance:      Mounts the file system and access it through normal file operations.
 
+What you need beyound the file system:
 
-   What you need beyound the file system:
-      
-       "Creating the file system is only the first step: clients also need appropriate network connectivity, security rules, operating-system configuration, and permissions." 
+       "Creating the file system is only the first step: clients also need appropriate network connectivity, security rules, operating-system configuration, and permissions."
 
-   
-   The complete Picture:
-      
+The complete Picture:
 
        EFS File System (stores files)
               │
@@ -940,13 +935,40 @@ What this means:
               ▼
       Normal File Operations (read/write)
 
+That's all from my side related to this topic :)
 
- That's all from my side related to this topic :) 
+## 4. Important EFS Concepts
 
- 
- ## 4. Important EFS Concepts
-   
     Amazon EFS includes several Concepts that determine how a file system is accessed, secured, scaled, and maintained.
 
 ## 4.1 EFS File System
-  
+
+An EFS File system is the primary storage resource that holds and directories.
+
+It has a unique file system ID, Such as:
+
+        fs-0123456789abcdef0
+
+Multiple authorized clients can access the same file system.
+
+Unlike a typical EBS volume, EFS does not require you to provision a fixed storage capacity when creating the file system. Its storage usage adjusts as files are added and removed.
+
+Remember: The file system stores the data; it does not automatically configure client connectivity.
+
+## 4.2 Mount Target
+
+A mount target is a network endpoint through which an EC2 instance or another supported client connects to EFS.
+
+Each mount target is associated with a subnet and a security group.
+
+Important points:
+
+Mount targets provide network access to the file system.
+
+They have network interfaces and private IP addresses.
+
+They must be reachable from the clients that need access.
+
+A Regional EFS file system supports one mount target per Availability Zone per VPC.
+
+Remember: Creating an EFS file system and creating its mount targets are separate operations.
