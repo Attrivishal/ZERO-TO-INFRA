@@ -1231,3 +1231,18 @@ Available values:
      
       provisioned_throughput_in_mibps is applicable when the throughput mode is provisioned.
 
+
+## 5.6 Understanding availability_zone_name
+
+   This argument is used when creating an EFS file system with One Zone storage.
+
+
+   Example:
+      
+      availability_zone_name = "us-east-1a"
+   
+   It identifies the Availability Zone in which the One Zone file system is created.
+
+   For a Regional EFS file system, you normally omit this argument.
+
+## 5.7 Understanding tags
