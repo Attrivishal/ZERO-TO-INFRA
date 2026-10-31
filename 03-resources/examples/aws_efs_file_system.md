@@ -1030,3 +1030,89 @@ The mount target's security group should permit inbound TCP port 2049 from the i
 Use narrowly scoped rules instead of allowing NFS access from all IP addresses.
 
 Remember: A valid file system ID alone is insufficient. Network reachability and security rules must also be correct.
+
+## 4.6 EFS Access Points
+
+An EFS access point is an application-specific entry point into a file system.
+
+It can provide:
+
+A designated root directory for the application
+
+Enforced POSIX user and group identity
+
+Consistent access behavior for applications using that access point
+
+For example, different applications can use different access points to access their designated directories within one file system.
+
+An access point does not create a separate file system or an independent storage capacity.
+
+Remember: An access point helps control how an application accesses a shared EFS file system.
+
+## 4.7 Performance Mode
+
+Performance mode determines how the file system is optimized for performance characteristics.
+
+The main modes are:
+
+General Purpose: Recommended for most workloads; designed to provide low latency.
+
+Max I/O: Designed for workloads requiring highly parallelized access, with higher latency characteristics. AWS recommends evaluating Elastic throughput and General Purpose performance mode for many modern workloads.
+
+Choose the mode based on the application's access patterns and performance requirements. Check current AWS service documentation before selecting a mode for a new deployment.
+
+## 4.8 Throughput Mode
+
+Throughput mode determines how EFS provides file-system throughput.
+
+The main options include:
+
+Elastic: Throughput automatically scales with workload activity within the service's limits.
+
+Provisioned: You specify a throughput level independently of the amount of data stored, subject to service requirements.
+
+Bursting: Throughput is related to the amount of data stored, with burst capacity governed by the service's credit model.
+
+The right choice depends on workload activity, throughput requirements, and cost.
+
+Important: Performance mode and throughput mode are different settings. Performance mode concerns file-system performance characteristics; throughput mode determines how throughput capacity is provided.
+
+## 4.9 Encryption
+
+EFS supports encryption at rest and encryption in transit.
+
+Encryption at rest: Protects stored file data using AWS KMS-managed or customer-managed keys.
+
+Encryption in transit: Protects data moving between a client and EFS when the client is configured to use TLS.
+
+For production workloads, determine which encryption requirements apply and configure the file system and client mount accordingly.
+
+## 4.10 EFS Storage Classes and Lifecycle Management
+
+EFS supports storage classes intended for different access patterns, including frequently accessed data and data that is accessed less often.
+
+Lifecycle management can transition eligible files to lower-cost storage classes based on configured policies.
+
+This can reduce storage costs for suitable workloads, but retrieval and access characteristics should be considered when selecting a policy.
+
+## 4.11 Backup and Recovery
+
+EFS data can be protected using AWS Backup and other supported backup approaches.
+
+A backup strategy should specify:
+
+Backup frequency and retention
+
+Recovery requirements
+
+Whether backups must be protected from accidental deletion
+
+How restoration will be tested
+
+A Regional EFS file system provides multi-AZ storage resilience, but that is not a substitute for backups. Backups can help recover from accidental deletion, unwanted changes, or other logical data-loss events.
+
+## 4.12 Key Takeaway
+
+Before creating EFS with Terraform, understand the file system, mount targets, storage availability option, NFS networking, access points, performance and throughput modes, encryption, and backup strategy.
+
+These concepts determine how the file system behaves in production and which Terraform arguments and related AWS resources you need.
