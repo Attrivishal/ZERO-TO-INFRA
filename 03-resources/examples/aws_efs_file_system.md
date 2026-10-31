@@ -1188,4 +1188,46 @@ Terraform resource address:
 
  For production environments, encryption should be considered as part of the storage security requirements. 
 
+## 5.4 Understanding performance_mode
+
+    This argument defines the performance mode of the EFS file system.
+
+performance_mode = "generalPurpose"
+
+Available values:
+
+Value              Purpose
+
+generalPurpose      Suitable for most workloads and designed for low latency
+
+maxIO               Designed for highly parallelized workloads with different latency characteristics
+
+The default is generalPurpose.
+
+ Choose the mode according to the application's workload requirements.
+
+##  5.5 Understanding throughput_mode
+
+This argument determines how throughput capacity is provided.
+    
+    throughput_mode = "elastic"
+
+Available values:
  
+ Mode                    Purpose
+ bursting                Throughput is related to the amount of data stored and burst credits
+
+ provisioned             You specify the desired throughput capacity
+
+ elastic                 Throughput automatically scales with workload activity withthin service limits. 
+
+ For provisioned throughput, configure:
+   
+   throughput_mode                  = "provisioned"
+   provisioned_throughput_in_mibps  = 10
+
+
+   Important:
+     
+      provisioned_throughput_in_mibps is applicable when the throughput mode is provisioned.
+
