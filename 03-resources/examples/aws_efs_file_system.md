@@ -1172,3 +1172,20 @@ Terraform resource address:
      The creation token identifies the creation request; AWS generates the actual file system ID.
 
 ## 5.3 Understanding encrypted 
+
+   This argument controls encryption at rest.
+    
+    encrypted = true
+
+ When enabled, AWS encrypts the data stored in the EFS file system.
+
+ You can also specify a cutomer-managed AWS KMS Key:
+    
+    encrypted = true
+    Kms_key_id = var.Kms_key_id
+
+ IF Kms_id is specified, encryption must be enabled. 
+
+ For production environments, encryption should be considered as part of the storage security requirements. 
+
+ 
