@@ -1116,3 +1116,34 @@ A Regional EFS file system provides multi-AZ storage resilience, but that is not
 Before creating EFS with Terraform, understand the file system, mount targets, storage availability option, NFS networking, access points, performance and throughput modes, encryption, and backup strategy.
 
 These concepts determine how the file system behaves in production and which Terraform arguments and related AWS resources you need.
+
+## 5. Terraform Resource
+   
+    Terraform provides the aws_efs_file_system resource to create and manage an amazon EFS File System. 
+
+    Using this resource, We can configure the file system's encryption, performance mode, throughout mode, storage lifecycle policies, and tags.
+
+## 5.1 Resource Structure
+  
+  Basic Terraform resource structure>:
+     
+     resource "aws_efs_file_system" "example" {
+          creation_token = "my-efs-file-system"
+
+          ecrypted = true
+
+          tags = {
+               Name = "application-efs"
+          }
+     }
+
+The resource consists of:
+
+| Component | Purpose |
+|---|---|
+| `resource` | Declares an AWS resource |
+| `aws_efs_file_system` | Terraform resource type |
+| `example` | Terraform local resource name |
+| `creation_token` | Unique identifier used during file-system creation |
+| `encrypted` | Enables encryption at rest |
+| `tags` | Adds metadata to the file system |
