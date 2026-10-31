@@ -1147,3 +1147,28 @@ The resource consists of:
 | `creation_token` | Unique identifier used during file-system creation |
 | `encrypted` | Enables encryption at rest |
 | `tags` | Adds metadata to the file system |
+
+Terraform resource address:
+  
+  aws_efs_file_system.example
+
+## 5.2 Understanding creation_token
+ 
+  The creation_token is a unique identifier used when creating an EFS file system.
+
+  Example:
+     
+     creation_token = "application-efs-2026"
+
+ Important points:
+    
+    1. It can contain up to 64 characters
+    2. It helps ensure indempotent file-system creation.
+    3. It is optional because Terraform can generate one automatically.
+    4. It is not the actual EFS file system ID.
+
+   Remember: 
+
+     The creation token identifies the creation request; AWS generates the actual file system ID.
+
+## 5.3 Understanding encrypted 
