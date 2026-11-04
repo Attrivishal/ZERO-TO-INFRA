@@ -6,6 +6,7 @@ This repository is carefully structured to take you from an absolute beginner to
 
 ---
 
+
 ## 🗺️ Repository Structure
 
 A quick guide to how the learning material is structured across files and folders:
