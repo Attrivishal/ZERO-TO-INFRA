@@ -1282,3 +1282,45 @@ Tags help organize and identify AWS resources
 This returns the generated EFS file system ID. 
 
        You can use this attribute when configuring dependent resources such as EFS mount targets. 
+
+
+## 5.9 Complete Basic Configuration 
+
+     resource "aws_efs_file_system" "application_efs" {
+          creation_token = "application-efs-2026"
+
+          encrypted = true
+          performance_mode = "generalPurpose"
+          throughput_mode = "elastic"
+
+          tags = {
+               Name        = "application-efs"
+               Environment = "development"
+               ManageBy    = "terraform"
+          }
+     }
+
+  This configuration creates an encrypted Regional EFS file system using general  purpose performance mode and elastic throughput. 
+
+  it does not create mount targets or configure EC2 access. Those are separate resources and configurations. 
+
+## 5.10 Key takeaway
+
+   The aws_efs_file_system resource creates and manages the primary EFS storage resource.
+
+  Its important arguments control encryption, performance, throughput, storage placement, and resource metadata.
+
+  Remember:
+
+   Creating the EFS file system is only the first step. To make it accessible to EC2 instances, you must configure mount targets, networking, security groups, and client-side mounting.
+
+
+## 6 Terraform behaviour 
+
+  Terraform manages Amazon EFS by comparing the desored configuration, Terraform state, and actual AWS infrastructure.
+
+  It determines whether the EFS file system needs to be created, updated, replaced, or destroyed.
+
+## 7.1 Initial Resource Creation
+ 
+   When an EFS resource is defined for the first time, Terraform checks whether it is already managed in the current state. 
