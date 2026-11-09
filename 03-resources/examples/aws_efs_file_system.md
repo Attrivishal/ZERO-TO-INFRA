@@ -977,15 +977,15 @@ Remember: Creating an EFS file system and creating its mount targets are separat
 
 EFS provides two main storage availability options.
 
-Feature               Regional              One Zone
+Feature Regional One Zone
 
-Data storage         Across multiple AZs    In one AZ
+Data storage Across multiple AZs In one AZ
 
-Availability design  Multi-AZ resilience    Depends on one AZ
+Availability design Multi-AZ resilience Depends on one AZ
 
-Typical use          Production workloads needing multi-AZ resilience                          Workloads that can accept single-AZ storage availability
+Typical use Production workloads needing multi-AZ resilience Workloads that can accept single-AZ storage availability
 
-Cost                Generally higher         Generally lower
+Cost Generally higher Generally lower
 
 A Regional file system is usually the starting choice for production applications that require resilience across Availability Zones.
 
@@ -995,35 +995,35 @@ Important: Regional and One Zone describe the file system's storage placement, n
 
 ## 4.4 Network File System (NFS)
 
-  EFS uses the Network File System protocol for standard file-system access.
+EFS uses the Network File System protocol for standard file-system access.
 
 NFS allows a client to access files on a remote server as though they were available through a mounted directory.
 
 For standard EFS access, the important network port is:
 
-Protocol        Port     Purpose
+Protocol Port Purpose
 
-TCP              2049    NFS traffic
+TCP 2049 NFS traffic
 
 For example, an EC2 instance might access EFS through /mnt/efs.
 
 EC2 Application
-      |
-      ▼
-  /mnt/efs
-      |
-      ▼
-  NFS over TCP
-      |
-      ▼
+|
+▼
+/mnt/efs
+|
+▼
+NFS over TCP
+|
+▼
 EFS Mount Target
-      |
-      ▼
- EFS File System
+|
+▼
+EFS File System
 
 ## 4.5 VPC and Security Groups
-  
-  EFS clients need network connectivity to a mount target.
+
+EFS clients need network connectivity to a mount target.
 
 The mount target's security group should permit inbound TCP port 2049 from the intended client security group. The client security group's outbound rules must also permit the connection.
 
@@ -1118,15 +1118,15 @@ Before creating EFS with Terraform, understand the file system, mount targets, s
 These concepts determine how the file system behaves in production and which Terraform arguments and related AWS resources you need.
 
 ## 5. Terraform Resource
-   
-    Terraform provides the aws_efs_file_system resource to create and manage an amazon EFS File System. 
+
+    Terraform provides the aws_efs_file_system resource to create and manage an amazon EFS File System.
 
     Using this resource, We can configure the file system's encryption, performance mode, throughout mode, storage lifecycle policies, and tags.
 
 ## 5.1 Resource Structure
-  
-  Basic Terraform resource structure>:
-     
+
+Basic Terraform resource structure>:
+
      resource "aws_efs_file_system" "example" {
           creation_token = "my-efs-file-system"
 
@@ -1139,54 +1139,54 @@ These concepts determine how the file system behaves in production and which Ter
 
 The resource consists of:
 
-| Component | Purpose |
-|---|---|
-| `resource` | Declares an AWS resource |
-| `aws_efs_file_system` | Terraform resource type |
-| `example` | Terraform local resource name |
-| `creation_token` | Unique identifier used during file-system creation |
-| `encrypted` | Enables encryption at rest |
-| `tags` | Adds metadata to the file system |
+| Component             | Purpose                                            |
+| --------------------- | -------------------------------------------------- |
+| `resource`            | Declares an AWS resource                           |
+| `aws_efs_file_system` | Terraform resource type                            |
+| `example`             | Terraform local resource name                      |
+| `creation_token`      | Unique identifier used during file-system creation |
+| `encrypted`           | Enables encryption at rest                         |
+| `tags`                | Adds metadata to the file system                   |
 
 Terraform resource address:
-  
-  aws_efs_file_system.example
+
+aws_efs_file_system.example
 
 ## 5.2 Understanding creation_token
- 
-  The creation_token is a unique identifier used when creating an EFS file system.
 
-  Example:
-     
+The creation_token is a unique identifier used when creating an EFS file system.
+
+Example:
+
      creation_token = "application-efs-2026"
 
- Important points:
-    
+Important points:
+
     1. It can contain up to 64 characters
     2. It helps ensure indempotent file-system creation.
     3. It is optional because Terraform can generate one automatically.
     4. It is not the actual EFS file system ID.
 
-   Remember: 
+Remember:
 
      The creation token identifies the creation request; AWS generates the actual file system ID.
 
-## 5.3 Understanding encrypted 
+## 5.3 Understanding encrypted
 
-   This argument controls encryption at rest.
-    
+This argument controls encryption at rest.
+
     encrypted = true
 
- When enabled, AWS encrypts the data stored in the EFS file system.
+When enabled, AWS encrypts the data stored in the EFS file system.
 
- You can also specify a cutomer-managed AWS KMS Key:
-    
+You can also specify a cutomer-managed AWS KMS Key:
+
     encrypted = true
     Kms_key_id = var.Kms_key_id
 
- IF Kms_id is specified, encryption must be enabled. 
+IF Kms_id is specified, encryption must be enabled.
 
- For production environments, encryption should be considered as part of the storage security requirements. 
+For production environments, encryption should be considered as part of the storage security requirements.
 
 ## 5.4 Understanding performance_mode
 
@@ -1196,68 +1196,65 @@ performance_mode = "generalPurpose"
 
 Available values:
 
-Value              Purpose
+Value Purpose
 
-generalPurpose      Suitable for most workloads and designed for low latency
+generalPurpose Suitable for most workloads and designed for low latency
 
-maxIO               Designed for highly parallelized workloads with different latency characteristics
+maxIO Designed for highly parallelized workloads with different latency characteristics
 
 The default is generalPurpose.
 
- Choose the mode according to the application's workload requirements.
+Choose the mode according to the application's workload requirements.
 
-##  5.5 Understanding throughput_mode
+## 5.5 Understanding throughput_mode
 
 This argument determines how throughput capacity is provided.
-    
+
     throughput_mode = "elastic"
 
 Available values:
- 
- Mode                    Purpose
- bursting                Throughput is related to the amount of data stored and burst credits
 
- provisioned             You specify the desired throughput capacity
+Mode Purpose
+bursting Throughput is related to the amount of data stored and burst credits
 
- elastic                 Throughput automatically scales with workload activity withthin service limits. 
+provisioned You specify the desired throughput capacity
 
- For provisioned throughput, configure:
-   
-   throughput_mode                  = "provisioned"
-   provisioned_throughput_in_mibps  = 10
+elastic Throughput automatically scales with workload activity withthin service limits.
 
+For provisioned throughput, configure:
 
-   Important:
-     
+throughput_mode = "provisioned"
+provisioned_throughput_in_mibps = 10
+
+Important:
+
       provisioned_throughput_in_mibps is applicable when the throughput mode is provisioned.
-
 
 ## 5.6 Understanding availability_zone_name
 
-   This argument is used when creating an EFS file system with One Zone storage.
+This argument is used when creating an EFS file system with One Zone storage.
 
+Example:
 
-   Example:
-      
       availability_zone_name = "us-east-1a"
-   
-   It identifies the Availability Zone in which the One Zone file system is created.
 
-   For a Regional EFS file system, you normally omit this argument.
+It identifies the Availability Zone in which the One Zone file system is created.
+
+For a Regional EFS file system, you normally omit this argument.
 
 ## 5.7 Understanding tags
 
 Tags help organize and identify AWS resources
 
-  Example:
-     
+Example:
+
      tags = {
           Name = "application-efs"
           Environment = "development"
           ManagedBy = "Terraform"
      }
 
- Tags are useful for:
+Tags are useful for:
 
     1. Resource identification
     2. Environment classification
@@ -1266,7 +1263,7 @@ Tags help organize and identify AWS resources
 
 ## 5.8 Important attributes
 
-  After creating the file system, Terraform exposes useful attributes.
+After creating the file system, Terraform exposes useful attributes.
 
     Attribute                 Purpose
     id                        Unique EFS file system ID
@@ -1275,16 +1272,15 @@ Tags help organize and identify AWS resources
     owner_id                  AWS account that owns the file system
     number_of_mount_targets   Current number of mount targets
 
- Example resource reference:
-    
+Example resource reference:
+
     aws_efs_file_system.example.id
 
-This returns the generated EFS file system ID. 
+This returns the generated EFS file system ID.
 
-       You can use this attribute when configuring dependent resources such as EFS mount targets. 
+       You can use this attribute when configuring dependent resources such as EFS mount targets.
 
-
-## 5.9 Complete Basic Configuration 
+## 5.9 Complete Basic Configuration
 
      resource "aws_efs_file_system" "application_efs" {
           creation_token = "application-efs-2026"
@@ -1300,27 +1296,61 @@ This returns the generated EFS file system ID.
           }
      }
 
-  This configuration creates an encrypted Regional EFS file system using general  purpose performance mode and elastic throughput. 
+This configuration creates an encrypted Regional EFS file system using general purpose performance mode and elastic throughput.
 
-  it does not create mount targets or configure EC2 access. Those are separate resources and configurations. 
+it does not create mount targets or configure EC2 access. Those are separate resources and configurations.
 
 ## 5.10 Key takeaway
 
-   The aws_efs_file_system resource creates and manages the primary EFS storage resource.
+The aws_efs_file_system resource creates and manages the primary EFS storage resource.
 
-  Its important arguments control encryption, performance, throughput, storage placement, and resource metadata.
+Its important arguments control encryption, performance, throughput, storage placement, and resource metadata.
 
-  Remember:
+Remember:
 
-   Creating the EFS file system is only the first step. To make it accessible to EC2 instances, you must configure mount targets, networking, security groups, and client-side mounting.
+Creating the EFS file system is only the first step. To make it accessible to EC2 instances, you must configure mount targets, networking, security groups, and client-side mounting.
 
+## 6 Terraform behaviour
 
-## 6 Terraform behaviour 
+Terraform manages Amazon EFS by comparing the desored configuration, Terraform state, and actual AWS infrastructure.
 
-  Terraform manages Amazon EFS by comparing the desored configuration, Terraform state, and actual AWS infrastructure.
-
-  It determines whether the EFS file system needs to be created, updated, replaced, or destroyed.
+It determines whether the EFS file system needs to be created, updated, replaced, or destroyed.
 
 ## 7.1 Initial Resource Creation
- 
-   When an EFS resource is defined for the first time, Terraform checks whether it is already managed in the current state. 
+
+When an EFS resource is defined for the first time, Terraform checks whether it is already managed in the current state.
+
+Example:
+
+     resource "aws_efs_file_system" "application_efs" {
+
+          encrypted          = true
+          preformance_mode   = "generalPurpose"
+          throughput_mode    = "elastic"
+
+          tags = {
+               Name = "application-efs"
+          }
+     }
+
+Run:
+
+     terraform init
+     terraform validate
+     terraform plan
+
+Expected plan representation:
+
+    + resource "aws_efs_file_system" "application_efs" {
+    + encrypted        = true
+    + performance_mode = "generalPurpose"
+    + throughput_mode  = "elastic"
+    + id               = (known after apply)
+
+}
+
+The + symbol indicates that Terraform plans to create the resource. 
+
+## 7.2 Resource Creation  Using Apply
+  
+  
