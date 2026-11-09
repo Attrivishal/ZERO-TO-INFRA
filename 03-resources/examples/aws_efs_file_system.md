@@ -1247,4 +1247,38 @@ Available values:
 
 ## 5.7 Understanding tags
 
+Tags help organize and identify AWS resources
 
+  Example:
+     
+     tags = {
+          Name = "application-efs"
+          Environment = "development"
+          ManagedBy = "Terraform"
+     }
+
+ Tags are useful for:
+
+    1. Resource identification
+    2. Environment classification
+    3. Cost allocation
+    4. Infrastructure management
+
+## 5.8 Important attributes
+
+  After creating the file system, Terraform exposes useful attributes.
+
+    Attribute                 Purpose
+    id                        Unique EFS file system ID
+    arn                       Amazon Resource Name
+    dns_name                  DNS name associated with the file system
+    owner_id                  AWS account that owns the file system
+    number_of_mount_targets   Current number of mount targets
+
+ Example resource reference:
+    
+    aws_efs_file_system.example.id
+
+This returns the generated EFS file system ID. 
+
+       You can use this attribute when configuring dependent resources such as EFS mount targets. 
