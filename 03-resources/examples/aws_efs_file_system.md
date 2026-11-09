@@ -1352,5 +1352,40 @@ Expected plan representation:
 The + symbol indicates that Terraform plans to create the resource. 
 
 ## 7.2 Resource Creation  Using Apply
+   
+  After reviewing the plan, execute:
+     
+       terraform apply 
   
-  
+  Terraform sends the required API request to AWS to create the EFS file system.
+
+  AWS generates a unique file system ID. 
+
+  Example:
+   
+    fs-0123456789abcdef0
+
+ Creation flow:
+
+     Terraform Configuration
+         |
+         v
+     terraform plan
+         |
+         v
+    terraform apply
+         |
+         v
+    AWS EFS Created
+         |
+         v
+    File System ID Generated
+         |
+         v
+    Terraform State Updated
+
+ Important: Creating an EFS file system does not automatically create mount targets or configure EC2 access. 
+
+ 
+
+
