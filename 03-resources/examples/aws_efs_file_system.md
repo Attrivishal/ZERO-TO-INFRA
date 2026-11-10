@@ -1349,23 +1349,23 @@ Expected plan representation:
 
 }
 
-The + symbol indicates that Terraform plans to create the resource. 
+The + symbol indicates that Terraform plans to create the resource.
 
-## 7.2 Resource Creation  Using Apply
-   
-  After reviewing the plan, execute:
-     
-       terraform apply 
-  
-  Terraform sends the required API request to AWS to create the EFS file system.
+## 7.2 Resource Creation Using Apply
 
-  AWS generates a unique file system ID. 
+After reviewing the plan, execute:
 
-  Example:
-   
+       terraform apply
+
+Terraform sends the required API request to AWS to create the EFS file system.
+
+AWS generates a unique file system ID.
+
+Example:
+
     fs-0123456789abcdef0
 
- Creation flow:
+Creation flow:
 
      Terraform Configuration
          |
@@ -1384,29 +1384,28 @@ The + symbol indicates that Terraform plans to create the resource.
          v
     Terraform State Updated
 
- Important: Creating an EFS file system does not automatically create mount targets or configure EC2 access. 
-
+Important: Creating an EFS file system does not automatically create mount targets or configure EC2 access.
 
 ## 7.3 Terraform State Management
-  
-  Terraform maintains a state file to track the resources it manages.
 
-  After successfully creating EFS, you can inspect the state.
+Terraform maintains a state file to track the resources it manages.
 
-  List resources:
-    
+After successfully creating EFS, you can inspect the state.
+
+List resources:
+
      terraform state list
 
-  Expected Output:
-  
+Expected Output:
+
      aws_efs_file_system.application_efs
 
-  Inspect the resources:
-    
+Inspect the resources:
+
      terraform state show aws_efs_file_system.application_efs
 
-  You can examine attributes such as:
-    
+You can examine attributes such as:
+
     1. File system ID
     2. ARN
     3. Encryption configuration
@@ -1414,10 +1413,42 @@ The + symbol indicates that Terraform plans to create the resource.
     5. Throughput mode
     6. Tags
 
- State allows Terraform to compare the configuration with the resources it manages.
+State allows Terraform to compare the configuration with the resources it manages.
 
 PRODUCTION NOTE:
 
- Protect the state file because it can contain sensitive infrastructure information. For team environments, use a properly secured remote backend with state locking where supported. 
+Protect the state file because it can contain sensitive infrastructure information. For team environments, use a properly secured remote backend with state locking where supported.
 
 ## 7.4 Resource References and Implicit Dependencies
+
+EFS commonly depends on other AWS infrastructure resources.
+
+For Example:
+
+    resource "aws_efs_mount_target" "application_mount" {
+     encrypted = "true"
+    }
+
+     resource "aws_efs_mount_target" "application_mount" {
+          file_system_id  = aws_efs_file_system.application_efs.id
+          subnet_id       = aws_subnet.private.id
+          security_groups = [aws_security_group.efs.id]
+     }
+
+  
+   Here the Reference is:
+       
+       Terraform understands that the EFS file system must exist before its mount target can be created.
+
+       Dependency:
+           
+              EFS File System
+                    |
+                    |
+              EFS Mount Target
+     
+  Terraform create the resource in dependency order and reverses that order during destruction. 
+
+## 7.5 In-place Updates
+ 
+  
