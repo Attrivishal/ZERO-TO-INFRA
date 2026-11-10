@@ -1452,3 +1452,27 @@ For Example:
 ## 7.5 In-place Updates
  
   
+  When a supported arguments changes, terraform may update the existing EFS file system without replacing it. 
+  
+  For example- changing tags:
+   
+  original:
+      
+        tags = {
+          Name = "application-efs"
+        }
+
+  Updated:
+    
+    tags = {
+       Name        = "application-efs"
+       Environment = "production"
+    }
+
+  Terraform detects the difference and plans an in-place update.
+
+  Typical plan symbol:
+    
+    ~ update in-place
+    
+  The existing file system remains the same.
