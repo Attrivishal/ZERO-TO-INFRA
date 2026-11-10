@@ -1386,6 +1386,38 @@ The + symbol indicates that Terraform plans to create the resource.
 
  Important: Creating an EFS file system does not automatically create mount targets or configure EC2 access. 
 
- 
 
+## 7.3 Terraform State Management
+  
+  Terraform maintains a state file to track the resources it manages.
 
+  After successfully creating EFS, you can inspect the state.
+
+  List resources:
+    
+     terraform state list
+
+  Expected Output:
+  
+     aws_efs_file_system.application_efs
+
+  Inspect the resources:
+    
+     terraform state show aws_efs_file_system.application_efs
+
+  You can examine attributes such as:
+    
+    1. File system ID
+    2. ARN
+    3. Encryption configuration
+    4. Performance mode
+    5. Throughput mode
+    6. Tags
+
+ State allows Terraform to compare the configuration with the resources it manages.
+
+PRODUCTION NOTE:
+
+ Protect the state file because it can contain sensitive infrastructure information. For team environments, use a properly secured remote backend with state locking where supported. 
+
+## 7.4 Resource References and Implicit Dependencies
