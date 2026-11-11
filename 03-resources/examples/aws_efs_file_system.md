@@ -1514,3 +1514,4 @@ Important:
 Do not assume that Terraform replacement automatically transfers data from the old EFS file system to the new one.
 
 ## 7.7 Resource Destruction 
+
