@@ -1474,5 +1474,43 @@ For Example:
   Typical plan symbol:
     
     ~ update in-place
-    
+
   The existing file system remains the same.
+
+## 7.6 Resource Replacement
+
+Some configuration changes may require Terraform to replace an existing resource.
+
+Terraform represents replacement using:
+
+    -/+ destroy and then create replacement
+
+Conceptually:
+
+    Existing EFS File System
+             |
+             v
+          Destroy
+             |
+             v
+      Create New EFS
+
+ -This is especially important for persistent storage.
+
+ -Before approving a replacement, investigate:
+
+ -Whether the existing file system contains important data.
+
+ -Whether a backup is available.
+
+ -Whether applications depend on the existing file system.
+
+ -Whether mount targets and dependent resources need migration.
+
+ -Whether downtime is acceptable.
+
+Important: 
+
+Do not assume that Terraform replacement automatically transfers data from the old EFS file system to the new one.
+
+## 7.7 Resource Destruction 
