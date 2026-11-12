@@ -1548,3 +1548,31 @@ If an EFS resource is removed from terraform configuration while still managed i
       1. It does not prevent directly through AWS.
       2. Removing the resource configuration also removes the protection rule.
       3. It does not replace backups or recovery planning.
+
+## 7.9 Terraform Referesh and drift Detection
+
+ Infrastructure drift occurs when actual AWS infrastructure changes outside Terraform.
+
+ For example:
+   
+   1. Someone changes EFS targets directly in AWS.
+   2. Someone modifies throughput settings through the AWS console.
+   3. Another automation pocess changes a managed resource.
+
+   Terraform can detect differences during plannig.
+
+   RUN:
+      
+        terraform plan
+
+   Terraform refereshes its knowledge of managed resources and compares the actual infrastructure with the desired configuration.
+
+   You can also use:
+      
+        terraform plan -referesh-only
+   
+   This generates a plan focused on updating Terraform state to reflect remote infrastructure changes.
+
+   Remember: 
+   Drift detection helps identify differences; it does not automatically mean Terraform should overwrite every external change.
+   
