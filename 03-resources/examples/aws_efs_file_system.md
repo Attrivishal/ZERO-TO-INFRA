@@ -1576,3 +1576,5 @@ If an EFS resource is removed from terraform configuration while still managed i
    Remember: 
    Drift detection helps identify differences; it does not automatically mean Terraform should overwrite every external change.
    
+## 7.10 Important Terraform Commands
+
