@@ -1515,3 +1515,36 @@ Do not assume that Terraform replacement automatically transfers data from the o
 
 ## 7.7 Resource Destruction 
 
+If an EFS resource is removed from terraform configuration while still managed in state, terraform generally plans to destroy it.
+ 
+
+ Example:
+      
+      resource "aws_efs_file_system" "application_efs" {
+          encrypted = true
+      }
+
+     If this resource is removed from main.tf. Terraform detects that it is no longer part of the desired configuration.
+
+  Typical plan representation:
+   
+    - destroy 
+
+ Before applying, verify that:
+  
+  1. The file system is no longer required.
+  2. Important data has been backed up
+  3. Application no longer depend on it.
+  4. Associated mounts targets and other dependent resources are hanled correctly.
+
+## 7.8 Lifecycle Protection
+   
+   For important Terraform from planning destruction while the protection rule remains in the configuration. 
+
+   It is useful for reducing accidental deletion risk.
+
+   However:
+      
+      1. It does not prevent directly through AWS.
+      2. Removing the resource configuration also removes the protection rule.
+      3. It does not replace backups or recovery planning.
