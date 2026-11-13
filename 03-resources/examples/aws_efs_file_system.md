@@ -1588,4 +1588,111 @@ If an EFS resource is removed from terraform configuration while still managed i
   terraform statw show          Displays a resource in state 
   terraform plan -refresh-only  Plans state updates based on remote infrastructure
 
+## 8 What happens When Configuration Changes?
+
+  Terraform continously  compares the desired configuration with the existing AWS Infrastructure.
+
+  When you modify an EFS configuration, Terraform determines whether the existing file system can be updated or whether a new resources is required. 
+
+  For EFS, understanding these changes is important because the file system may contain persistent application data. 
+
+## 8.1 Changing Tags
+
+   Suppose your original configuration is:
+      
+       tags = {
+          Name = "application-efs"
+       }
+
+   You update it to:
+    
+       tags = {
+          Name = "application-efs"
+          Environment = "production"
+       }
+
+   Run: 
+      
+      Terraform plan
+
+   Expected plan representation:
+     
+     ~ resource "aws_efs_file_system" "application_efs" {
+     + tags = {
+        + "Environment" = "production"
+        + "Name"        = "application-efs"
+       }
+    }
+ 
+ What happens?
+
+   1. Terraform detects the tag change.
+   2. The existing EFS file system is updated.
+   3. The file system ID remains unchanged.
+   4. Existing files are not recreated or deleted.
+
+   This is an in-place update.
+
+## Changing Encryption Settings
   
+  Suppose your original configuration is:
+    
+    encrypted = false
+
+  You change it to:
+    
+    encrypted = true
+
+  Important: 
+     
+       EFS encyption at rest is selected when the file system is created. You cannot simply enable encryption on an existing file system through a normal in-place update.
+
+       Changing this setting require a migration strategy involving a new encrypted file system and data transfer. 
+
+
+ Conceptually: 
+
+     Existing EFS (Unencrypted)
+               |
+     Create New EFS (Encrypted)
+               |
+     Transfer Existing Data
+               |
+     Update Application Access
+               |
+        Verify New EFS
+
+The same caution applies when changing the encryption key: do not assume that changing kms_key_id will update the existing file system in place.
+
+Production consideration:
+    
+     Plan the migration, data synchronization, application cutover, and rollback strategy before replacing the storage resource.
+
+
+## 8.3 Changing Performance Mode
+
+   Suppose your configuration uses:
+       
+       performance_mode = "generalPurpose"
+
+   You attempt to change it to:
+
+       performance_mode = "maxIO"
+   
+   EFS performance mode is selected during file-system creation and cannot simply be changed on an exsting file system. 
+
+   A new file system may be required.
+
+          Existing EFS
+                |
+    Create New EFS with Desired Mode
+                |
+          Migrate Data
+                |
+          Switch Applications
+
+   Remember:
+
+      Performance mode is an architectural decision.Choose it according to workload requirements before creating the file system.
+
+## 
