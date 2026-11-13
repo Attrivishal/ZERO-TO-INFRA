@@ -1578,3 +1578,14 @@ If an EFS resource is removed from terraform configuration while still managed i
    
 ## 7.10 Important Terraform Commands
 
+  Command                       Purpose
+  terraform init                initializes the working directory
+  terraform validate            check configuration validity
+  terrafirm fmt                 formats Terraform files
+  terraform plan                show proposes infrastructure changes
+  terraform apply               shows approved changes
+  terraform state list          Lists managed resources
+  terraform statw show          Displays a resource in state 
+  terraform plan -refresh-only  Plans state updates based on remote infrastructure
+
+  
