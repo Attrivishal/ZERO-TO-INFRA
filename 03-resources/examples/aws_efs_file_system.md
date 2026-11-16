@@ -1727,3 +1727,11 @@ Production consideration:
       The throughput configuration changes according to the selected mode.
 
   You can also change provisioned throughput without replacing the file system, subject to AWS service limits and requirements.
+
+## 8.5 Changine Lifecycle Policy
+   
+   Original configiration:
+     
+     lifecycle_policy {
+          transition_to_ia = "AFTER_30_DAYS"
+     }
