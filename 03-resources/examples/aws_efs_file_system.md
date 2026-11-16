@@ -1695,4 +1695,35 @@ Production consideration:
 
       Performance mode is an architectural decision.Choose it according to workload requirements before creating the file system.
 
-## 8.4 
+## 8.4 Changing Throughput Mode
+   
+   Suppose your original configuration is:
+     
+      throughput_mode = "elastic"
+   
+   You change it to:
+      
+      throughout_mode         = "provisioned"
+      provisioned_throughput  = 10
+
+   Terraform detects the configuration change.
+   
+   Expected plan representation:
+       
+    ~ resource "aws_efs_file_system" "application_efs" {
+    ~ throughput_mode                 = "elastic" -> "provisioned"
+    + provisioned_throughput_in_mibps = 10
+   } 
+
+    
+  What happens?
+
+      Terraform updates the throughput configuration.
+ 
+      The existing file system remains in place.
+
+      Existing files remain available.
+
+      The throughput configuration changes according to the selected mode.
+
+  You can also change provisioned throughput without replacing the file system, subject to AWS service limits and requirements.
