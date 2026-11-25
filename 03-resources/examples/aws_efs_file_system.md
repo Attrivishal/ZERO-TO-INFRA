@@ -1809,3 +1809,30 @@ Example One Zone configuration:
      
      Do not apply a replacement or destruction plan until you understand its impact on existing data and applications.
 
+
+## 9 Practical Example: Deploying Amazon EFS with terraform
+
+   We'll build a small but relaistic AWS infrastructure lab. 
+
+   Scenario: 
+        
+        You have two EC2 instances running a web application. Both instances need access to the same shared directory so that files uploaded through one instance can be accessed by the other.
+
+   We'll use Amazon EFS as the shared storage layer.
+
+   Architecture: 
+
+                 Application User
+                         |
+                         |
+               Application Load Balancer
+                         |
+                         |
+         EC2-A  ------------------- EC2-B
+         AZs A  ------------------- AZs B
+                         |
+                         |
+         + ----------------------------- +
+         |          Amazon EFS          | 
+         |     Shared File storage      |
+         +------------------------------+
