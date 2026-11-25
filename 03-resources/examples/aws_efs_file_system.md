@@ -1775,4 +1775,37 @@ Example One Zone configuration:
      
      Changing the availability zone placement of a One zone file system is not an ordinary update either. Plan a migration when changing the storage placement. 
 
+## 8.7 Practical Change-Management Workflow
+  
+    When we modify EFS configuration, Just follow this process:
+        
+            Modify Terraform COnfiguration 
+                        |
+                        |
+                  terraform fmt
+                        |
+                        |
+                  terraform validate
+                        |
+                        |
+               Inspect Planned changes
+                        |
+                        |
+               +-----------------+
+                |                |
+            Safe Update        Replacement 
+                |                |
+                |                |
+              Review         Plan Migration
+                |                |
+                +-------+--------+
+                        |
+                        |
+                 terraform apply
+                        |
+                        |
+                 Verify AWS EFS
+               
      
+     Do not apply a replacement or destruction plan until you understand its impact on existing data and applications.
+
