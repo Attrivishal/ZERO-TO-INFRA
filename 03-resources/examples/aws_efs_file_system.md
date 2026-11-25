@@ -1736,11 +1736,23 @@ Production consideration:
           transition_to_ia = "AFTER_30_DAYS"
      }
 
+   Updated configuration:
+    
+      lifecycle_policy {
+          transition_to_ia = "AFTER_60_DAYS"
+      }
+
+
+ Terraform detects the lifecycle policy change and updates the file system configuration:
+     
+ What happens? 
       
+       1. The lifecycle policy is modified.
+       2. The existing file system remains. 
+       3. Eligible files follow the updated transition policy.
+       4. Existing files are not immediately moved because the configuration changed.
 
-
-
-
+    Lifecycle policies control storage-class tansitions based on file access and eligibility. 
 
 
       
