@@ -1754,5 +1754,25 @@ Production consideration:
 
     Lifecycle policies control storage-class tansitions based on file access and eligibility. 
 
+## 8.6 Changing storage availability configuration
+  
+   Suppose you created a regional EFS file system and later decide that you want one Zone storage. 
 
+   These are different storage availability configurations.
+
+   You cannot simply convert an existing regional file system into a one zone file system through an ordinary in-palce update.
       
+    You need to create a new file system with the desired storage configuration and migrate the data.
+
+Example One Zone configuration:
+
+    resource "aws_efs_file_system" "application_efs" {
+     availability_zone_name = "us-east-1a"
+     encrypted              = true
+    }
+ 
+ Important: 
+     
+     Changing the availability zone placement of a One zone file system is not an ordinary update either. Plan a migration when changing the storage placement. 
+
+     
