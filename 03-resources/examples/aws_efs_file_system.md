@@ -1821,7 +1821,7 @@ Example One Zone configuration:
    We'll use Amazon EFS as the shared storage layer.
 
    Architecture: 
-
+      
                  Application User
                          |
                          |
@@ -1836,3 +1836,35 @@ Example One Zone configuration:
          |          Amazon EFS          | 
          |     Shared File storage      |
          +------------------------------+
+  
+     Conceptual application architecture. We will build the EFS storage and connectivity first; the load balancer and EC2 instances are separate infrastructure components.
+
+  We'll implement this progressively rather than creating everything in one large Terraform file.
+
+## 9.1 Practical lab - requirements
+   
+   Before writing Terraform code, understand what we are building. 
+
+     Component                  Responsibility
+
+     EFS File system             Stores shared files
+     EFS Security Group          Controls NFS access
+     EFS Mount Targets           Provide network endpoints
+     EC2 Instances               Access Shared files
+     VPC                         Provide network
+
+   Prequisities:
+
+    You should have:
+        
+        1. An AWS VPC
+        2. Two private subnets in different Availability Zones.
+        3. An EC2 security group for the application instances.
+        4. Two EC2 instances, or an existing EC2 instance for initial testing.
+        5. AWS CLI and Terraform configured
+
+ For this lab, we will reuse the VPC, subnets, and EC2 security group rather than creating another VPC.
+
+## 9.2 Define the Terraform variables
+  
+  
