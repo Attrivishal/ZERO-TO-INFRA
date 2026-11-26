@@ -1901,3 +1901,5 @@ Example:  terraform.tfvars
             us-east-1a = "subnet-aaaaaaaa"
             us-east-1b = "subnet-bbbbbbbb"
        }
+
+These are placeholders. Replace them with IDs from your AWS account.
