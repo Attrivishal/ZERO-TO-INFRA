@@ -1867,4 +1867,37 @@ Example One Zone configuration:
 
 ## 9.2 Define the Terraform variables
   
-  
+   Create variables.tf
+
+     
+      variable "aws_region" {
+          description = "AWS Regions"
+          type        = string
+          default     = "us-east-1"
+      }
+     -----------------------------------------------
+      variable "vpc_id" {
+          description = "Existing VPC ID"
+          type        = string
+      }
+     -----------------------------------------------
+      variable "ec2_security_group_id" {
+          description = "Security group attached to EC2 instances"
+          type        = string 
+      }
+     -----------------------------------------------
+      varible "efs_subnet_ids" {
+          description = "One  private subnet ID per Availability Zone"
+          type        = map(string)
+      }
+
+Example:  terraform.tfvars
+   
+            aws_region            = "us-east-1"
+            vpc_id                = "vpc-xxxxxxxx"
+            ec2_security_group_id = "sg-xxxxxxxx"
+
+            efs_subnet_ids = {
+            us-east-1a = "subnet-aaaaaaaa"
+            us-east-1b = "subnet-bbbbbbbb"
+       }
