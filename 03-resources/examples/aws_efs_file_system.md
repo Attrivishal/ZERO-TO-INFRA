@@ -1904,3 +1904,20 @@ Example:  terraform.tfvars
 
 These are placeholders. Replace them with IDs from your AWS account.
 
+## 9.3 Create the EFS File System
+  
+  Create main.tf.
+     
+     resource "aws_efs_file_system" "application_efs" {
+     creation_token = "application-efs-lab"
+
+     encrypted        = true
+     performance_mode = "generalPurpose"
+     throughput_mode  = "elastic"
+
+     tags = {
+       Name        = "application-efs"
+       Environment = "development"
+       ManagedBy   = "Terraform"
+     }
+    }
